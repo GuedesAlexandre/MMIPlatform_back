@@ -1,6 +1,7 @@
 package org.mmi.MMIPlatform.domain.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mmi.MMIPlatform.domain.models.User;
 import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
 import org.mmi.MMIPlatform.infrastructure.db.adapter.UserDbAdapter;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationDomainService {
 
     private final UserDaoMapper userDaoMapper;
@@ -29,14 +31,14 @@ public class AuthenticationDomainService {
         }
     }
 
-    public String updateUser(User user){
+    public User updateUser(User user){
         UserDao userDao = this.userDaoMapper.userToUserDao(user);
         try{
             this.userDbAdapter.updateUserDao(userDao);
         }catch (Exception e){
-            return e.getLocalizedMessage();
+            log.error(e.getLocalizedMessage());
         }
-        return "User updated successfully : " + userDao ;
+        return this.userDaoMapper.userDaoToUser(userDao) ;
     }
 
     public String deleteUser(User user){
@@ -46,7 +48,7 @@ public class AuthenticationDomainService {
         }catch (Exception e){
             return e.getLocalizedMessage();
         }
-        return "User deleted successfully : " + userDao ;
+        return "User deleted successfully with email : " + user.getEmail();
     }
 
     public String authenticateUser(String email, String password){
@@ -61,7 +63,6 @@ public class AuthenticationDomainService {
             return e.getLocalizedMessage();
         }
     }
-
     public Boolean validateToken(String token) {
         return this.jwtAdapter.validateToken(token);
     }

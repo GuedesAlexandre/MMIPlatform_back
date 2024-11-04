@@ -30,17 +30,17 @@ public class UserDbAdapter {
         } catch (Exception e) {
             return e.getLocalizedMessage();
         }
-        return "User saved successfully" + userDao;
+        return "User saved successfully\n" + userDao;
     }
 
     public UserDao getUserDaoById(UUID id) {
         return this.userDaoRepository.findById(id).orElse(null);
     }
+
     public UserDao getUserDaoByEmail(String email) {
         UserDao userDao = null;
         try {
             userDao = this.userDaoRepository.findByEmail(email);
-
         } catch (Exception e) {
             log.error(e.getLocalizedMessage());
         }
