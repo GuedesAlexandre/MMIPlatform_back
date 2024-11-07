@@ -31,7 +31,7 @@ public class UserDao {
     @Column(name = "MMIPLATFORM_NAME")
     private String name;
 
-    @Column(name = "MMIPLATFORM_FIST_NAME")
+    @Column(name = "MMIPLATFORM_FIRST_NAME")
     private String firstName;
 
     @Column(name = "MMIPLATFORM_PHONE")
