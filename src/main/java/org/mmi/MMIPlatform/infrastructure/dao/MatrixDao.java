@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @Builder
@@ -26,4 +28,9 @@ public class MatrixDao {
     @Column(name = "MMI_PLATFORM_MATRIX_SEMESTER")
     private int semester;
 
+    @OneToOne
+    @JoinTable(name = "MMI_PLATFORM_MATRIX_USER",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
+    private UserDao user;
 }

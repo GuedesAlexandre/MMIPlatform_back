@@ -5,6 +5,8 @@ import lombok.*;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @Builder
@@ -36,4 +38,16 @@ public class ModuleDao {
     @Column(name = "MMI_PLATFORM_MODULE_UE_NAME")
     @Enumerated(EnumType.STRING)
     private UEEnum ueName;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_MODULE_USER",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
+    private List<UserDao> user;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_MODULE_NOTES",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_NOTE_ID"))
+    private List<NoteDao> notes;
 }

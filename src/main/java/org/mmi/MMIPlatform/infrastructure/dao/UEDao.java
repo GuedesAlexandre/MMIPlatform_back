@@ -5,6 +5,8 @@ import lombok.*;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @Builder
@@ -36,4 +38,16 @@ public class UEDao {
 
     @Column(name = "MMI_PLATEFORM_UE_COEFF")
     private float coeff;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_UE_MODULE",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_UE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))
+    private List<ModuleDao> module;
+
+    @ManyToOne
+    @JoinTable(name = "MMI_PLATFORM_UE_MATRIX",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_UE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
+    private MatrixDao matrix;
 }

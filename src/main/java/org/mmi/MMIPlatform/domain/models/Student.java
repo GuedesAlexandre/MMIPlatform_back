@@ -14,5 +14,5 @@ public class Student  {
     private String firstName;
     private String promo;
     private String group;
-    private String num_etu;
+    private String numEtu;
 }

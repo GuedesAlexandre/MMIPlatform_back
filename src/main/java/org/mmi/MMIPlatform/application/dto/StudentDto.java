@@ -16,6 +16,6 @@ public class StudentDto {
     private String promo;
     @JsonProperty("group")
     private String group;
-    @JsonProperty("num_etu")
-    private String num_etu;
+    @JsonProperty("numEtu")
+    private String numEtu;
 }

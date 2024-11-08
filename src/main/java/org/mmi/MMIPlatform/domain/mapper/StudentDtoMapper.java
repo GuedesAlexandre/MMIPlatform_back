@@ -13,7 +13,7 @@ public class StudentDtoMapper {
                 .firstName(student.getFirstName())
                 .promo(student.getPromo())
                 .group(student.getGroup())
-                .num_etu(student.getNum_etu())
+                .numEtu(student.getNumEtu())
                 .build();
     }
 
@@ -23,7 +23,7 @@ public class StudentDtoMapper {
                 .firstName(studentDto.getFirstName())
                 .promo(studentDto.getPromo())
                 .group(studentDto.getGroup())
-                .num_etu(studentDto.getNum_etu())
+                .numEtu(studentDto.getNumEtu())
                 .build();
     }
 }

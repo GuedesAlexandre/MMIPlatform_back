@@ -6,9 +6,9 @@ import lombok.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.*;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
-import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -39,5 +39,17 @@ public class StudentDao {
     private String group;
 
     @Column(name = "MMI_PLATFORM_STUDENT_NUM_ETU")
-    private String num_etu;
+    private String numEtu;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_STUDENT_MODULE",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))
+    private List<ModuleDao> module;
+
+    @ManyToOne
+    @JoinTable(name = "MMI_PLATFORM_STUDENT_MATRIX",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
+    private MatrixDao matrix;
 }
