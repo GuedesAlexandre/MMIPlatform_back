@@ -20,5 +20,4 @@ public class MatrixDtoMapper {
                 .promo(matrixDto.getPromo())
                 .build();
     }
-
 }
