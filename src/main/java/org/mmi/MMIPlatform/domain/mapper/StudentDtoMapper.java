@@ -16,4 +16,14 @@ public class StudentDtoMapper {
                 .num_etu(student.getNum_etu())
                 .build();
     }
+
+    public Student studentDtoToStudent(StudentDto studentDto) {
+        return Student.builder()
+                .lastName(studentDto.getLastName())
+                .firstName(studentDto.getFirstName())
+                .promo(studentDto.getPromo())
+                .group(studentDto.getGroup())
+                .num_etu(studentDto.getNum_etu())
+                .build();
+    }
 }

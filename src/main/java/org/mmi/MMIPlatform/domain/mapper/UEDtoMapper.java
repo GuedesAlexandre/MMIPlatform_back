@@ -16,4 +16,14 @@ public class UEDtoMapper {
                 .coeff(ue.getCoeff())
                 .build();
     }
+
+    public UE UEDtoToUE(UEDto ueDto) {
+        return UE.builder()
+                .name(ueDto.getName())
+                .promo(ueDto.getPromo())
+                .semester(ueDto.getSemester())
+                .sum_note(ueDto.getSum_note())
+                .coeff(ueDto.getCoeff())
+                .build();
+    }
 }

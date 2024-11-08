@@ -17,7 +17,7 @@ public class UEDto {
     @JsonProperty("sum_note")
     private double sum_note;
     @JsonProperty("coeff")
-    private double coeff;
+    private float coeff;
 
 
 }
