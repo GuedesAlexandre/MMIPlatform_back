@@ -64,7 +64,7 @@ public class StudentAdapter {
         List<StudentDto> studentDtoList = getStudent();
         if (studentDtoList != null) {
             studentDtoList.stream()
-                    .map(studentDto -> this.studentDaoMapper.studentDtoToStudentDao(studentDto))
+                    .map(this.studentDaoMapper::studentDtoToStudentDao)
                     .forEach(studentDao -> {
                         if (this.studentDaoRepository.findByNumEtu(studentDao.getNumEtu()) == null) {
                             this.studentDaoRepository.save(studentDao);
