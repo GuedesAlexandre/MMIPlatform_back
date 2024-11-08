@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum PromoEnum {
-    MMI1("MMI1"),
-    MMI2("MMI2"),
-    MMI3("MMI3");
+    MMI01("MMI01"),
+    MMI02("MMI02"),
+    MMI03("MMI03");
 
     private final String PromoEnum;
 }
