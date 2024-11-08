@@ -3,7 +3,6 @@ package org.mmi.MMIPlatform.infrastructure.mapper;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.domain.models.Matrix;
 import org.mmi.MMIPlatform.infrastructure.dao.MatrixDao;
-import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.springframework.stereotype.Service;
 

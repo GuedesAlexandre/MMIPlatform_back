@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 public class MatrixDto {
+
     @JsonProperty("promo")
     private String promo;
     @JsonProperty("semester")

@@ -2,7 +2,6 @@ package org.mmi.MMIPlatform.domain.models;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Builder
