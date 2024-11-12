@@ -2,6 +2,9 @@ package org.mmi.MMIPlatform.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.mmi.MMIPlatform.domain.models.Module;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -18,6 +21,8 @@ public class UEDto {
     private double sum_note;
     @JsonProperty("coeff")
     private float coeff;
+    @JsonProperty("modules")
+    private List<ModuleDto> modules;
 
 
 }

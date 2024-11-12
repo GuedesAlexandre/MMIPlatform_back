@@ -7,9 +7,14 @@ import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.git.dto.StudentDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class StudentDaoMapper {
+
+    private final ModuleDaoMapper moduleDaoMapper;
 
     public Student studentDaoToStudent(StudentDao studentDao) {
         if(studentDao == null) {
@@ -22,7 +27,12 @@ public class StudentDaoMapper {
                 .promo(studentDao.getPromo().toString())
                 .group(studentDao.getGroup())
                 .numEtu(studentDao.getNumEtu())
+                .modules(null == studentDao.getModules() ? null : studentDao.getModules().stream().map(moduleDaoMapper::moduleDaoToModule).toList())
                 .build();
+    }
+
+    public List<Student> studentsDaostoStudents(List<StudentDao> studentDaos){
+        return studentDaos.stream().map(this::studentDaoToStudent).toList();
     }
 
     public StudentDao studentToStudentDao(Student student) {
@@ -36,8 +46,14 @@ public class StudentDaoMapper {
                 .promo(PromoEnum.valueOf(student.getPromo()))
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
+                .modules(null == student.getModules() ? null : student.getModules().stream().map(moduleDaoMapper::moduleToModuleDao).toList())
                 .build();
     }
+
+    public List<StudentDao> studentListToStudentDaoList(List<Student> students){
+        return students.stream().map(this::studentToStudentDao).toList();
+    }
+
     public StudentDao studentDtoToStudentDao(StudentDto student) {
         if(student == null) {
             return null;
@@ -50,6 +66,7 @@ public class StudentDaoMapper {
                 .numEtu(student.getNumEtu())
                 .build();
     }
+
 
 
 }

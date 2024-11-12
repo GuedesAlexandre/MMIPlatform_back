@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -15,9 +17,13 @@ public class ModuleDto {
     @JsonProperty("promo")
     private String promo;
     @JsonProperty("semester")
-    private int semester;
+    private String semester;
     @JsonProperty("coeff")
     private float coeff;
     @JsonProperty("ueName")
     private String ueName;
+    @JsonProperty("notes")
+    private List<NoteDto> noteDtos;
+    @JsonProperty("sum")
+    private Double sum;
 }

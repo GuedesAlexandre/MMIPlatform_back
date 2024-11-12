@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoteDto {
-
     @JsonProperty("coeff")
     private float coeff;
     @JsonProperty("name")

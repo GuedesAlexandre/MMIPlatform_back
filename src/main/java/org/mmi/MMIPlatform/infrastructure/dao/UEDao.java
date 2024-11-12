@@ -45,9 +45,5 @@ public class UEDao {
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))
     private List<ModuleDao> module;
 
-    @ManyToOne
-    @JoinTable(name = "MMI_PLATFORM_UE_MATRIX",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_UE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
-    private MatrixDao matrix;
+
 }

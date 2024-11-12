@@ -45,11 +45,5 @@ public class StudentDao {
     @JoinTable(name = "MMI_PLATFORM_STUDENT_MODULE",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))
-    private List<ModuleDao> module;
-
-    @ManyToOne
-    @JoinTable(name = "MMI_PLATFORM_STUDENT_MATRIX",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
-    private MatrixDao matrix;
+    private List<ModuleDao> modules;
 }

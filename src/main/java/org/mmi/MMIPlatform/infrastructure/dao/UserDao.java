@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @Builder
@@ -52,6 +54,12 @@ public class UserDao {
     @Column(name = "MMIPLATFORM_ACCESS")
     @Enumerated(EnumType.STRING)
     private PermissionsEnum access;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_USER_MODULE",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
+    private List<ModuleDao> moduleDaos;
 
 
 

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -21,4 +23,5 @@ public class User {
     private String country;
     private String establishment;
     private String access;
+    private List<Module> modules;
 }

@@ -1,11 +1,17 @@
 package org.mmi.MMIPlatform.domain.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.UserDto;
 import org.mmi.MMIPlatform.domain.models.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class UserDtoMapper {
+
+    private ModuleDtoMapper moduleDtoMapper;
 
     public UserDto userToUserDto(User user){
         return UserDto.builder()
@@ -20,7 +26,12 @@ public class UserDtoMapper {
                 .country(user.getCountry())
                 .establishment(user.getEstablishment())
                 .access(user.getAccess())
+                .modules(this.moduleDtoMapper.moduleListToModuleDtoList(user.getModules()))
                 .build();
+    }
+
+    public List<UserDto> userListToUserDtoList(List<User> users){
+        return users.stream().map(this::userToUserDto).toList();
     }
 
     public User userDtoToUser(UserDto userDto){
@@ -36,7 +47,12 @@ public class UserDtoMapper {
                 .country(userDto.getCountry())
                 .establishment(userDto.getEstablishment())
                 .access(userDto.getAccess())
+                .modules(this.moduleDtoMapper.moduleDtoListToModuleList(userDto.getModules()))
                 .build();
+    }
+
+    public List<User> userDtoListToUserList(List<UserDto> userDtos){
+        return userDtos.stream().map(this::userDtoToUser).toList();
     }
 
 }

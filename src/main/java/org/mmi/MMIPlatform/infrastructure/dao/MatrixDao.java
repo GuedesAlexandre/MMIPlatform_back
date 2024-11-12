@@ -33,4 +33,16 @@ public class MatrixDao {
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
     private UserDao user;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_MATRIX_STUDENT",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
+    private List<StudentDao> studentDaos;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_MATRIX_UE",
+            joinColumns = @JoinColumn(name = "MMI_PLATFORM_UE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MATRIX_ID"))
+    private List<UEDao> ueDaos;
 }

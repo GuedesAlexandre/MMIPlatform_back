@@ -30,7 +30,7 @@ public class ModuleDao {
     private PromoEnum promo;
 
     @Column(name = "MMI_PLATFORM_MODULE_SEMESTER")
-    private int semester;
+    private String semester;
 
     @Column(name = "MMI_PLATFORM_MODULE_COEFF")
     private float coeff;
@@ -39,15 +39,14 @@ public class ModuleDao {
     @Enumerated(EnumType.STRING)
     private UEEnum ueName;
 
-    @OneToMany
-    @JoinTable(name = "MMI_PLATFORM_MODULE_USER",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
-    private List<UserDao> user;
+
 
     @OneToMany
     @JoinTable(name = "MMI_PLATFORM_MODULE_NOTES",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_NOTE_ID"))
     private List<NoteDao> notes;
+
+    @Column(name = "MMI_PLATFORM_MODULE_SUM_NOTE")
+    private Double sumNote;
 }
