@@ -44,6 +44,9 @@ public class ModuleDtoMapper {
     }
 
     public List<Module> moduleDtoListToModuleList(List<ModuleDto> moduleDtos){
+        if(moduleDtos == null || moduleDtos.isEmpty()){
+            return List.of();
+        }
         return moduleDtos.stream().map(this::moduleDtoToModule).toList();
     }
 
