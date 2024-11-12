@@ -2,6 +2,9 @@ package org.mmi.MMIPlatform.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.mmi.MMIPlatform.domain.models.Module;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -29,4 +32,6 @@ public class UserDto {
     private String establishment;
     @JsonProperty("access")
     private String access;
+    @JsonProperty("modules")
+    private List<ModuleDto> modules;
 }
