@@ -1,5 +1,10 @@
 package org.mmi.MMIPlatform.application.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.controllers.models.AuthRequest;
 import org.mmi.MMIPlatform.application.dto.UserDto;
@@ -16,6 +21,12 @@ public class  AuthenticationController {
 
     private final AuthenticationApplicationService authenticationApplicationService;
 
+    @Operation(summary = "Create a User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDto.class)) }),
+    })
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
         return ResponseEntity.ok(this.authenticationApplicationService.initUser(userDto));
