@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDtoMapper {
 
-    private ModuleDtoMapper moduleDtoMapper;
+    private final ModuleDtoMapper moduleDtoMapper;
 
     public UserDto userToUserDto(User user){
         return UserDto.builder()
