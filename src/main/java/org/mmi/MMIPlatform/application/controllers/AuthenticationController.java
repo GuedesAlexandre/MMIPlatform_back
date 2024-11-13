@@ -1,5 +1,12 @@
 package org.mmi.MMIPlatform.application.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.controllers.models.AuthRequest;
 import org.mmi.MMIPlatform.application.dto.UserDto;
@@ -16,23 +23,43 @@ public class  AuthenticationController {
 
     private final AuthenticationApplicationService authenticationApplicationService;
 
+    @Operation(summary = "Create a User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDto.class)) }),
+    })
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
         return ResponseEntity.ok(this.authenticationApplicationService.initUser(userDto));
     }
 
+    @Operation(summary = "Update a User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDto.class)) }),
+    })
     @PutMapping
     public ResponseEntity<UserDto> updateUser(UserDto userDto){
         return ResponseEntity.ok(this.authenticationApplicationService.updateUser(userDto));
     }
 
+    @Operation(summary = "User authentication")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User token")
+    })
     @PostMapping("/users/me")
-    public ResponseEntity<String> authenticateUser(@RequestBody()AuthRequest authRequest){
+    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequest authRequest) {
         return ResponseEntity.ok(this.authenticationApplicationService.authenticateUser(authRequest.getEmail(), authRequest.getPassword()));
     }
 
+    @Operation(summary = "Token validation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User authorization")
+    })
     @PostMapping("/valid")
-    public ResponseEntity<HttpStatus> validateToken(@RequestBody String token){
+    public ResponseEntity<HttpStatus> validateToken(@Parameter(description = "user token") @RequestBody String token){
         if(this.authenticationApplicationService.validateToken(token)){
             return ResponseEntity.ok(HttpStatus.OK);
         }else{
