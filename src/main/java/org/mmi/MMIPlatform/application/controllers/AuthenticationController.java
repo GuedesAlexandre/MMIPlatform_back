@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.controllers.models.AuthRequest;
@@ -19,33 +20,33 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/auth")
-public class  AuthenticationController {
+public class AuthenticationController {
 
     private final AuthenticationApplicationService authenticationApplicationService;
 
-    @Operation(summary = "Create a User")
+    @Operation(summary = "Create a User", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User created",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserDto.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDto.class))}),
     })
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.authenticationApplicationService.initUser(userDto));
     }
 
-    @Operation(summary = "Update a User")
+    @Operation(summary = "Update a User", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserDto.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserDto.class))}),
     })
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(UserDto userDto){
+    public ResponseEntity<UserDto> updateUser(UserDto userDto) {
         return ResponseEntity.ok(this.authenticationApplicationService.updateUser(userDto));
     }
 
-    @Operation(summary = "User authentication")
+    @Operation(summary = "User authentication", security = @SecurityRequirement(name = ""))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User token")
     })
@@ -54,15 +55,15 @@ public class  AuthenticationController {
         return ResponseEntity.ok(this.authenticationApplicationService.authenticateUser(authRequest.getEmail(), authRequest.getPassword()));
     }
 
-    @Operation(summary = "Token validation")
+    @Operation(summary = "Token validation", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User authorization")
     })
     @PostMapping("/valid")
-    public ResponseEntity<HttpStatus> validateToken(@Parameter(description = "user token") @RequestBody String token){
-        if(this.authenticationApplicationService.validateToken(token)){
+    public ResponseEntity<HttpStatus> validateToken(@Parameter(description = "user token") @RequestBody String token) {
+        if (this.authenticationApplicationService.validateToken(token)) {
             return ResponseEntity.ok(HttpStatus.OK);
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
