@@ -12,9 +12,9 @@ public class XlsDomainService {
 
     private final XlsAdapter xlsAdapter;
 
-    public byte[] exportMatrixByPromo(String promo) {
+    public byte[] exportMatrixByPromo(String promo, String semester) {
         try {
-        return xlsAdapter.exportStudentToExcel(promo);
+        return xlsAdapter.exportStudentToExcel(promo, semester);
         } catch(Exception e){
             log.error(e.getMessage());
             return null;

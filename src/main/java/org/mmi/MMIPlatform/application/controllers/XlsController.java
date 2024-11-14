@@ -32,11 +32,11 @@ public class XlsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "matrix exported")})
     @GetMapping("/students")
-    public ResponseEntity<byte[]> exportStudents(@RequestParam String promo) {
+    public ResponseEntity<byte[]> exportStudents(@RequestParam String promo, @RequestParam String semester) {
         try {
-            byte[] excelData = this.xlsApplicationService.exportMatrixByPromo(promo);
+            byte[] excelData = this.xlsApplicationService.exportMatrixByPromo(promo, semester);
             String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            String filename = String.format("%s_%s_matrice.xlsx", promo, date);
+            String filename = String.format("%s_%s_%s_matrice.xlsx", promo, semester, date);
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=" + filename);
             return new ResponseEntity<>(excelData, headers, HttpStatus.OK);

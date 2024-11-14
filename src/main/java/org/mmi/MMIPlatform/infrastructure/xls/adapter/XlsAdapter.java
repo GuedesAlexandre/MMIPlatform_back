@@ -25,7 +25,7 @@ public class XlsAdapter {
     private final StudentDaoRepository studentDaoRepository;
     private final ModuleDaoRepository moduleDaoRepository;
 
-    public byte[] exportStudentToExcel(String promo) throws IOException {
+    public byte[] exportStudentToExcel(String promo, String semester) throws IOException {
         List<StudentDao> studentDaoList = this.studentDaoRepository.findAll().stream()
                 .filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo)))
                 .toList();
@@ -37,7 +37,7 @@ public class XlsAdapter {
                 headerRow.createCell(0).setCellValue("Liste des étudiants");
 
                 List<ModuleDao> moduleList = moduleDaoRepository.findAll().stream()
-                        .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())))
+                        .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
                         .toList();
 
                 for (int i = 0; i < moduleList.size(); i++) {
