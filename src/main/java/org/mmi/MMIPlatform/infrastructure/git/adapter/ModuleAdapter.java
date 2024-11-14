@@ -68,12 +68,8 @@ public class ModuleAdapter {
             moduleDtoList.stream()
                     .map(this.moduleDaoMapper::moduleDtoToModuleDao)
                     .forEach(moduleDao -> {
-                        if (this.moduleDaoRepository.findByName(moduleDao.getName()) == null) {
                             this.moduleDaoRepository.save(moduleDao);
                             log.info("Module with name {} saved in database", moduleDao.getName());
-                        } else {
-                            log.info("Module with name {} already exists in database", moduleDao.getName());
-                        }
                     });
         }
 
