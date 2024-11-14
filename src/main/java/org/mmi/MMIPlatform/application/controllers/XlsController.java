@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.UserDto;
 import org.mmi.MMIPlatform.application.services.XlsApplicationService;
+import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
+import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
+import org.mmi.MMIPlatform.infrastructure.db.repository.UserDaoRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/export")
@@ -27,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 public class XlsController {
 
     private final XlsApplicationService xlsApplicationService;
+    private final StudentDaoRepository studentDaoRepository;
 
     @Operation(summary = "Export matrix by promo", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
@@ -44,4 +49,5 @@ public class XlsController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
