@@ -33,12 +33,14 @@ public class XlsAdapter {
         List<StudentDao> studentDaoList = getStudentList(promo);
         try (Workbook workbook = new XSSFWorkbook()) {
             XSSFCellStyle headerStyle = createHeaderStyle(workbook);
+            XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
+            XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
 
             for (UEEnum ue : UEEnum.values()) {
                 XSSFSheet sheet = (XSSFSheet) workbook.createSheet(ue.name());
                 createHeaderRow(sheet, headerStyle, ue, semester);
 
-                fillStudentData(sheet, studentDaoList, ue, semester);
+                fillStudentData(sheet, studentDaoList, ue, semester, cellStyleRed, cellStyleGreen);
 
                 autoSizeColumns(sheet, moduleDaoRepository.findAll().stream()
                         .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
@@ -104,7 +106,33 @@ public class XlsAdapter {
         headerStyle.setLeftBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
         headerStyle.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
 
+
         return headerStyle;
+    }
+
+    private XSSFCellStyle createCellStyleRed(Workbook workbook) {
+        XSSFCellStyle cellStyleRed = (XSSFCellStyle) workbook.createCellStyle();
+        cellStyleRed.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleRed.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleRed.setWrapText(true);
+        XSSFFont font = (XSSFFont) workbook.createFont();
+        font.setColor(IndexedColors.RED.getIndex());
+        cellStyleRed.setFont(font);
+
+        return cellStyleRed;
+    }
+
+    private XSSFCellStyle createCellStyleGreen(Workbook workbook) {
+        XSSFCellStyle cellStyleRed = (XSSFCellStyle) workbook.createCellStyle();
+        cellStyleRed.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleRed.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleRed.setWrapText(true);
+        cellStyleRed.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        cellStyleRed.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        XSSFFont font = (XSSFFont) workbook.createFont();
+        font.setColor(IndexedColors.RED.getIndex());
+        cellStyleRed.setFont(font);
+        return cellStyleRed;
     }
 
     private void createHeaderRow(XSSFSheet sheet, XSSFCellStyle headerStyle, UEEnum ue, String semester) {
@@ -130,7 +158,8 @@ public class XlsAdapter {
         headerRow.getCell(moduleList.size() + 3).setCellStyle(headerStyle);
     }
 
-    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester) {
+    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+
         List<ModuleDao> moduleList = moduleDaoRepository.findAll().stream()
                 .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
                 .toList();
@@ -153,6 +182,11 @@ public class XlsAdapter {
                         .average()
                         .orElse(0.00);
                 row.createCell(j + 3).setCellValue(String.format("%.2f", averageGrade));
+                if (averageGrade < 10) {
+                    row.getCell(j + 3).setCellStyle(cellStyleRed);
+                } else {
+                    row.getCell(j + 3).setCellStyle(cellStyleGreen);
+                }
                 totalGrades += averageGrade;
                 gradeCount++;
             }
