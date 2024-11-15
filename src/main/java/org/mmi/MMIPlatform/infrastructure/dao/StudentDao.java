@@ -41,7 +41,7 @@ public class StudentDao {
     @Column(name = "MMI_PLATFORM_STUDENT_NUM_ETU")
     private String numEtu;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "MMI_PLATFORM_STUDENT_MODULE",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))

@@ -39,8 +39,6 @@ public class ModuleDao {
     @Enumerated(EnumType.STRING)
     private UEEnum ueName;
 
-
-
     @OneToMany
     @JoinTable(name = "MMI_PLATFORM_MODULE_NOTES",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
