@@ -18,7 +18,7 @@ public class OpenAPIConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+        return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .servers(List.of(new Server().url("http://localhost:8080/mmiplatform")))
                 .info(new Info().title("Product Service API").version("1.0.0"));
