@@ -6,7 +6,6 @@ import org.mmi.MMIPlatform.application.dto.StudentDto;
 import org.mmi.MMIPlatform.domain.mapper.StudentDtoMapper;
 import org.mmi.MMIPlatform.domain.models.Student;
 import org.mmi.MMIPlatform.domain.services.StudentDomaineService;
-import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

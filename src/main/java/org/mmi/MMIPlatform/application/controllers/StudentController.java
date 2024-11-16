@@ -32,7 +32,7 @@ public class StudentController {
         return ResponseEntity.ok(studentApplicationService.getStudentsByPromo(promo));
     }
 
-    @Operation(summary = "get all Students")
+    @Operation(summary = "get all Students", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "students recover",
                     content = {@Content(mediaType = "application/json",
