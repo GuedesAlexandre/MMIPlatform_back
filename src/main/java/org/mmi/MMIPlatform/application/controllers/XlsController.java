@@ -31,7 +31,6 @@ import java.util.List;
 public class XlsController {
 
     private final XlsApplicationService xlsApplicationService;
-    private final StudentDaoRepository studentDaoRepository;
 
     @Operation(summary = "Export matrix by promo", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {

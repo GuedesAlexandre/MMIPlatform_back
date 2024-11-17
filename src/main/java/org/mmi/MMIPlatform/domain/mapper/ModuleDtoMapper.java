@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ModuleDtoMapper {
 
-    private  NoteDtoMapper noteDtoMapper;
+    private final NoteDtoMapper noteDtoMapper;
 
     public ModuleDto moduleToModuleDto(Module module) {
         return ModuleDto.builder()
