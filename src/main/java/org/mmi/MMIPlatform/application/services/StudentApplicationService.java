@@ -30,8 +30,7 @@ public class StudentApplicationService {
 
     public List<StudentDto> getAllStudents() {
         try {
-            List<Student> students = studentDomaineService.getAllStudents();
-            return studentDtoMapper.studentListToStudentDtoList(students);
+            return studentDtoMapper.studentListToStudentDtoList( studentDomaineService.getAllStudents());
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;

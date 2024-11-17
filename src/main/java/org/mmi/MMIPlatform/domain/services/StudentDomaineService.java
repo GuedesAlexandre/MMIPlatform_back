@@ -30,8 +30,7 @@ public class StudentDomaineService {
 
     public List<Student> getAllStudents() {
         try {
-            List<StudentDao> studentsDao = studentAdapter.getAllStudents();
-            return studentDaoMapper.studentsDaostoStudents(studentsDao);
+            return studentDaoMapper.studentsDaostoStudents( studentAdapter.getAllStudents());
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;

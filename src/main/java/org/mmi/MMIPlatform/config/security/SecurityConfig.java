@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/users/me").permitAll()
                         .requestMatchers("/api/v1/export/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").hasAuthority("ADMIN")
-                        .requestMatchers("api/vi/auth/student").permitAll()
+                        .requestMatchers("api/v1/student").permitAll()
                         .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
