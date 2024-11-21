@@ -26,9 +26,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/mmiplatform/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/auth/users/me").permitAll()
-                        .requestMatchers("/api/v1/export/**").permitAll()
+                        .requestMatchers("/api/v1/export/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/auth/**").hasAuthority("ADMIN")
-                        .requestMatchers("api/v1/student").permitAll()
+                        .requestMatchers("api/v1/student").hasAnyAuthority("ADMIN", "TEACHER", "SCOLARITY")
                         .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
