@@ -106,7 +106,6 @@ public class XlsAdapter {
         headerStyle.setLeftBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
         headerStyle.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
 
-
         return headerStyle;
     }
 
@@ -123,16 +122,16 @@ public class XlsAdapter {
     }
 
     private XSSFCellStyle createCellStyleGreen(Workbook workbook) {
-        XSSFCellStyle cellStyleRed = (XSSFCellStyle) workbook.createCellStyle();
-        cellStyleRed.setAlignment(HorizontalAlignment.CENTER);
-        cellStyleRed.setVerticalAlignment(VerticalAlignment.CENTER);
-        cellStyleRed.setWrapText(true);
-        cellStyleRed.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        cellStyleRed.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        XSSFCellStyle cellStyleGreen = (XSSFCellStyle) workbook.createCellStyle();
+        cellStyleGreen.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleGreen.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleGreen.setWrapText(true);
+        cellStyleGreen.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        cellStyleGreen.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         XSSFFont font = (XSSFFont) workbook.createFont();
-        font.setColor(IndexedColors.RED.getIndex());
-        cellStyleRed.setFont(font);
-        return cellStyleRed;
+        font.setColor(IndexedColors.GREEN.getIndex());
+        cellStyleGreen.setFont(font);
+        return cellStyleGreen;
     }
 
     private void createHeaderRow(XSSFSheet sheet, XSSFCellStyle headerStyle, UEEnum ue, String semester) {
@@ -156,16 +155,21 @@ public class XlsAdapter {
 
         headerRow.createCell(moduleList.size() + 3).setCellValue("Moyenne de l'UE");
         headerRow.getCell(moduleList.size() + 3).setCellStyle(headerStyle);
+
+        Row subHeaderRow = sheet.createRow(1);
+        for (int i = 0; i < moduleList.size() ; i++) {
+            subHeaderRow.createCell(i + 3).setCellValue("Coeff: " + moduleList.get(i).getCoeff() );
+            subHeaderRow.getCell(i + 3).setCellStyle(headerStyle);
+        }
     }
 
     private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
-
         List<ModuleDao> moduleList = moduleDaoRepository.findAll().stream()
                 .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
                 .toList();
 
         for (int i = 0; i < studentDaoList.size(); i++) {
-            Row row = sheet.createRow(i + 1);
+            Row row = sheet.createRow(i + 2);
             row.createCell(0).setCellValue(studentDaoList.get(i).getFirstName() + " " + studentDaoList.get(i).getLastName());
             row.createCell(1).setCellValue(studentDaoList.get(i).getNumEtu());
             row.createCell(2).setCellValue(studentDaoList.get(i).getGroup());
