@@ -10,6 +10,7 @@ import org.mmi.MMIPlatform.infrastructure.security.jwt.JwtAdapter;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,6 +33,10 @@ public class AuthenticationDomainService {
         }catch (Exception e){
             return e.getLocalizedMessage();
         }
+    }
+
+    public List<User> getAllUsers(){
+        return this.userDaoMapper.userDaoListToUserList(this.userDbAdapter.getAllUserDao());
     }
 
     public User updateUser(User user){
