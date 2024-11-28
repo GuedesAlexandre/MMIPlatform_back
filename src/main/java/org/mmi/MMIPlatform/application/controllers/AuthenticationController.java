@@ -76,6 +76,7 @@ public class AuthenticationController {
                             schema = @Schema(implementation = UserDto.class))}),
     })
     @GetMapping("/user/all")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(this.authenticationApplicationService.getAllUsers());
     }
