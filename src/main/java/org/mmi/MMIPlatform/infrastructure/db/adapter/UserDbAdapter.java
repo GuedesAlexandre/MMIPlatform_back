@@ -8,6 +8,7 @@ import org.mmi.MMIPlatform.infrastructure.db.repository.UserDaoRepository;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,7 +20,9 @@ public class UserDbAdapter {
     private final Argon2PasswordEncoder argon2PasswordEncoder;
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
 
-
+    public List<UserDao> getAllUserDao(){
+     return this.userDaoRepository.findAll();
+    }
     public String saveUserDao(UserDao userDao) {
         if (!userDao.getPassword().matches(PASSWORD_PATTERN)) {
             return "Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.";
