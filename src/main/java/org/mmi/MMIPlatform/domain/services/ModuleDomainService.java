@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ModuleDomainService {
+
     private final ModuleDaoMapper moduleDaoMapper;
     private final ModuleDBAdapter moduleDBAdapter;
 
