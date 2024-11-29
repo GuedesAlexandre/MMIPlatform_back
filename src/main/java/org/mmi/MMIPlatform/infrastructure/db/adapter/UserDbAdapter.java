@@ -36,7 +36,12 @@ public class UserDbAdapter {
 
             userDao.setModuleDaos(
                     userDao.getModuleDaos().stream()
-                            .map(moduleDao -> this.moduleDaoRepository.findByName(moduleDao.getName()))
+                            .map(moduleDao -> this.moduleDaoRepository.findAll().stream()
+                                    .filter(moduleDao1 -> moduleDao1.getName().equals(moduleDao.getName())
+                                            && moduleDao1.getUeName().equals(moduleDao.getUeName())
+                                            && moduleDao1.getSemester().equals(moduleDao.getSemester()))
+                                    .findFirst()
+                                    .orElseThrow(() -> new IllegalArgumentException("Module not found: " + moduleDao.getName())))
                             .collect(Collectors.toList())
             );
             this.userDaoRepository.save(userDao);
