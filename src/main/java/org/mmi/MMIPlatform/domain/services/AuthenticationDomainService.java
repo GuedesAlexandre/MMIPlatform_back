@@ -29,6 +29,7 @@ public class AuthenticationDomainService {
             if(userDbAdapter.getUserDaoByEmail(user.getEmail()) != null){
                 return "User already exists with email : " + user.getEmail();
             }
+
          return this.userDbAdapter.saveUserDao(userDao);
         }catch (Exception e){
             return e.getLocalizedMessage();
