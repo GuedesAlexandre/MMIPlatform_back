@@ -55,7 +55,7 @@ public class UserDao {
     @Enumerated(EnumType.STRING)
     private PermissionsEnum access;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "MMI_PLATFORM_USER_MODULE",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_ID"))
