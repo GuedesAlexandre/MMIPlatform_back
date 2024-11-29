@@ -29,12 +29,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/mmiplatform/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/mmiplatform/api/v1/auth/**").permitAll()
                         .requestMatchers("/mmiplatform/h2-console/**").permitAll()
-                        .requestMatchers("/api/v1/auth/users/me").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers("/api/v1/export/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/auth/**").hasAuthority("ADMIN")
                         .requestMatchers("api/v1/student").hasAnyAuthority("ADMIN", "TEACHER", "SCOLARITY")
                         .anyRequest().permitAll()
                 )
@@ -56,7 +58,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
