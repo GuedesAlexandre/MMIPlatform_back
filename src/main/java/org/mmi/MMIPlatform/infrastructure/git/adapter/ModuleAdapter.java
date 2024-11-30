@@ -70,8 +70,9 @@ public class ModuleAdapter {
                     .map(this.moduleDaoMapper::moduleDtoToModuleDao)
                     .forEach(moduleDao -> {
                         this.moduleDaoRepository.save(moduleDao);
-                        log.info("Module with name {} saved in database", moduleDao.getName());
+
                     });
+            log.info("Modules are saved in database");
         }
     }
 }

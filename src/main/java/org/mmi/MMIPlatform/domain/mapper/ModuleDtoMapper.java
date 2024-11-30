@@ -1,10 +1,9 @@
+
 package org.mmi.MMIPlatform.domain.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.ModuleDto;
-import org.mmi.MMIPlatform.application.dto.NoteDto;
 import org.mmi.MMIPlatform.domain.models.Module;
-import org.mmi.MMIPlatform.domain.models.Note;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ModuleDtoMapper {
-
-    private final NoteDtoMapper noteDtoMapper;
 
     public ModuleDto moduleToModuleDto(Module module) {
         return ModuleDto.builder()
@@ -23,40 +20,31 @@ public class ModuleDtoMapper {
                 .coeff(module.getCoeff())
                 .ueName(module.getUeName())
                 .sumNote(module.getSumNote())
-                .notes(this.noteDtoMapper.noteListToNoteDtoList(module.getNotes()))
                 .build();
     }
 
-    public List<ModuleDto> moduleListToModuleDtoList(List<Module> moduleList){
+    public List<ModuleDto> moduleListToModuleDtoList(List<Module> moduleList) {
         return moduleList.stream().map(this::moduleToModuleDto).toList();
     }
 
     public Module moduleDtoToModule(ModuleDto moduleDto) {
+        if(moduleDto == null) {
+            return null;
+        }
         return Module.builder()
-                .name(moduleDto.getName())
+                .name(null == moduleDto.getName() ? "" : moduleDto.getName())
                 .promo(moduleDto.getPromo())
                 .semester(moduleDto.getSemester())
                 .coeff(moduleDto.getCoeff())
                 .ueName(moduleDto.getUeName())
-                .sumNote(this.calculteAverageNoteFromList(moduleDto.getNotes()))
-                .notes(this.noteDtoMapper.noteDtoListToNoteList(moduleDto.getNotes()))
+                .sumNote(0.0)
                 .build();
     }
 
-    public List<Module> moduleDtoListToModuleList(List<ModuleDto> moduleDtos){
-        if(moduleDtos == null || moduleDtos.isEmpty()){
+    public List<Module> moduleDtoListToModuleList(List<ModuleDto> moduleDtos) {
+        if (moduleDtos == null || moduleDtos.isEmpty()) {
             return List.of();
         }
         return moduleDtos.stream().map(this::moduleDtoToModule).toList();
-    }
-
-    public double calculteAverageNoteFromList(List<NoteDto> notes) {
-        if (notes == null || notes.isEmpty()) {
-            return 0.0;
-        }
-        return notes.stream()
-                .mapToDouble(NoteDto::getNote)
-                .average()
-                .orElse(0.0);
     }
 }

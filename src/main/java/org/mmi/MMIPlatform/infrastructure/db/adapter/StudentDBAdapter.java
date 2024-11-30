@@ -2,9 +2,11 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
+import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class StudentDBAdapter {
 
     private final StudentDaoRepository studentDaoRepository;
     private final NoteDaoRepository noteDaoRepository;
+    private final ModuleDaoRepository moduleDaoRepository;
 
     public List<StudentDao> getStudentsByPromo(String promo) {
         return this.studentDaoRepository.findAll().stream().filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo))).toList();
@@ -30,20 +33,23 @@ public class StudentDBAdapter {
     }
 
     public String postNotesForAStudent(String numEtu, String moduleName, NoteDao note) {
-        StudentDao student = this.studentDaoRepository.findAll().stream().filter(s -> s.getNumEtu().equals(numEtu)).findFirst().orElse(null);
+        StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
+        ModuleDao moduleDao = this.moduleDaoRepository.findByName(moduleName);
         if (student == null) {
             return "Student not found";
         }
         try {
             log.info("Adding note to module {} for student {}", moduleName, numEtu);
 
-            // Save the note before adding it to the module
+            note.setModule(moduleDao);
+            note.setStudent(student);
+            moduleDao.getNotes().add(note);
             this.noteDaoRepository.save(note);
-
+            this.moduleDaoRepository.save(moduleDao);
             student.getNotes().add(note);
 
             this.studentDaoRepository.save(student);
-            return "Note added";
+            return "Note added for : " + student;
         } catch (Exception e) {
             return "Module not found";
         }

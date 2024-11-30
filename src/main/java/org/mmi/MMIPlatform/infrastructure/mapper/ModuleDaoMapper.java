@@ -17,17 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ModuleDaoMapper {
 
-    private final NoteDaoMapper noteDaoMapper;
 
     public Module moduleDaoToModule(ModuleDao moduleDao) {
         return Module.builder()
                 .id(moduleDao.getId())
                 .name(moduleDao.getName())
-                .promo(moduleDao.getPromo().toString())
+                .promo(moduleDao.getPromo())
                 .semester(moduleDao.getSemester())
                 .coeff(moduleDao.getCoeff())
-                .ueName(moduleDao.getUeName().toString())
-                .notes(this.noteDaoMapper.noteDaoListToNoteList(moduleDao.getNotes()))
+                .ueName(moduleDao.getUeName())
                 .sumNote(this.calculateAverageNoteFromListDao(moduleDao.getNotes()))
                 .build();
     }
@@ -39,23 +37,24 @@ public class ModuleDaoMapper {
     public ModuleDao moduleDtoToModuleDao(ModuleDto moduleDto) {
         return ModuleDao.builder()
                 .name(moduleDto.getName())
-                .promo(moduleDto.getPromo())
+                .promo(String.valueOf(moduleDto.getPromo()))
                 .semester(moduleDto.getSemester())
                 .coeff(moduleDto.getCoeff())
-                .ueName(moduleDto.getUeName())
+                .ueName(String.valueOf(moduleDto.getUeName()))
                 .build();
     }
 
     public ModuleDao moduleToModuleDao(Module module) {
+        if(module == null) {
+            return null;
+        }
         return ModuleDao.builder()
                 .id(module.getId())
                 .name(module.getName())
-                .promo(PromoEnum.valueOf(module.getPromo()))
+                .promo(String.valueOf(PromoEnum.valueOf(module.getPromo())))
                 .semester(module.getSemester())
                 .coeff(module.getCoeff())
-                .ueName(UEEnum.valueOf(module.getUeName()))
-                .notes(this.noteDaoMapper.noteListToNoteDaoList(module.getNotes()))
-                .sumNote(this.calculteAverageNoteFromList(module.getNotes()))
+                .ueName(String.valueOf(UEEnum.valueOf(module.getUeName())))
                 .build();
     }
 
