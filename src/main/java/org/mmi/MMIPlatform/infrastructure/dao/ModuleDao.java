@@ -2,8 +2,6 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
-import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 
 import java.util.List;
 
@@ -26,8 +24,7 @@ public class ModuleDao {
     private String name;
 
     @Column(name = "MMI_PLATFORM_MODULE_PROMO")
-    @Enumerated(EnumType.STRING)
-    private PromoEnum promo;
+    private String promo;
 
     @Column(name = "MMI_PLATFORM_MODULE_SEMESTER")
     private String semester;
@@ -35,16 +32,10 @@ public class ModuleDao {
     @Column(name = "MMI_PLATFORM_MODULE_COEFF")
     private float coeff;
 
-    @Column(name = "MMI_PLATFORM_MODULE_UE_NAME")
-    @Enumerated(EnumType.STRING)
-    private UEEnum ueName;
+    @Column(name = "MMI_PLATFORM_MODULE_UENAME")
+    private String ueName;
 
-    @OneToMany
-    @JoinTable(name = "MMI_PLATFORM_MODULE_NOTES",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_NOTE_ID"))
+    @OneToMany(mappedBy = "module")
+    @ToString.Exclude
     private List<NoteDao> notes;
-
-    @Column(name = "MMI_PLATFORM_MODULE_SUM_NOTE")
-    private Double sumNote;
 }

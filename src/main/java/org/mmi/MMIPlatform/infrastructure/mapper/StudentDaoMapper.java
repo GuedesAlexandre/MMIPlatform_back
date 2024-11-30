@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class StudentDaoMapper {
 
     private final ModuleDaoMapper moduleDaoMapper;
+    private final NoteDaoMapper noteDaoMapper;
 
     public Student studentDaoToStudent(StudentDao studentDao) {
         if(studentDao == null) {
@@ -27,7 +28,7 @@ public class StudentDaoMapper {
                 .promo(studentDao.getPromo().toString())
                 .group(studentDao.getGroup())
                 .numEtu(studentDao.getNumEtu())
-                .modules(null == studentDao.getModules() ? null : studentDao.getModules().stream().map(moduleDaoMapper::moduleDaoToModule).toList())
+                .notes(null == studentDao.getNotes() ? null : studentDao.getNotes().stream().map(this.noteDaoMapper::noteDaoToNote).toList())
                 .build();
     }
 
@@ -46,7 +47,7 @@ public class StudentDaoMapper {
                 .promo(PromoEnum.valueOf(student.getPromo()))
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
-                .modules(null == student.getModules() ? null : student.getModules().stream().map(moduleDaoMapper::moduleToModuleDao).toList())
+                .notes(null == student.getNotes() ? null : student.getNotes().stream().map(this.noteDaoMapper::noteToNoteDao).toList())
                 .build();
     }
 

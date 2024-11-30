@@ -1,7 +1,9 @@
 package org.mmi.MMIPlatform.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -9,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 public class StudentDto {
+    @JsonProperty("id")
+    private String id;
     @JsonProperty("lastName")
     private String lastName;
     @JsonProperty("firstName")
@@ -19,6 +23,6 @@ public class StudentDto {
     private String group;
     @JsonProperty("numEtu")
     private String numEtu;
-    @JsonProperty("modules")
-    private List<ModuleDto> modules;
+    @JsonProperty("notes")
+    private List<NoteDto> notes;
 }

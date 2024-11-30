@@ -11,7 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ModuleDto {
-
+    @JsonProperty("id")
+    private String id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("promo")
@@ -23,7 +24,7 @@ public class ModuleDto {
     @JsonProperty("ueName")
     private String ueName;
     @JsonProperty("notes")
-    private List<NoteDto> noteDtos;
-    @JsonProperty("sum")
-    private Double sum;
+    private List<NoteDto> notes;
+    @JsonProperty("sumNote")
+    private Double sumNote;
 }

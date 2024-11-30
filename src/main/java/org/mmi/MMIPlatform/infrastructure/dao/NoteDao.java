@@ -26,4 +26,14 @@ public class NoteDao {
 
     @Column(name = "MMI_PLATFORM_NOTE_NOTE")
     private float note;
+
+    @ManyToOne
+    @JoinColumn(name = "MMI_PLATFORM_MODULE_ID")
+    @ToString.Exclude
+    private ModuleDao module;
+
+    @ManyToOne
+    @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID")
+    @ToString.Exclude
+    private StudentDao student;
 }

@@ -1,5 +1,6 @@
 package org.mmi.MMIPlatform.infrastructure.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.domain.models.Note;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NoteDaoMapper {
+
+    private final ModuleDaoMapper moduleDaoMapper;
+
 
     public Note noteDaoToNote(NoteDao noteDao) {
         return Note.builder()
@@ -15,6 +20,7 @@ public class NoteDaoMapper {
                 .coeff(noteDao.getNote())
                 .name(noteDao.getName())
                 .note(noteDao.getNote())
+                .module(moduleDaoMapper.moduleDaoToModule(noteDao.getModule()))
                 .build();
     }
 
@@ -28,6 +34,7 @@ public class NoteDaoMapper {
                 .coeff(note.getCoeff())
                 .name(note.getName())
                 .note(note.getNote())
+                .module(moduleDaoMapper.moduleToModuleDao(note.getModule()))
                 .build();
     }
 

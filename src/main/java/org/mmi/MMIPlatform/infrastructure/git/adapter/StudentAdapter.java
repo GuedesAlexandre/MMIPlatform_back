@@ -68,11 +68,11 @@ public class StudentAdapter {
                     .forEach(studentDao -> {
                         if (this.studentDaoRepository.findByNumEtu(studentDao.getNumEtu()) == null) {
                             this.studentDaoRepository.save(studentDao);
-                            log.info("Student with num_etu {} saved in database", studentDao.getNumEtu());
                         }else{
                             log.info("Student with num_etu {} already exists in database", studentDao.getNumEtu());
                         }
                     });
+            log.info("Students are saved in database");
         }
 
     }

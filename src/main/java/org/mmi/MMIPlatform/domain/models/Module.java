@@ -17,5 +17,5 @@ public class Module {
     private float coeff;
     private String ueName;
     private List<Note> notes;
-    private Double sum;
+    private Double sumNote;
 }

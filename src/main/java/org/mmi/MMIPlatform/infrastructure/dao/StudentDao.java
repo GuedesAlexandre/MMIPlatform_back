@@ -1,11 +1,7 @@
 package org.mmi.MMIPlatform.infrastructure.dao;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 
 import java.util.List;
@@ -41,9 +37,6 @@ public class StudentDao {
     @Column(name = "MMI_PLATFORM_STUDENT_NUM_ETU")
     private String numEtu;
 
-    @ManyToMany
-    @JoinTable(name = "MMI_PLATFORM_STUDENT_MODULE",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_MODULE_ID"))
-    private List<ModuleDao> modules;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NoteDao> notes;
 }

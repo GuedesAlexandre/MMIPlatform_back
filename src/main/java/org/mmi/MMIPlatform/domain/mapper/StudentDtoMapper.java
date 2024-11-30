@@ -12,7 +12,7 @@ import java.util.List;
 public class StudentDtoMapper {
 
     private final ModuleDtoMapper moduleDtoMapper;
-
+    private final NoteDtoMapper noteDtoMapper;
 
 
     public StudentDto studentToStudentDto(Student student){
@@ -22,7 +22,7 @@ public class StudentDtoMapper {
                 .promo(student.getPromo())
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
-                .modules(this.moduleDtoMapper.moduleListToModuleDtoList(student.getModules()))
+                .notes(this.noteDtoMapper.noteListToNoteDtoList(student.getNotes()))
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class StudentDtoMapper {
                 .promo(studentDto.getPromo())
                 .group(studentDto.getGroup())
                 .numEtu(studentDto.getNumEtu())
-                .modules(this.moduleDtoMapper.moduleDtoListToModuleList(studentDto.getModules()))
+                .notes(this.noteDtoMapper.noteDtoListToNoteList(studentDto.getNotes()))
                 .build();
     }
 

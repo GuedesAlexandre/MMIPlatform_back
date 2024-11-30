@@ -8,16 +8,20 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
+import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
+import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +30,14 @@ public class XlsAdapter {
 
     private final StudentDaoRepository studentDaoRepository;
     private final ModuleDaoRepository moduleDaoRepository;
+    private final NoteDaoRepository noteDaoRepository;
 
     public byte[] exportStudentToExcel(String promo, String semester) {
         validateInput(promo, semester);
 
         List<StudentDao> studentDaoList = getStudentList(promo);
+        List<ModuleDao> moduleList = getModuleList(promo, semester);
+
         try (Workbook workbook = new XSSFWorkbook()) {
             XSSFCellStyle headerStyle = createHeaderStyle(workbook);
             XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
@@ -38,13 +45,11 @@ public class XlsAdapter {
 
             for (UEEnum ue : UEEnum.values()) {
                 XSSFSheet sheet = (XSSFSheet) workbook.createSheet(ue.name());
-                createHeaderRow(sheet, headerStyle, ue, semester);
+                createHeaderRow(sheet, headerStyle, ue, semester, moduleList);
 
-                fillStudentData(sheet, studentDaoList, ue, semester, cellStyleRed, cellStyleGreen);
+                fillStudentData(sheet, studentDaoList, ue, semester, moduleList, cellStyleRed, cellStyleGreen);
 
-                autoSizeColumns(sheet, moduleDaoRepository.findAll().stream()
-                        .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
-                        .toList().size() + 3);
+                autoSizeColumns(sheet, moduleList.size() + 3);
             }
 
             return writeWorkbookToByteArray(workbook);
@@ -78,6 +83,12 @@ public class XlsAdapter {
     private List<StudentDao> getStudentList(String promo) {
         return this.studentDaoRepository.findAll().stream()
                 .filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo)))
+                .toList();
+    }
+
+    private List<ModuleDao> getModuleList(String promo, String semester) {
+        return this.moduleDaoRepository.findAll().stream()
+                .filter(module -> module.getPromo().equals(String.valueOf(PromoEnum.valueOf(promo))) && module.getSemester().equals(semester))
                 .toList();
     }
 
@@ -134,7 +145,7 @@ public class XlsAdapter {
         return cellStyleGreen;
     }
 
-    private void createHeaderRow(XSSFSheet sheet, XSSFCellStyle headerStyle, UEEnum ue, String semester) {
+    private void createHeaderRow(XSSFSheet sheet, XSSFCellStyle headerStyle, UEEnum ue, String semester, List<ModuleDao> moduleList) {
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("Liste des étudiants");
         headerRow.getCell(0).setCellStyle(headerStyle);
@@ -144,28 +155,28 @@ public class XlsAdapter {
         headerRow.createCell(2).setCellValue("Groupe");
         headerRow.getCell(2).setCellStyle(headerStyle);
 
-        List<ModuleDao> moduleList = moduleDaoRepository.findAll().stream()
-                .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
+        List<ModuleDao> filteredModules = moduleList.stream()
+                .filter(module -> module.getUeName().equals(ue.name()))
                 .toList();
 
-        for (int i = 0; i < moduleList.size(); i++) {
-            headerRow.createCell(i + 3).setCellValue(moduleList.get(i).getName());
+        for (int i = 0; i < filteredModules.size(); i++) {
+            headerRow.createCell(i + 3).setCellValue(filteredModules.get(i).getName());
             headerRow.getCell(i + 3).setCellStyle(headerStyle);
         }
 
-        headerRow.createCell(moduleList.size() + 3).setCellValue("Moyenne de l'UE");
-        headerRow.getCell(moduleList.size() + 3).setCellStyle(headerStyle);
+        headerRow.createCell(filteredModules.size() + 3).setCellValue("Moyenne de l'UE");
+        headerRow.getCell(filteredModules.size() + 3).setCellStyle(headerStyle);
 
         Row subHeaderRow = sheet.createRow(1);
-        for (int i = 0; i < moduleList.size() ; i++) {
-            subHeaderRow.createCell(i + 3).setCellValue("Coeff: " + moduleList.get(i).getCoeff() );
+        for (int i = 0; i < filteredModules.size(); i++) {
+            subHeaderRow.createCell(i + 3).setCellValue("Coeff: " + filteredModules.get(i).getCoeff());
             subHeaderRow.getCell(i + 3).setCellStyle(headerStyle);
         }
     }
 
-    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
-        List<ModuleDao> moduleList = moduleDaoRepository.findAll().stream()
-                .filter(module -> module.getUeName().equals(UEEnum.valueOf(ue.name())) && module.getSemester().equals(semester))
+    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, List<ModuleDao> moduleList, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+        List<ModuleDao> filteredModules = moduleList.stream()
+                .filter(module -> module.getUeName().equals(ue.name()))
                 .toList();
 
         for (int i = 0; i < studentDaoList.size(); i++) {
@@ -177,12 +188,11 @@ public class XlsAdapter {
             double totalGrades = 0;
             int gradeCount = 0;
 
-            for (int j = 0; j < moduleList.size(); j++) {
-                ModuleDao module = moduleList.get(j);
-                double averageGrade = studentDaoList.get(i).getModules().stream()
-                        .filter(m -> m.getId().equals(module.getId()))
-                        .flatMap(m -> m.getNotes().stream())
-                        .mapToDouble(note -> note.getNote() * module.getCoeff())
+            for (int j = 0; j < filteredModules.size(); j++) {
+                ModuleDao module = filteredModules.get(j);
+                double averageGrade = studentDaoList.get(i).getNotes().stream()
+                        .filter(note -> note.getModule().getId().equals(module.getId()))
+                        .mapToDouble(NoteDao::getNote)
                         .average()
                         .orElse(0.00);
                 row.createCell(j + 3).setCellValue(String.format("%.2f", averageGrade));
@@ -195,7 +205,7 @@ public class XlsAdapter {
                 gradeCount++;
             }
             double averageGrade = gradeCount > 0 ? totalGrades / gradeCount : 0.00;
-            row.createCell(moduleList.size() + 3).setCellValue(String.format("%.2f", averageGrade));
+            row.createCell(filteredModules.size() + 3).setCellValue(String.format("%.2f", averageGrade));
         }
     }
 
@@ -211,4 +221,137 @@ public class XlsAdapter {
             return outputStream.toByteArray();
         }
     }
+
+    private XSSFCellStyle createCenteredCellStyle(Workbook workbook) {
+        XSSFCellStyle centeredStyle = (XSSFCellStyle) workbook.createCellStyle();
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+        centeredStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        centeredStyle.setWrapText(true);
+        return centeredStyle;
+    }
+
+    private void applyCenteredStyleToAllCells(XSSFSheet sheet, XSSFCellStyle centeredStyle) {
+        for (Row row : sheet) {
+            for (Cell cell : row) {
+                cell.setCellStyle(centeredStyle);
+            }
+        }
+    }
+
+    public byte[] exportModuleGradesToExcel(String promo, String semester, String ueName, String moduleName) {
+        validateInput(promo, semester);
+
+        List<StudentDao> studentDaoList = getStudentList(promo);
+        ModuleDao module = getModule(promo, semester, ueName, moduleName);
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            XSSFCellStyle centeredStyle = createCenteredCellStyle(workbook);
+            XSSFCellStyle headerStyle = createHeaderStyle(workbook);
+            XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
+            XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
+
+            XSSFSheet sheet = (XSSFSheet) workbook.createSheet(module.getName());
+
+            Map<String, Integer> evalColumnMap = createHeaderRowForModule(sheet, headerStyle, module, studentDaoList);
+
+            fillStudentDataForModule(sheet, studentDaoList, module, evalColumnMap, cellStyleRed, cellStyleGreen);
+            applyCenteredStyleToAllCells(sheet, centeredStyle);
+            autoSizeColumns(sheet, evalColumnMap.size() + 4);
+
+            return writeWorkbookToByteArray(workbook);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, Integer> createHeaderRowForModule(XSSFSheet sheet, XSSFCellStyle headerStyle, ModuleDao module, List<StudentDao> studentDaoList) {
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Liste des étudiants");
+        headerRow.getCell(0).setCellStyle(headerStyle);
+
+        headerRow.createCell(1).setCellValue("N° étudiant");
+        headerRow.getCell(1).setCellStyle(headerStyle);
+        headerRow.createCell(2).setCellValue("Groupe");
+        headerRow.getCell(2).setCellStyle(headerStyle);
+
+        Map<String, Integer> evalColumnMap = new HashMap<>();
+        int colIndex = 3;
+
+        for (StudentDao student : studentDaoList) {
+            for (NoteDao note : student.getNotes()) {
+                if (note.getModule().getId().equals(module.getId())) {
+                    String evalKey = note.getName() + " (Coeff: " + note.getCoeff() + ")";
+                    if (!evalColumnMap.containsKey(evalKey)) {
+                        evalColumnMap.put(evalKey, colIndex);
+                        headerRow.createCell(colIndex).setCellValue(evalKey);
+                        headerRow.getCell(colIndex).setCellStyle(headerStyle);
+                        colIndex++;
+                    }
+                }
+            }
+        }
+
+
+        headerRow.createCell(colIndex).setCellValue("Moyenne de " + module.getName());
+        headerRow.getCell(colIndex).setCellStyle(headerStyle);
+
+        return evalColumnMap;
+    }
+
+
+    private ModuleDao getModule(String promo, String semester, String ueName, String moduleName) {
+        return moduleDaoRepository.findAll().stream()
+                .filter(module -> module.getPromo().equals(String.valueOf(PromoEnum.valueOf(promo))))
+                .filter(module -> module.getSemester().equals(semester))
+                .filter(module -> module.getUeName().equals(ueName))
+                .filter(module -> module.getName().equals(moduleName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Module not found for the given parameters"));
+    }
+
+    private void fillStudentDataForModule(XSSFSheet sheet, List<StudentDao> studentDaoList, ModuleDao module,
+                                          Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+        for (int i = 0; i < studentDaoList.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            StudentDao student = studentDaoList.get(i);
+
+            // Fill student details
+            row.createCell(0).setCellValue(student.getFirstName() + " " + student.getLastName());
+            row.createCell(1).setCellValue(student.getNumEtu());
+            row.createCell(2).setCellValue(student.getGroup());
+
+            double totalGrades = 0;
+            double totalCoeff = 0;
+
+            for (String evalKey : evalColumnMap.keySet()) {
+                int colIndex = evalColumnMap.get(evalKey);
+                row.createCell(colIndex).setCellValue("0.00");
+            }
+
+
+            for (NoteDao note : student.getNotes()) {
+                if (note.getModule().getId().equals(module.getId())) {
+                    String evalKey = note.getName() + " (Coeff: " + note.getCoeff() + ")";
+                    Integer colIndex = evalColumnMap.get(evalKey);
+
+                    if (colIndex != null) {
+                        double grade = note.getNote();
+                        row.getCell(colIndex).setCellValue(String.format("%.2f", grade));
+                        totalGrades += grade * note.getCoeff();
+                        totalCoeff += note.getCoeff();
+                    }
+                }
+            }
+            double averageGrade = totalCoeff > 0 ? totalGrades / totalCoeff : 0.00;
+            int avgColIndex = evalColumnMap.size() + 3;
+            row.createCell(avgColIndex).setCellValue(String.format("%.2f", averageGrade));
+            if (averageGrade < 10) {
+                row.getCell(avgColIndex).setCellStyle(cellStyleRed);
+            } else {
+                row.getCell(avgColIndex).setCellStyle(cellStyleGreen);
+            }
+        }
+    }
+
+
 }

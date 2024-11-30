@@ -44,4 +44,21 @@ public class XlsController {
         }
     }
 
+    @Operation(summary = "Export module grades", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "module grades exported")})
+    @GetMapping("/modules")
+    public ResponseEntity<byte[]> exportModuleGrades(@RequestParam String promo, @RequestParam String semester, @RequestParam String moduleName, @RequestParam String ueName) {
+        try {
+            byte[] excelData = this.xlsApplicationService.exportModuleGradesToExcel(promo, semester, ueName , moduleName);
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String filename = String.format("%s_%s_%s_%s_%s_notes.xlsx", promo, semester, moduleName, ueName, date);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=" + filename);
+            return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

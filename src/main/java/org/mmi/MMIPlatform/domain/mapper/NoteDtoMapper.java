@@ -11,11 +11,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoteDtoMapper {
 
+
+    private final ModuleDtoMapper moduleDtoMapper;
+
+
+
     public NoteDto noteToNoteDto(Note note) {
         return NoteDto.builder()
                 .coeff(note.getCoeff())
                 .name(note.getName())
                 .note(note.getNote())
+                .module(null == this.moduleDtoMapper.moduleToModuleDto(note.getModule()) ? null : this.moduleDtoMapper.moduleToModuleDto(note.getModule()))
                 .build();
     }
 
@@ -28,6 +34,7 @@ public class NoteDtoMapper {
                 .coeff(noteDto.getCoeff())
                 .name(noteDto.getName())
                 .note(noteDto.getNote())
+                .module( null == this.moduleDtoMapper.moduleDtoToModule(noteDto.getModule()) ? null : this.moduleDtoMapper.moduleDtoToModule(noteDto.getModule()))
                 .build();
     }
 

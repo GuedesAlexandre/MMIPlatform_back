@@ -12,4 +12,6 @@ public class Note {
     private float coeff;
     private String name;
     private float note;
+    private Module module;
+    private Student student;
 }

@@ -5,13 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
-import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
-import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.git.dto.GithubResponseDto;
 import org.mmi.MMIPlatform.infrastructure.git.dto.ModuleDto;
-import org.mmi.MMIPlatform.infrastructure.git.dto.StudentDto;
 import org.mmi.MMIPlatform.infrastructure.mapper.ModuleDaoMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,7 +28,6 @@ public class ModuleAdapter {
     private String accessToken;
     private final ModuleDaoMapper moduleDaoMapper;
     private final ModuleDaoRepository moduleDaoRepository;
-    private final StudentDaoRepository studentDaoRepository;
 
     public List<ModuleDto> getModule() {
         log.info("Scheduled task started");
@@ -65,7 +61,6 @@ public class ModuleAdapter {
         return null;
     }
 
-
     @Scheduled(fixedRate = 60000000, initialDelay = 30000)
     @Transactional
     public void mapModuleToSaveInDatabase() {
@@ -75,41 +70,9 @@ public class ModuleAdapter {
                     .map(this.moduleDaoMapper::moduleDtoToModuleDao)
                     .forEach(moduleDao -> {
                         this.moduleDaoRepository.save(moduleDao);
-                        log.info("Module with name {} saved in database", moduleDao.getName());
 
-                        switch (moduleDao.getPromo()) {
-                            case MMI01:
-                                this.studentDaoRepository.findAll().stream()
-                                        .filter(student -> student.getPromo().equals(PromoEnum.MMI01))
-                                        .forEach(student -> addModuleToStudent(student, moduleDao));
-                                break;
-                            case MMI02:
-                                this.studentDaoRepository.findAll().stream()
-                                        .filter(student -> student.getPromo().equals(PromoEnum.MMI02))
-                                        .forEach(student -> addModuleToStudent(student, moduleDao));
-                                break;
-                            case MMI03:
-                                this.studentDaoRepository.findAll().stream()
-                                        .filter(student -> student.getPromo().equals(PromoEnum.MMI03))
-                                        .forEach(student -> addModuleToStudent(student, moduleDao));
-                                break;
-                            default:
-                                log.warn("Unknown promo: {}", moduleDao.getPromo());
-                                break;
-                        }
                     });
+            log.info("Modules are saved in database");
         }
     }
-
-    private void addModuleToStudent(StudentDao student, ModuleDao module) {
-        if (!student.getModules().contains(module)) {
-            student.getModules().add(module);
-            this.studentDaoRepository.save(student);
-            log.info("Module with name {} added to student with num_etu {}", module.getName(), student.getNumEtu());
-        } else {
-            log.info("Module with name {} already exists for student with num_etu {}", module.getName(), student.getNumEtu());
-        }
-    }
-
-
 }

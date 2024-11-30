@@ -9,10 +9,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoteDto {
+    @JsonProperty("id")
+    private String id;
     @JsonProperty("coeff")
     private float coeff;
     @JsonProperty("name")
     private String name;
     @JsonProperty("note")
     private float note;
+    @JsonProperty("module")
+    private ModuleDto module;
+    @JsonProperty("student")
+    private StudentDto student;
 }
