@@ -23,7 +23,7 @@ public class ModuleDBAdapter {
     }
 
     public List<ModuleDao> getModulesByPromoAndSemester(String promo, String semester) {
-        return this.moduleDaoRepository.findAll().stream().filter(module -> module.getPromo().equals(PromoEnum.valueOf(promo)) && module.getSemester().equals(semester)).toList();
+        return this.moduleDaoRepository.findAll().stream().filter(module -> module.getPromo().equals(String.valueOf(promo)) && module.getSemester().equals(semester)).toList();
     }
 
 }

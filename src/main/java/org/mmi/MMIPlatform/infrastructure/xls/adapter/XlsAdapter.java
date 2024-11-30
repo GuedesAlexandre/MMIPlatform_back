@@ -312,7 +312,7 @@ public class XlsAdapter {
     private void fillStudentDataForModule(XSSFSheet sheet, List<StudentDao> studentDaoList, ModuleDao module,
                                           Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
         for (int i = 0; i < studentDaoList.size(); i++) {
-            Row row = sheet.createRow(i + 1);  // Start from row 1 (after header)
+            Row row = sheet.createRow(i + 1);
             StudentDao student = studentDaoList.get(i);
 
             // Fill student details
