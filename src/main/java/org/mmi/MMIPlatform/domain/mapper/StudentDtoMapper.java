@@ -1,0 +1,47 @@
+package org.mmi.MMIPlatform.domain.mapper;
+
+import lombok.RequiredArgsConstructor;
+import org.mmi.MMIPlatform.application.dto.StudentDto;
+import org.mmi.MMIPlatform.domain.models.Student;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class StudentDtoMapper {
+
+    private final ModuleDtoMapper moduleDtoMapper;
+    private final NoteDtoMapper noteDtoMapper;
+
+
+    public StudentDto studentToStudentDto(Student student){
+        return StudentDto.builder()
+                .lastName(student.getLastName())
+                .firstName(student.getFirstName())
+                .promo(student.getPromo())
+                .group(student.getGroup())
+                .numEtu(student.getNumEtu())
+                .notes(this.noteDtoMapper.noteListToNoteDtoList(student.getNotes()))
+                .build();
+    }
+
+    public List<StudentDto> studentListToStudentDtoList(List<Student> students){
+        return students.stream().map(this::studentToStudentDto).toList();
+    }
+
+    public Student studentDtoToStudent(StudentDto studentDto) {
+        return Student.builder()
+                .lastName(studentDto.getLastName())
+                .firstName(studentDto.getFirstName())
+                .promo(studentDto.getPromo())
+                .group(studentDto.getGroup())
+                .numEtu(studentDto.getNumEtu())
+                .notes(this.noteDtoMapper.noteDtoListToNoteList(studentDto.getNotes()))
+                .build();
+    }
+
+    public List<Student> studentDtoListToStudent(List<StudentDto> studentDtos){
+        return studentDtos.stream().map(this::studentDtoToStudent).toList();
+    }
+}
