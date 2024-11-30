@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -219,4 +221,137 @@ public class XlsAdapter {
             return outputStream.toByteArray();
         }
     }
+
+    private XSSFCellStyle createCenteredCellStyle(Workbook workbook) {
+        XSSFCellStyle centeredStyle = (XSSFCellStyle) workbook.createCellStyle();
+        centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+        centeredStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        centeredStyle.setWrapText(true);
+        return centeredStyle;
+    }
+
+    private void applyCenteredStyleToAllCells(XSSFSheet sheet, XSSFCellStyle centeredStyle) {
+        for (Row row : sheet) {
+            for (Cell cell : row) {
+                cell.setCellStyle(centeredStyle);
+            }
+        }
+    }
+
+    public byte[] exportModuleGradesToExcel(String promo, String semester, String ueName, String moduleName) {
+        validateInput(promo, semester);
+
+        List<StudentDao> studentDaoList = getStudentList(promo);
+        ModuleDao module = getModule(promo, semester, ueName, moduleName);
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            XSSFCellStyle centeredStyle = createCenteredCellStyle(workbook);
+            XSSFCellStyle headerStyle = createHeaderStyle(workbook);
+            XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
+            XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
+
+            XSSFSheet sheet = (XSSFSheet) workbook.createSheet(module.getName());
+
+            Map<String, Integer> evalColumnMap = createHeaderRowForModule(sheet, headerStyle, module, studentDaoList);
+
+            fillStudentDataForModule(sheet, studentDaoList, module, evalColumnMap, cellStyleRed, cellStyleGreen);
+            applyCenteredStyleToAllCells(sheet, centeredStyle);
+            autoSizeColumns(sheet, evalColumnMap.size() + 4);
+
+            return writeWorkbookToByteArray(workbook);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, Integer> createHeaderRowForModule(XSSFSheet sheet, XSSFCellStyle headerStyle, ModuleDao module, List<StudentDao> studentDaoList) {
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Liste des étudiants");
+        headerRow.getCell(0).setCellStyle(headerStyle);
+
+        headerRow.createCell(1).setCellValue("N° étudiant");
+        headerRow.getCell(1).setCellStyle(headerStyle);
+        headerRow.createCell(2).setCellValue("Groupe");
+        headerRow.getCell(2).setCellStyle(headerStyle);
+
+        Map<String, Integer> evalColumnMap = new HashMap<>();
+        int colIndex = 3;
+
+        for (StudentDao student : studentDaoList) {
+            for (NoteDao note : student.getNotes()) {
+                if (note.getModule().getId().equals(module.getId())) {
+                    String evalKey = note.getName() + " (Coeff: " + note.getCoeff() + ")";
+                    if (!evalColumnMap.containsKey(evalKey)) {
+                        evalColumnMap.put(evalKey, colIndex);
+                        headerRow.createCell(colIndex).setCellValue(evalKey);
+                        headerRow.getCell(colIndex).setCellStyle(headerStyle);
+                        colIndex++;
+                    }
+                }
+            }
+        }
+
+
+        headerRow.createCell(colIndex).setCellValue("Moyenne de " + module.getName());
+        headerRow.getCell(colIndex).setCellStyle(headerStyle);
+
+        return evalColumnMap;
+    }
+
+
+    private ModuleDao getModule(String promo, String semester, String ueName, String moduleName) {
+        return moduleDaoRepository.findAll().stream()
+                .filter(module -> module.getPromo().equals(String.valueOf(PromoEnum.valueOf(promo))))
+                .filter(module -> module.getSemester().equals(semester))
+                .filter(module -> module.getUeName().equals(ueName))
+                .filter(module -> module.getName().equals(moduleName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Module not found for the given parameters"));
+    }
+
+    private void fillStudentDataForModule(XSSFSheet sheet, List<StudentDao> studentDaoList, ModuleDao module,
+                                          Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+        for (int i = 0; i < studentDaoList.size(); i++) {
+            Row row = sheet.createRow(i + 1);  // Start from row 1 (after header)
+            StudentDao student = studentDaoList.get(i);
+
+            // Fill student details
+            row.createCell(0).setCellValue(student.getFirstName() + " " + student.getLastName());
+            row.createCell(1).setCellValue(student.getNumEtu());
+            row.createCell(2).setCellValue(student.getGroup());
+
+            double totalGrades = 0;
+            double totalCoeff = 0;
+
+            for (String evalKey : evalColumnMap.keySet()) {
+                int colIndex = evalColumnMap.get(evalKey);
+                row.createCell(colIndex).setCellValue("0.00");
+            }
+
+
+            for (NoteDao note : student.getNotes()) {
+                if (note.getModule().getId().equals(module.getId())) {
+                    String evalKey = note.getName() + " (Coeff: " + note.getCoeff() + ")";
+                    Integer colIndex = evalColumnMap.get(evalKey);
+
+                    if (colIndex != null) {
+                        double grade = note.getNote();
+                        row.getCell(colIndex).setCellValue(String.format("%.2f", grade));
+                        totalGrades += grade * note.getCoeff();
+                        totalCoeff += note.getCoeff();
+                    }
+                }
+            }
+            double averageGrade = totalCoeff > 0 ? totalGrades / totalCoeff : 0.00;
+            int avgColIndex = evalColumnMap.size() + 3;
+            row.createCell(avgColIndex).setCellValue(String.format("%.2f", averageGrade));
+            if (averageGrade < 10) {
+                row.getCell(avgColIndex).setCellStyle(cellStyleRed);
+            } else {
+                row.getCell(avgColIndex).setCellStyle(cellStyleGreen);
+            }
+        }
+    }
+
+
 }

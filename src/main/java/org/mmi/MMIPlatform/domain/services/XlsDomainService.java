@@ -20,6 +20,14 @@ public class XlsDomainService {
             return null;
         }
     }
+    public byte[] exportModuleGradesToExcel(String promo, String semester, String ueName, String moduleName) {
+        try {
+            return xlsAdapter.exportModuleGradesToExcel(promo, semester, ueName, moduleName);
+        } catch(Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
 
 }
