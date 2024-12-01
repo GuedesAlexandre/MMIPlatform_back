@@ -17,7 +17,7 @@ public class NoteDaoMapper {
     public Note noteDaoToNote(NoteDao noteDao) {
         return Note.builder()
                 .id(noteDao.getId())
-                .coeff(noteDao.getNote())
+                .coeff(noteDao.getCoeff())
                 .name(noteDao.getName())
                 .note(noteDao.getNote())
                 .module(moduleDaoMapper.moduleDaoToModule(noteDao.getModule()))
