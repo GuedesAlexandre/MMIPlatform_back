@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.math.raw.Mod;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
@@ -31,27 +32,34 @@ public class StudentDBAdapter {
     public List<StudentDao> getAllStudents() {
         return this.studentDaoRepository.findAll();
     }
-
     public String postNotesForAStudent(String numEtu, String moduleName, NoteDao note) {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
-        ModuleDao moduleDao = this.moduleDaoRepository.findByName(moduleName);
+        List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();
         if (student == null) {
             return "Student not found";
         }
-        try {
-            log.info("Adding note to module {} for student {}", moduleName, numEtu);
-
-            note.setModule(moduleDao);
-            note.setStudent(student);
-            moduleDao.getNotes().add(note);
-            this.noteDaoRepository.save(note);
-            this.moduleDaoRepository.save(moduleDao);
-            student.getNotes().add(note);
-
-            this.studentDaoRepository.save(student);
-            return "Note added for : " + student;
-        } catch (Exception e) {
+        if (moduleDaoList.isEmpty()) {
             return "Module not found";
+        }
+        try {
+            log.info("Adding note to modules {} for student {}", moduleName, numEtu);
+            for (ModuleDao moduleDao : moduleDaoList) {
+                NoteDao newNote = new NoteDao();
+                newNote.setCoeff(note.getCoeff());
+                newNote.setName(note.getName());
+                newNote.setNote(note.getNote());
+                newNote.setModule(moduleDao);
+                newNote.setStudent(student);
+                moduleDao.getNotes().add(newNote);
+                student.getNotes().add(newNote);
+                this.noteDaoRepository.save(newNote);
+            }
+            this.moduleDaoRepository.saveAll(moduleDaoList);
+            this.studentDaoRepository.save(student);
+            return "Notes added for student: " + student;
+        } catch (Exception e) {
+            log.error("Error adding notes for student {}: {}", numEtu, e.getMessage());
+            return "Error adding notes";
         }
     }
 }
