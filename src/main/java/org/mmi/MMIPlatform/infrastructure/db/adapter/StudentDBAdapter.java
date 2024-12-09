@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -32,6 +33,7 @@ public class StudentDBAdapter {
     public List<StudentDao> getAllStudents() {
         return this.studentDaoRepository.findAll();
     }
+
     public String postNotesForAStudent(String numEtu, String moduleName, NoteDao note) {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
         List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();
@@ -62,4 +64,45 @@ public class StudentDBAdapter {
             return "Error adding notes";
         }
     }
+
+    public String putNotesForAStudent(String numEtu, String moduleName, String name, NoteDao note) {
+        StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
+        NoteDao modifyNote = this.noteDaoRepository.findByName(name);
+        List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();
+        if (student == null) {
+            return "Student not found";
+        }
+        if (moduleDaoList.isEmpty()) {
+            return "Module not found";
+        }
+        if (modifyNote == null) {
+            return "Note not found";
+        }
+        try {
+            log.info("Changing note {} to modules {} for student {}", name, moduleName, numEtu);
+            student.getNotes().stream().filter(s -> Objects.equals(s.getModule().getName(), moduleName) && Objects.equals(s.getName(), name)).forEach(
+                    n -> {
+                        n.setCoeff(note.getCoeff());
+                        n.setName(note.getName());
+                        n.setNote(note.getNote());
+                    }
+            );
+            moduleDaoList.forEach(m -> m.getNotes().stream().filter(n -> Objects.equals(n.getName(), name)).forEach(
+                    n -> {
+                        n.setCoeff(note.getCoeff());
+                        n.setName(note.getName());
+                        n.setNote(note.getNote());
+                        this.noteDaoRepository.save(n);
+                    }
+            ));
+
+            this.moduleDaoRepository.saveAll(moduleDaoList);
+            this.studentDaoRepository.save(student);
+            return "Notes changed for student: " + student;
+        } catch (Exception e) {
+            log.error("Error changing notes {} for student {}: {}", note, numEtu, e.getMessage());
+            return "Error changing notes";
+        }
+    }
+
 }

@@ -36,6 +36,10 @@ public class StudentApplicationService {
         return studentDomaineService.postNotesForAStudent(numEtu, ModuleName, this.noteDtoMapper.noteDtoToNote(note));
     }
 
+    public String putNotesForAStudent(String numEtu, String ModuleName, String name, NoteDto note) {
+        return studentDomaineService.putNotesForAStudent(numEtu, ModuleName, name, this.noteDtoMapper.noteDtoToNote(note));
+    }
+
     public List<StudentDto> getAllStudents() {
         try {
             return studentDtoMapper.studentListToStudentDtoList( studentDomaineService.getAllStudents());

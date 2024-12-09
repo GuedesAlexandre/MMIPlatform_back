@@ -58,4 +58,16 @@ public class StudentController {
         return ResponseEntity.ok(this.studentApplicationService.postNotesForAStudent(numEtu , URLDecoder.decode(module, StandardCharsets.UTF_8), noteDto));
     }
 
+
+
+    @Operation(summary = "Put note for student", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "student modify notes",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = NoteDto.class))}),
+    })
+    @PutMapping("/notes/{num_etu}/{module}/{name}")
+    public ResponseEntity<String> putNotesForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name = "module") String module, @PathVariable(name = "name") String name, @RequestBody NoteDto noteDto) {
+        return ResponseEntity.ok(this.studentApplicationService.putNotesForAStudent(numEtu , URLDecoder.decode(module, StandardCharsets.UTF_8), name, noteDto));
+    }
 }
