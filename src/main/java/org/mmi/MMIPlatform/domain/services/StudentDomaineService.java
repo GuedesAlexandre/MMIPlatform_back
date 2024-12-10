@@ -36,6 +36,10 @@ public class StudentDomaineService {
         return studentAdapter.postNotesForAStudent(numEtu, ModuleName, this.noteDaoMapper.noteToNoteDao(note));
     }
 
+    public String putNotesForAStudent(String numEtu, String ModuleName, String name, Note note) {
+        return studentAdapter.putNotesForAStudent(numEtu, ModuleName, name, this.noteDaoMapper.noteToNoteDao(note));
+    }
+
     public List<Student> getAllStudents() {
         try {
             return studentDaoMapper.studentsDaostoStudents( studentAdapter.getAllStudents());
