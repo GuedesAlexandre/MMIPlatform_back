@@ -26,9 +26,8 @@ public class AuthenticationApplicationService {
         return this.userDtoMapper.userToUserDto(this.authenticationDomainService.updateUser(user));
     }
 
-    public String deleteUser(UserDto userDto) {
-        User user = this.userDtoMapper.userDtoToUser(userDto);
-        return this.authenticationDomainService.deleteUser(user);
+    public String deleteUser(String email) {
+        return this.authenticationDomainService.deleteUser(email);
     }
 
     public List<UserDto> getAllUsers() {
