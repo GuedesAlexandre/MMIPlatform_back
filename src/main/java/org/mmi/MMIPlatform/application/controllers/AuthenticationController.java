@@ -52,8 +52,8 @@ public class AuthenticationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted")
     })
-    @DeleteMapping
-    public ResponseEntity<String> deleteUser(@RequestParam String email) {
+    @DeleteMapping("/user/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name="email") String email) {
         return ResponseEntity.ok(this.authenticationApplicationService.deleteUser(email));
     }
 

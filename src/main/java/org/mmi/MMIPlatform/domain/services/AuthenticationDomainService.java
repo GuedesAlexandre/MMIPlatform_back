@@ -52,7 +52,7 @@ public class AuthenticationDomainService {
 
     public String deleteUser(String email){
         try{
-            this.userDbAdapter.deleterUserDaoById(email);
+            this.userDbAdapter.deleteUserDaoByEmail(email);
         }catch (Exception e){
             return e.getLocalizedMessage();
         }
