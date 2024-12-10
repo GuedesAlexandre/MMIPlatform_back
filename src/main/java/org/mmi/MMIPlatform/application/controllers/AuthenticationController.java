@@ -48,6 +48,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(this.authenticationApplicationService.updateUser(userDto));
     }
 
+    @Operation(summary = "Delete a User", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted")
+    })
+    @DeleteMapping("/user/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name="email") String email) {
+        return ResponseEntity.ok(this.authenticationApplicationService.deleteUser(email));
+    }
+
     @Operation(summary = "User authentication", security = @SecurityRequirement(name = ""))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User token")

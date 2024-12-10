@@ -50,14 +50,13 @@ public class AuthenticationDomainService {
         return this.userDaoMapper.userDaoToUser(userDao) ;
     }
 
-    public String deleteUser(User user){
-        UserDao userDao = this.userDaoMapper.userToUserDao(user);
+    public String deleteUser(String email){
         try{
-            this.userDbAdapter.deleterUserDaoById(UUID.fromString(userDao.getId()));
+            this.userDbAdapter.deleteUserDaoByEmail(email);
         }catch (Exception e){
             return e.getLocalizedMessage();
         }
-        return "User deleted successfully with email : " + user.getEmail();
+        return "User deleted successfully with email : " + email;
     }
 
     public String authenticateUser(String email, String password){

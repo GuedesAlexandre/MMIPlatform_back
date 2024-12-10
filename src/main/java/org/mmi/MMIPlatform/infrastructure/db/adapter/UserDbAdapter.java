@@ -70,9 +70,10 @@ public class UserDbAdapter {
         return userDao;
     }
 
-    public String deleterUserDaoById(UUID id) {
+    public String deleteUserDaoByEmail(String email) {
+        UserDao userDao = this.userDaoRepository.findByEmail(email);
         try {
-            this.userDaoRepository.deleteById(id);
+            this.userDaoRepository.delete(userDao);
         } catch (Exception e) {
             return e.getLocalizedMessage();
         }
