@@ -3,6 +3,7 @@ package org.mmi.MMIPlatform.infrastructure.mapper;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.domain.models.Note;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.StatusEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class NoteDaoMapper {
                 .coeff(noteDao.getCoeff())
                 .name(noteDao.getName())
                 .note(noteDao.getNote())
+                .status(String.valueOf(noteDao.getStatus()))
                 .module(moduleDaoMapper.moduleDaoToModule(noteDao.getModule()))
                 .build();
     }
@@ -34,6 +36,7 @@ public class NoteDaoMapper {
                 .coeff(note.getCoeff())
                 .name(note.getName())
                 .note(note.getNote())
+                .status(StatusEnum.valueOf(note.getStatus()))
                 .module(moduleDaoMapper.moduleToModuleDao(note.getModule()))
                 .build();
     }

@@ -54,7 +54,7 @@ public class StudentController {
                             schema = @Schema(implementation = NoteDto.class))}),
     })
     @PostMapping("/notes/{num_etu}/{module}")
-    public ResponseEntity<String> postNotesForAStudent(@PathVariable(name="num_etu") String numEtu, @RequestBody NoteDto noteDto, @PathVariable(name = "module") String module) {
+    public ResponseEntity<String> postNotesForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name = "module") String module, @RequestBody NoteDto noteDto) {
         return ResponseEntity.ok(this.studentApplicationService.postNotesForAStudent(numEtu , URLDecoder.decode(module, StandardCharsets.UTF_8), noteDto));
     }
 
