@@ -2,12 +2,17 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 import org.mmi.MMIPlatform.domain.models.User;
+import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.UserDaoRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -83,4 +88,28 @@ public class UserDbAdapter {
         return "User updated successfully";
     }
 
+    //JUST FOR TEST !!!!!
+    @Scheduled(fixedRate = 60000000, initialDelay = 50000)
+    @Transactional
+    public void initAdminUser() {
+        List<ModuleDao> moduleDaoList = moduleDaoRepository.findAll().stream()
+                .filter(m -> m.getName().equals("R.407 Dév Back") || m.getName().equals("R.313 Développement Back") || m.getName().equals("SAE.501 Développer pour le web ou Concevoir un dispositif interactif")).toList();
+        UserDao userAdmin = UserDao.builder()
+                .email("cherifa.boucetta@univ-eiffel.fr")
+                .password("MMIPl@tform24!")
+                .username("Cherifa Respo-MMI3")
+                .firstName("cherifa")
+                .name("boucetta")
+                .phone("0607080910")
+                .address("4 rue Gambetta")
+                .city("Meaux")
+                .country("France")
+                .establishment("IUT-Meaux")
+                .access(PermissionsEnum.valueOf("ADMIN"))
+                .moduleDaos(moduleDaoList)
+                .build();
+
+        this.saveUserDao(userAdmin);
+        log.info("Admin user are saved in database");
+    }
 }
