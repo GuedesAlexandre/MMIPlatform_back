@@ -12,7 +12,9 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -91,8 +93,13 @@ public class UserDbAdapter {
     @Scheduled(fixedRate = 60000000, initialDelay = 50000)
     @Transactional
     public void initAdminUser() {
+        Set<String> checkDuplicateModule = new HashSet<>();
         List<ModuleDao> moduleDaoList = moduleDaoRepository.findAll().stream()
-                .filter(m -> m.getName().equals("R.407 Dév Back") || m.getName().equals("R.313 Développement Back") || m.getName().equals("SAE.501 Développer pour le web ou Concevoir un dispositif interactif")).toList();
+                .filter(m -> m.getName().equals("R.407 Dév Back") ||
+                        m.getName().equals("R.313 Développement Back") ||
+                        m.getName().equals("SAE.501 Développer pour le web ou Concevoir un dispositif interactif"))
+                .filter(m -> checkDuplicateModule.add(m.getName()))
+                .toList();
         UserDao userAdmin = UserDao.builder()
                 .email("cherifa.boucetta@univ-eiffel.fr")
                 .password("MMIPl@tform24!")
