@@ -23,17 +23,17 @@ public class AuthenticationDomainService {
     private final JwtAdapter jwtAdapter;
     private final Argon2PasswordEncoder argon2PasswordEncoder;
 
-    public String initUser(User user){
+    public User initUser(User user){
         UserDao userDao = this.userDaoMapper.userToUserDao(user);
         try{
             if(userDbAdapter.getUserDaoByEmail(user.getEmail()) != null){
-                return "User already exists with email : " + user.getEmail();
+                 log.error("User already exists with email : " + user.getEmail());
             }
-
-         return this.userDbAdapter.saveUserDao(userDao);
+         this.userDbAdapter.saveUserDao(userDao);
         }catch (Exception e){
-            return e.getLocalizedMessage();
+            log.error(e.getLocalizedMessage());
         }
+        return this.userDaoMapper.userDaoToUser(userDao);
     }
 
     public List<User> getAllUsers(){
