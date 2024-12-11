@@ -17,6 +17,8 @@ public class NoteDto {
     private String name;
     @JsonProperty("note")
     private float note;
+    @JsonProperty("status")
+    private String status;
     @JsonProperty("module")
     private ModuleDto module;
     @JsonProperty("student")

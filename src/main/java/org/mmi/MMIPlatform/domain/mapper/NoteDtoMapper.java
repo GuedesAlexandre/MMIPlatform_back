@@ -21,6 +21,7 @@ public class NoteDtoMapper {
                 .coeff(note.getCoeff())
                 .name(note.getName())
                 .note(note.getNote())
+                .status(note.getStatus())
                 .module(null == this.moduleDtoMapper.moduleToModuleDto(note.getModule()) ? null : this.moduleDtoMapper.moduleToModuleDto(note.getModule()))
                 .build();
     }
@@ -34,6 +35,7 @@ public class NoteDtoMapper {
                 .coeff(noteDto.getCoeff())
                 .name(noteDto.getName())
                 .note(noteDto.getNote())
+                .status(noteDto.getStatus())
                 .module( null == this.moduleDtoMapper.moduleDtoToModule(noteDto.getModule()) ? null : this.moduleDtoMapper.moduleDtoToModule(noteDto.getModule()))
                 .build();
     }

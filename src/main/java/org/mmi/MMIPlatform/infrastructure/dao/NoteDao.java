@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.StatusEnum;
 
 @Entity
 @AllArgsConstructor
@@ -26,6 +27,10 @@ public class NoteDao {
 
     @Column(name = "MMI_PLATFORM_NOTE_NOTE")
     private float note;
+
+    @Column(name = "MMI_PLATFORM_NOTE_STATUS")
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
 
     @ManyToOne
     @JoinColumn(name = "MMI_PLATFORM_MODULE_ID")

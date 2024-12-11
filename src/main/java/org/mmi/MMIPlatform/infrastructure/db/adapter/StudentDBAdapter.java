@@ -50,6 +50,7 @@ public class StudentDBAdapter {
                 newNote.setCoeff(note.getCoeff());
                 newNote.setName(note.getName());
                 newNote.setNote(note.getNote());
+                newNote.setStatus(note.getStatus());
                 newNote.setModule(moduleDao);
                 newNote.setStudent(student);
                 moduleDao.getNotes().add(newNote);
@@ -85,6 +86,7 @@ public class StudentDBAdapter {
                         n.setCoeff(note.getCoeff());
                         n.setName(note.getName());
                         n.setNote(note.getNote());
+                        n.setStatus(note.getStatus());
                     }
             );
             moduleDaoList.forEach(m -> m.getNotes().stream().filter(n -> Objects.equals(n.getName(), name)).forEach(
@@ -92,6 +94,7 @@ public class StudentDBAdapter {
                         n.setCoeff(note.getCoeff());
                         n.setName(note.getName());
                         n.setNote(note.getNote());
+                        n.setStatus(note.getStatus());
                         this.noteDaoRepository.save(n);
                     }
             ));
