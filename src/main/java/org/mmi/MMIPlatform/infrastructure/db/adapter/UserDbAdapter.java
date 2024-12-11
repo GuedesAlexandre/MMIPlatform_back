@@ -90,7 +90,7 @@ public class UserDbAdapter {
     }
 
     //JUST FOR TEST !!!!!
-    @Scheduled(fixedRate = 60000000, initialDelay = 50000)
+    @Scheduled(fixedRate = 60000000, initialDelay = 40000)
     @Transactional
     public void initAdminUser() {
         Set<String> checkDuplicateModule = new HashSet<>();
