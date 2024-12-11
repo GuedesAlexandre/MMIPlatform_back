@@ -33,7 +33,7 @@ public class AuthenticationController {
                             schema = @Schema(implementation = UserDto.class))}),
     })
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.authenticationApplicationService.initUser(userDto));
     }
 

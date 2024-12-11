@@ -16,9 +16,9 @@ public class AuthenticationApplicationService {
     private final AuthenticationDomainService authenticationDomainService;
     private final UserDtoMapper userDtoMapper;
 
-    public String initUser(UserDto userDto) {
+    public UserDto initUser(UserDto userDto) {
         User user = this.userDtoMapper.userDtoToUser(userDto);
-        return this.authenticationDomainService.initUser(user);
+        return this.userDtoMapper.userToUserDto(authenticationDomainService.initUser(user));
     }
 
     public UserDto updateUser(UserDto userDto) {

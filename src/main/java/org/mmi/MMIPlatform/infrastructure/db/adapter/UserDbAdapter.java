@@ -2,8 +2,6 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
-import org.mmi.MMIPlatform.domain.models.User;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
@@ -32,9 +30,9 @@ public class UserDbAdapter {
         return this.userDaoRepository.findAll();
     }
 
-    public String saveUserDao(UserDao userDao) {
+    public UserDao saveUserDao(UserDao userDao) {
         if (!userDao.getPassword().matches(PASSWORD_PATTERN)) {
-            return "Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.";
+            log.info("Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.");
         }
         try {
             userDao.setPassword(argon2PasswordEncoder.encode(userDao.getPassword()));
@@ -51,9 +49,9 @@ public class UserDbAdapter {
             );
             this.userDaoRepository.save(userDao);
         } catch (Exception e) {
-            return e.getLocalizedMessage();
+            log.error(e.getLocalizedMessage());
         }
-        return "User saved successfully\n" + userDao;
+        return userDao;
     }
 
     public UserDao getUserDaoById(UUID id) {
