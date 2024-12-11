@@ -27,11 +27,13 @@ public class AuthenticationDomainService {
         UserDao userDao = this.userDaoMapper.userToUserDao(user);
         try{
             if(userDbAdapter.getUserDaoByEmail(user.getEmail()) != null){
-                 log.error("User already exists with email : " + user.getEmail());
-            }
+                throw new IllegalArgumentException("User already exists with email : " + user.getEmail());
+            } else {
          this.userDbAdapter.saveUserDao(userDao);
+            }
         }catch (Exception e){
             log.error(e.getLocalizedMessage());
+            throw e;
         }
         return this.userDaoMapper.userDaoToUser(userDao);
     }
