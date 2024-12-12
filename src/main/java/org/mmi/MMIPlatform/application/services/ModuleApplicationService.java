@@ -25,12 +25,7 @@ public class ModuleApplicationService {
     private final ModuleDomainService moduleDomainService;
     private final ModuleDtoMapper moduleDtoMapper;
 
-    @Operation(summary = "get all modules", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "modules recover",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ModuleDto.class))}),
-    })
+
     public List<ModuleDto> getAllModules() {
         try {
             return moduleDtoMapper.moduleListToModuleDtoList(this.moduleDomainService.getAllModules());
@@ -40,12 +35,7 @@ public class ModuleApplicationService {
         }
     }
 
-    @Operation(summary = "get modules by user", security = @SecurityRequirement(name = "bearerAuth"))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "modules recover",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ModuleDto.class))}),
-    })
+
     public List<ModuleDto> getModulesByUser(String email) {
         try {
             return moduleDtoMapper.moduleListToModuleDtoList(this.moduleDomainService.getModulesByUser(email));
