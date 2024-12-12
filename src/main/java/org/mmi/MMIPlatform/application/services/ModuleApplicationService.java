@@ -39,4 +39,20 @@ public class ModuleApplicationService {
             return null;
         }
     }
+
+    @Operation(summary = "get modules by user", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "modules recover",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ModuleDto.class))}),
+    })
+    public List<ModuleDto> getModulesByUser(String email) {
+        try {
+            return moduleDtoMapper.moduleListToModuleDtoList(this.moduleDomainService.getModulesByUser(email));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
 }
