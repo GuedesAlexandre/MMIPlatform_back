@@ -64,13 +64,17 @@ public class AuthenticationDomainService {
     public String authenticateUser(String email, String password){
         try{
             UserDao userDb = this.userDbAdapter.getUserDaoByEmail(email);
+            if(userDb == null) {
+                throw new IllegalArgumentException("User not found with : " + email);
+            }
             if(argon2PasswordEncoder.matches(password, userDb.getPassword())){
                 return this.jwtAdapter.generateToken(userDb);
             }else{
-                return "User not found with email :" + email;
+                throw new IllegalArgumentException("Incorrect password");
             }
         }catch (Exception e){
-            return e.getLocalizedMessage();
+            log.error(e.getLocalizedMessage());
+            throw e;
         }
     }
     public Boolean validateToken(String token) {

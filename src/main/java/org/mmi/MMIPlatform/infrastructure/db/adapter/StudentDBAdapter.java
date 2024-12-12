@@ -38,10 +38,16 @@ public class StudentDBAdapter {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
         List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();
         if (student == null) {
-            return "Student not found";
+            throw new IllegalArgumentException("Student not found");
         }
         if (moduleDaoList.isEmpty()) {
-            return "Module not found";
+            throw new IllegalArgumentException("Module not found");
+        }
+        if (note.getName() == null)  {
+            throw new IllegalArgumentException("Control name not found");
+        }
+        if (note.getStatus() == null) {
+            throw new IllegalArgumentException("Status not found");
         }
         try {
             log.info("Adding note to modules {} for student {}", moduleName, numEtu);
@@ -62,22 +68,24 @@ public class StudentDBAdapter {
             return "Notes added for student: " + student;
         } catch (Exception e) {
             log.error("Error adding notes for student {}: {}", numEtu, e.getMessage());
-            return "Error adding notes";
+            throw e;
         }
     }
 
     public String putNotesForAStudent(String numEtu, String moduleName, String name, NoteDao note) {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
-        NoteDao modifyNote = this.noteDaoRepository.findByName(name);
         List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();
         if (student == null) {
-            return "Student not found";
+            throw new IllegalArgumentException("Student not found");
         }
         if (moduleDaoList.isEmpty()) {
-            return "Module not found";
+            throw new IllegalArgumentException("Module not found");
         }
-        if (modifyNote == null) {
-            return "Note not found";
+        if (note.getName() == null)  {
+            throw new IllegalArgumentException("Control name not found");
+        }
+        if (note.getStatus() == null) {
+            throw new IllegalArgumentException("Status not found");
         }
         try {
             log.info("Changing note {} to modules {} for student {}", name, moduleName, numEtu);
@@ -104,7 +112,7 @@ public class StudentDBAdapter {
             return "Notes changed for student: " + student;
         } catch (Exception e) {
             log.error("Error changing notes {} for student {}: {}", note, numEtu, e.getMessage());
-            return "Error changing notes";
+            throw e;
         }
     }
 
