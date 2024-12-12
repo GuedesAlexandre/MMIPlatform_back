@@ -8,7 +8,7 @@ public enum StatusEnum {
     DONE("DONE"),
     ABS("ABS"),
     DEF("DEF"),
-    RATTRAPAGE("RATTRAPAGE");
+    MAKEUP("MAKEUP");
 
     private final String StatusEnum;
 }
