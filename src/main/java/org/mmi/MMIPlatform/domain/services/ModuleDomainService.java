@@ -19,4 +19,8 @@ public class ModuleDomainService {
         return this.moduleDaoMapper.moduleDaoListToModuleList(this.moduleDBAdapter.getAllModules());
     }
 
+    public List<Module> getModulesByUser(String email) {
+        return this.moduleDaoMapper.moduleDaoListToModuleList(this.moduleDBAdapter.getModulesForOneUser(email));
+    }
+
 }

@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +25,22 @@ public class JwtAdapter {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
+
+
     public String generateToken(UserDao user) {
+     Map<String, Object> userClaims = new HashMap<>();
+        userClaims.put("email", user.getEmail());
+        userClaims.put("username", user.getUsername());
+        userClaims.put("name", user.getName());
+        userClaims.put("firstName", user.getFirstName());
+        userClaims.put("access", user.getAccess());
+
+        Map<String, Object> filteredUserClaims = userClaims.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         Map<String, Object> claims = new HashMap<>();
-        claims.put("user", user);
+        claims.put("user", filteredUserClaims);
 
         return Jwts.builder()
                 .claims(claims)
