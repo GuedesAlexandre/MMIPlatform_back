@@ -123,7 +123,6 @@ public class XlsAdapter {
                         moduleCount++;
                     }
                 }
-
                 double averageGrade = moduleCount > 0 ? totalGrades / totalCoeffs : 0.00;
                 row.createCell(colIndex).setCellValue(String.format("%.2f", averageGrade));
                 if (averageGrade < 10) {
