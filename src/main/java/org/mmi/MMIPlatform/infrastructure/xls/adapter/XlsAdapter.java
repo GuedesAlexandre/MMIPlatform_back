@@ -84,7 +84,6 @@ public class XlsAdapter {
         headerRow.createCell(colIndex).setCellValue("Moyenne générale");
         headerRow.getCell(colIndex).setCellStyle(headerStyle);
 
-        // Fill student data
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = summarySheet.createRow(i + 1);
             StudentDao student = studentDaoList.get(i);
@@ -97,46 +96,50 @@ public class XlsAdapter {
             int ueCount = 0;
 
             colIndex = 3;
+            double totalUeCoeff = 0;
             for (UEEnum ue : UEEnum.values()) {
                 double totalGrades = 0;
-                double totalCoeffs = 0;
-                int moduleCount = 0;
+                double totalCoeffModule = 0;
 
-                for (ModuleDao module : moduleList) {
-                    if (module.getUeName().equals(ue.name())) {
-                        double totalGradesMultiply = student.getNotes().stream()
-                                .filter(note -> note.getModule().getId().equals(module.getId()))
-                                .mapToDouble(note -> note.getNote() * note.getCoeff())
-                                .sum();
+                List<ModuleDao> filteredModules = moduleList.stream()
+                        .filter(module -> module.getUeName().equals(ue.name()))
+                        .toList();
 
-                        double totalModuleCoeffs = student.getNotes().stream()
-                                .filter(note -> note.getModule().getId().equals(module.getId()))
-                                .mapToDouble(NoteDao::getCoeff)
-                                .sum();
+                for (ModuleDao module : filteredModules) {
+                    double totalGradesMultiply = student.getNotes().stream()
+                            .filter(note -> note.getModule().getId().equals(module.getId()))
+                            .mapToDouble(note -> note.getNote() * note.getCoeff())
+                            .sum();
 
-                        if (totalModuleCoeffs == 0) {
-                            totalModuleCoeffs = module.getCoeff();
-                        }
+                    double totalCoeffs = student.getNotes().stream()
+                            .filter(note -> note.getModule().getId().equals(module.getId()))
+                            .mapToDouble(NoteDao::getCoeff)
+                            .sum();
 
-                        totalGrades += totalGradesMultiply;
-                        totalCoeffs += totalModuleCoeffs;
-                        moduleCount++;
+                    if (totalCoeffs == 0) {
+                        totalCoeffs = module.getCoeff();
                     }
+
+                    double averageGrade = totalCoeffs > 0 ? totalGradesMultiply / totalCoeffs : 0.00;
+                    totalGrades += averageGrade * module.getCoeff();
+                    totalCoeffModule += module.getCoeff();
                 }
-                double averageGrade = moduleCount > 0 ? totalGrades / totalCoeffs : 0.00;
-                row.createCell(colIndex).setCellValue(String.format("%.2f", averageGrade));
-                if (averageGrade < 10) {
+
+                double ueAverage = totalCoeffModule > 0 ? totalGrades / totalCoeffModule : 0.00;
+                row.createCell(colIndex).setCellValue(String.format("%.2f", ueAverage));
+                if (ueAverage < 10) {
                     row.getCell(colIndex).setCellStyle(cellStyleRed);
                 } else {
                     row.getCell(colIndex).setCellStyle(cellStyleGreen);
                 }
 
-                totalAverage += averageGrade;
+                totalAverage += ueAverage * totalCoeffModule;
+                totalUeCoeff += totalCoeffModule;
                 ueCount++;
                 colIndex++;
             }
 
-            double overallAverage = ueCount > 0 ? totalAverage / ueCount : 0.00;
+            double overallAverage = totalUeCoeff > 0 ? totalAverage / totalUeCoeff : 0.00;
             row.createCell(colIndex).setCellValue(String.format("%.2f", overallAverage));
             if (overallAverage < 10) {
                 row.getCell(colIndex).setCellStyle(cellStyleRed);
