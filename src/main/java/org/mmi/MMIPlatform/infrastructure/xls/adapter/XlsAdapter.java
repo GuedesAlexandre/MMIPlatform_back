@@ -190,11 +190,17 @@ public class XlsAdapter {
 
             for (int j = 0; j < filteredModules.size(); j++) {
                 ModuleDao module = filteredModules.get(j);
-                double averageGrade = studentDaoList.get(i).getNotes().stream()
+                double totalGradesMultiply = studentDaoList.get(i).getNotes().stream()
                         .filter(note -> note.getModule().getId().equals(module.getId()))
-                        .mapToDouble(NoteDao::getNote)
-                        .average()
-                        .orElse(0.00);
+                        .mapToDouble(note -> note.getNote() * note.getCoeff())
+                        .sum();
+
+                double totalCoeffs = studentDaoList.get(i).getNotes().stream()
+                        .filter(note -> note.getModule().getId().equals(module.getId()))
+                        .mapToDouble(NoteDao::getCoeff)
+                        .sum();
+
+                double averageGrade = totalCoeffs > 0 ? totalGradesMultiply / totalCoeffs : 0.00;
                 row.createCell(j + 3).setCellValue(String.format("%.2f", averageGrade));
                 if (averageGrade < 10) {
                     row.getCell(j + 3).setCellStyle(cellStyleRed);
