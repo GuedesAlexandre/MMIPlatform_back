@@ -118,4 +118,27 @@ public class UserDbAdapter {
         this.saveUserDao(userAdmin);
         log.info("Admin user are saved in database");
     }
+
+    //JUST FOR TEST !!!!!
+    @Scheduled(fixedRate = 60000000, initialDelay = 40000)
+    @Transactional
+    public void initScolarityUser() {
+        UserDao userScolarity = UserDao.builder()
+                .email("chantal.jean-louis@univ-eiffel.fr")
+                .password("MMIPl@tform24!")
+                .username("Chantal secretaire-MMI")
+                .firstName("chantal")
+                .name("jean-louis")
+                .phone("0607080910")
+                .address("4 rue Gambetta")
+                .city("Meaux")
+                .country("France")
+                .establishment("IUT-Meaux")
+                .access(PermissionsEnum.valueOf("SCOLARITY"))
+                .moduleDaos(List.of(new ModuleDao[0]))
+                .build();
+
+        this.saveUserDao(userScolarity);
+        log.info("Scolarity user are saved in database");
+    }
 }
