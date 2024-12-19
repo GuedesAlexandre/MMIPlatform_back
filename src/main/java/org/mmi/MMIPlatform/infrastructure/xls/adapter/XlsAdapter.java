@@ -52,10 +52,103 @@ public class XlsAdapter {
                 autoSizeColumns(sheet, moduleList.size() + 3);
             }
 
+            createSummarySheet((XSSFWorkbook) workbook, studentDaoList, moduleList);
+
             return writeWorkbookToByteArray(workbook);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void createSummarySheet(XSSFWorkbook workbook, List<StudentDao> studentDaoList, List<ModuleDao> moduleList) {
+        XSSFSheet summarySheet = workbook.createSheet("Synthèse");
+        XSSFCellStyle headerStyle = createHeaderStyle(workbook);
+        XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
+        XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
+
+        // Create header row
+        Row headerRow = summarySheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Nom & Prénom de l'étudiant");
+        headerRow.getCell(0).setCellStyle(headerStyle);
+        headerRow.createCell(1).setCellValue("N° étudiant");
+        headerRow.getCell(1).setCellStyle(headerStyle);
+        headerRow.createCell(2).setCellValue("Groupe");
+        headerRow.getCell(2).setCellStyle(headerStyle);
+
+        int colIndex = 3;
+        for (UEEnum ue : UEEnum.values()) {
+            headerRow.createCell(colIndex).setCellValue(ue.name());
+            headerRow.getCell(colIndex).setCellStyle(headerStyle);
+            colIndex++;
+        }
+        headerRow.createCell(colIndex).setCellValue("Moyenne générale");
+        headerRow.getCell(colIndex).setCellStyle(headerStyle);
+
+        for (int i = 0; i < studentDaoList.size(); i++) {
+            Row row = summarySheet.createRow(i + 1);
+            StudentDao student = studentDaoList.get(i);
+
+            row.createCell(0).setCellValue(student.getFirstName() + " " + student.getLastName());
+            row.createCell(1).setCellValue(student.getNumEtu());
+            row.createCell(2).setCellValue(student.getGroup());
+
+            double totalAverage = 0;
+            int ueCount = 0;
+
+            colIndex = 3;
+            double totalUeCoeff = 0;
+            for (UEEnum ue : UEEnum.values()) {
+                double totalGrades = 0;
+                double totalCoeffModule = 0;
+
+                List<ModuleDao> filteredModules = moduleList.stream()
+                        .filter(module -> module.getUeName().equals(ue.name()))
+                        .toList();
+
+                for (ModuleDao module : filteredModules) {
+                    double totalGradesMultiply = student.getNotes().stream()
+                            .filter(note -> note.getModule().getId().equals(module.getId()))
+                            .mapToDouble(note -> note.getNote() * note.getCoeff())
+                            .sum();
+
+                    double totalCoeffs = student.getNotes().stream()
+                            .filter(note -> note.getModule().getId().equals(module.getId()))
+                            .mapToDouble(NoteDao::getCoeff)
+                            .sum();
+
+                    if (totalCoeffs == 0) {
+                        totalCoeffs = module.getCoeff();
+                    }
+
+                    double averageGrade = totalCoeffs > 0 ? totalGradesMultiply / totalCoeffs : 0.00;
+                    totalGrades += averageGrade * module.getCoeff();
+                    totalCoeffModule += module.getCoeff();
+                }
+
+                double ueAverage = totalCoeffModule > 0 ? totalGrades / totalCoeffModule : 0.00;
+                row.createCell(colIndex).setCellValue(String.format("%.2f", ueAverage));
+                if (ueAverage < 10) {
+                    row.getCell(colIndex).setCellStyle(cellStyleRed);
+                } else {
+                    row.getCell(colIndex).setCellStyle(cellStyleGreen);
+                }
+
+                totalAverage += ueAverage * totalCoeffModule;
+                totalUeCoeff += totalCoeffModule;
+                ueCount++;
+                colIndex++;
+            }
+
+            double overallAverage = totalUeCoeff > 0 ? totalAverage / totalUeCoeff : 0.00;
+            row.createCell(colIndex).setCellValue(String.format("%.2f", overallAverage));
+            if (overallAverage < 10) {
+                row.getCell(colIndex).setCellStyle(cellStyleRed);
+            } else {
+                row.getCell(colIndex).setCellStyle(cellStyleGreen);
+            }
+        }
+
+        autoSizeColumns(summarySheet, colIndex);
     }
 
     private void validateInput(String promo, String semester) {
@@ -173,7 +266,6 @@ public class XlsAdapter {
             subHeaderRow.getCell(i + 3).setCellStyle(headerStyle);
         }
     }
-
     private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, List<ModuleDao> moduleList, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
         List<ModuleDao> filteredModules = moduleList.stream()
                 .filter(module -> module.getUeName().equals(ue.name()))
@@ -186,29 +278,45 @@ public class XlsAdapter {
             row.createCell(2).setCellValue(studentDaoList.get(i).getGroup());
 
             double totalGrades = 0;
-            int gradeCount = 0;
+            double totalCoeffModule = 0;
 
             for (int j = 0; j < filteredModules.size(); j++) {
                 ModuleDao module = filteredModules.get(j);
-                double averageGrade = studentDaoList.get(i).getNotes().stream()
+                double totalGradesMultiply = studentDaoList.get(i).getNotes().stream()
                         .filter(note -> note.getModule().getId().equals(module.getId()))
-                        .mapToDouble(NoteDao::getNote)
-                        .average()
-                        .orElse(0.00);
+                        .mapToDouble(note -> note.getNote() * note.getCoeff())
+                        .sum();
+
+                double totalCoeffs = studentDaoList.get(i).getNotes().stream()
+                        .filter(note -> note.getModule().getId().equals(module.getId()))
+                        .mapToDouble(NoteDao::getCoeff)
+                        .sum();
+
+                if (totalCoeffs == 0) {
+                    totalCoeffs = module.getCoeff();
+                }
+
+                double averageGrade = totalCoeffs > 0 ? totalGradesMultiply / totalCoeffs : 0.00;
                 row.createCell(j + 3).setCellValue(String.format("%.2f", averageGrade));
                 if (averageGrade < 10) {
                     row.getCell(j + 3).setCellStyle(cellStyleRed);
                 } else {
                     row.getCell(j + 3).setCellStyle(cellStyleGreen);
                 }
-                totalGrades += averageGrade;
-                gradeCount++;
+
+                totalGrades += averageGrade * module.getCoeff();
+                totalCoeffModule += module.getCoeff();
             }
-            double averageGrade = gradeCount > 0 ? totalGrades / gradeCount : 0.00;
-            row.createCell(filteredModules.size() + 3).setCellValue(String.format("%.2f", averageGrade));
+
+            double ueAverage = totalCoeffModule > 0 ? totalGrades / totalCoeffModule : 0.00;
+            row.createCell(filteredModules.size() + 3).setCellValue(String.format("%.2f", ueAverage));
+            if (ueAverage < 10) {
+                row.getCell(filteredModules.size() + 3).setCellStyle(cellStyleRed);
+            } else {
+                row.getCell(filteredModules.size() + 3).setCellStyle(cellStyleGreen);
+            }
         }
     }
-
     private void autoSizeColumns(XSSFSheet sheet, int columnCount) {
         for (int i = 0; i <= columnCount; i++) {
             sheet.autoSizeColumn(i);
@@ -315,7 +423,6 @@ public class XlsAdapter {
             Row row = sheet.createRow(i + 1);
             StudentDao student = studentDaoList.get(i);
 
-            // Fill student details
             row.createCell(0).setCellValue(student.getFirstName() + " " + student.getLastName());
             row.createCell(1).setCellValue(student.getNumEtu());
             row.createCell(2).setCellValue(student.getGroup());
