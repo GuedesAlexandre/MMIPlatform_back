@@ -97,7 +97,7 @@ public class StudentDBAdapter {
                         n.setStatus(note.getStatus());
                     }
             );
-            moduleDaoList.forEach(m -> m.getNotes().stream().filter(n -> Objects.equals(n.getName(), name)).forEach(
+            moduleDaoList.forEach(m -> m.getNotes().stream().filter(n -> Objects.equals(n.getName(), name) && n.getStudent().getNumEtu().equals(numEtu)).forEach(
                     n -> {
                         n.setCoeff(note.getCoeff());
                         n.setName(note.getName());
