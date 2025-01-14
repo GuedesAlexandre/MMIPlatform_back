@@ -46,10 +46,10 @@ class AuthenticationDomainServiceTest {
     @Test
     void testInitUser() {
         User user = User.builder()
-                .email("cherifa.boucetta@univ-eiffel.fr")
+                .email("test.test@univ-eiffel.fr")
                 .build();
         UserDao userDao = new UserDao();
-        userDao.setEmail("cherifa.boucetta@univ-eiffel.fr");
+        userDao.setEmail("test.test@univ-eiffel.fr");
 
         when(userDaoMapper.userToUserDao(any(User.class))).thenReturn(userDao);
         when(userDbAdapter.getUserDaoByEmail(anyString())).thenReturn(null);
@@ -59,17 +59,17 @@ class AuthenticationDomainServiceTest {
         User result = authenticationDomainService.initUser(user);
 
         assertNotNull(result);
-        assertEquals("cherifa.boucetta@univ-eiffel.fr", result.getEmail());
+        assertEquals("test.test@univ-eiffel.fr", result.getEmail());
         verify(userDbAdapter, times(1)).saveUserDao(any(UserDao.class));
     }
 
     @Test
     void testGetAllUsers() {
         UserDao userDao = new UserDao();
-        userDao.setEmail("cherifa.boucetta@univ-eiffel.fr");
+        userDao.setEmail("test.test@univ-eiffel.fr");
         List<UserDao> userDaoList = Collections.singletonList(userDao);
         User user = User.builder()
-                .email("cherifa.boucetta@univ-eiffel.fr")
+                .email("test.test@univ-eiffel.fr")
                 .build();
 
         when(userDbAdapter.getAllUserDao()).thenReturn(userDaoList);
@@ -79,16 +79,16 @@ class AuthenticationDomainServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("cherifa.boucetta@univ-eiffel.fr", result.getFirst().getEmail());
+        assertEquals("test.test@univ-eiffel.fr", result.getFirst().getEmail());
     }
 
     @Test
     void testUpdateUser() {
         User user = User.builder()
-                .email("cherifa.boucetta@univ-eiffel.fr")
+                .email("test.test@univ-eiffel.fr")
                 .build();
         UserDao userDao = new UserDao();
-        userDao.setEmail("cherifa.boucetta@univ-eiffel.fr");
+        userDao.setEmail("test.test@univ-eiffel.fr");
 
         when(userDaoMapper.userToUserDao(any(User.class))).thenReturn(userDao);
         when(userDbAdapter.updateUserDao(any(UserDao.class))).thenReturn("User updated successfully");
@@ -97,24 +97,24 @@ class AuthenticationDomainServiceTest {
         User result = authenticationDomainService.updateUser(user);
 
         assertNotNull(result);
-        assertEquals("cherifa.boucetta@univ-eiffel.fr", result.getEmail());
+        assertEquals("test.test@univ-eiffel.fr", result.getEmail());
     }
 
     @Test
     void testDeleteUser() {
-        String email = "cherifa.boucetta@univ-eiffel.fr";
+        String email = "test.test@univ-eiffel.fr";
 
         when(userDbAdapter.deleteUserDaoByEmail(anyString())).thenReturn("User deleted successfully");
 
         String result = authenticationDomainService.deleteUser(email);
 
-        assertEquals("User deleted successfully with email : cherifa.boucetta@univ-eiffel.fr", result);
+        assertEquals("User deleted successfully with email : test.test@univ-eiffel.fr", result);
     }
 
     @Test
     void testAuthenticateUser() {
-        String email = "cherifa.boucetta@univ-eiffel.fr";
-        String password = "MMIPl@tform24!";
+        String email = "test.test@univ-eiffel.fr";
+        String password = "azertyuiop123456@!";
         UserDao userDao = new UserDao();
         userDao.setEmail(email);
         userDao.setPassword(Base64.getEncoder().encodeToString(password.getBytes()));
