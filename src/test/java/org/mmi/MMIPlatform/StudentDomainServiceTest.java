@@ -1,18 +1,14 @@
 package org.mmi.MMIPlatform;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mmi.MMIPlatform.domain.models.Module;
 import org.mmi.MMIPlatform.domain.models.Note;
-import org.mmi.MMIPlatform.domain.models.Student;
-import org.mmi.MMIPlatform.domain.services.StudentDomaineService;
+import org.mmi.MMIPlatform.domain.services.StudentDomainService;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
-import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
-import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.StatusEnum;
 import org.mmi.MMIPlatform.infrastructure.db.adapter.StudentDBAdapter;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
@@ -26,15 +22,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 
 @Slf4j
-public class StudentDomaineServiceTest {
+public class StudentDomainServiceTest {
 
     @Mock
     private StudentDBAdapter studentDBAdapter;
@@ -46,7 +36,7 @@ public class StudentDomaineServiceTest {
     private StudentDaoMapper studentDaoMapper;
 
     @InjectMocks
-    private StudentDomaineService studentDomaineService;
+    private StudentDomainService studentDomainService;
 
     @Mock
     private StudentDaoRepository studentDaoRepository;
@@ -98,7 +88,7 @@ public class StudentDomaineServiceTest {
         when(studentDBAdapter.putNotesForAStudent(numEtu, moduleName, name, noteDao)).thenReturn("Notes changed for student: "+ student);
         when(noteDaoMapper.noteDaoToNote(any(NoteDao.class))).thenReturn(note);
 
-        String result = studentDomaineService.putNotesForAStudent(numEtu, moduleName, name, note);
+        String result = studentDomainService.putNotesForAStudent(numEtu, moduleName, name, note);
 
         assertNotNull(result);
         assertEquals("Notes changed for student: " + student, result);
@@ -148,7 +138,7 @@ public class StudentDomaineServiceTest {
         when(studentDBAdapter.postNotesForAStudent(numEtu, ModuleName, noteDao)).thenReturn("Note created successfully" + student);
         when(noteDaoMapper.noteDaoToNote(any(NoteDao.class))).thenReturn(note);
 
-        String result = studentDomaineService.postNotesForAStudent(numEtu, ModuleName, note);
+        String result = studentDomainService.postNotesForAStudent(numEtu, ModuleName, note);
 
         assertNotNull(result);
         assertEquals("Note created successfully" + student, result);
