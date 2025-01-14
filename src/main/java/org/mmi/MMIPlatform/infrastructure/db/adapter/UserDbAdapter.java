@@ -115,6 +115,9 @@ public class UserDbAdapter {
                 .moduleDaos(moduleDaoList)
                 .build();
 
+        if(userDaoRepository.findByEmail(userAdmin.getEmail()) != null) {
+            return;
+        }
         this.saveUserDao(userAdmin);
         log.info("Admin user are saved in database");
     }
@@ -137,7 +140,9 @@ public class UserDbAdapter {
                 .access(PermissionsEnum.valueOf("SCOLARITY"))
                 .moduleDaos(List.of(new ModuleDao[0]))
                 .build();
-
+        if(userDaoRepository.findByEmail(userScolarity.getEmail()) != null) {
+            return;
+        }
         this.saveUserDao(userScolarity);
         log.info("Scolarity user are saved in database");
     }
