@@ -26,7 +26,7 @@ public class InternshipDao {
     private String comment;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_WEEKNUMBER")
-    private String weekNumber;
+    private int weekNumber;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_TYPE")
     @Enumerated(EnumType.STRING)
