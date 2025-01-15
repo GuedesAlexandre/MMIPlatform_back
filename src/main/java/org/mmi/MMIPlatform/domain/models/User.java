@@ -1,5 +1,6 @@
 package org.mmi.MMIPlatform.domain.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
 public class User {
     private String id;
     private String email;

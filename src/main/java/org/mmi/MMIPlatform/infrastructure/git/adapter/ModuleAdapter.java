@@ -65,12 +65,18 @@ public class ModuleAdapter {
     @Transactional
     public void mapModuleToSaveInDatabase() {
         List<ModuleDto> moduleDtoList = getModule();
+        List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll();
         if (moduleDtoList != null) {
             moduleDtoList.stream()
                     .map(this.moduleDaoMapper::moduleDtoToModuleDao)
                     .forEach(moduleDao -> {
-                        this.moduleDaoRepository.save(moduleDao);
-
+                        if (moduleDaoList.stream().anyMatch(module -> module.getName().equals(moduleDao.getName()) && module.getUeName().equals(moduleDao.getUeName()))
+                        ) {
+                            log.info("Module with name {} already exists in database", moduleDao.getName());
+                        } else {
+                            log.info("Saving module: {}", moduleDao.getName());
+                           this.moduleDaoRepository.save(moduleDao);
+                        }
                     });
             log.info("Modules are saved in database");
         }
