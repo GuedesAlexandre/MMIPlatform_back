@@ -27,10 +27,21 @@ public class InternshipController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Internships recover",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = InternshipDto.class))}),
+                            schema = @Schema(implementation = StudentDto.class))}),
     })
     @GetMapping("/{promo}")
-    public ResponseEntity<List<InternshipDto>> getInternshipsByPromo(@PathVariable String promo) {
+    public ResponseEntity<List<StudentDto>> getInternshipsByPromo(@PathVariable String promo) {
         return ResponseEntity.ok(internshipApplicationService.getInternshipsByPromo(promo));
+    }
+
+    @Operation(summary = "Post internship for student", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "student add internship",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InternshipDto.class))}),
+    })
+    @PostMapping("/{num_etu}")
+    public ResponseEntity<InternshipDto> postInternshipForAStudent(@PathVariable(name="num_etu") String numEtu, @RequestBody InternshipDto internshipDto) {
+        return ResponseEntity.ok(this.internshipApplicationService.postInternshipForAStudent(numEtu, internshipDto));
     }
 }

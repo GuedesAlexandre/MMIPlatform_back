@@ -3,8 +3,11 @@ package org.mmi.MMIPlatform.application.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mmi.MMIPlatform.application.dto.InternshipDto;
+import org.mmi.MMIPlatform.application.dto.StudentDto;
 import org.mmi.MMIPlatform.domain.mapper.InternshipDtoMapper;
+import org.mmi.MMIPlatform.domain.mapper.StudentDtoMapper;
 import org.mmi.MMIPlatform.domain.models.Internship;
+import org.mmi.MMIPlatform.domain.models.Student;
 import org.mmi.MMIPlatform.domain.services.InternshipDomainService;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +20,20 @@ public class InternshipApplicationService {
 
     private final InternshipDomainService internshipDomainService;
     private final InternshipDtoMapper internshipDtoMapper;
+    private final StudentDtoMapper studentDtoMapper;
 
-    public List<InternshipDto> getInternshipsByPromo(String promo) {
+    public List<StudentDto> getInternshipsByPromo(String promo) {
         try {
-            List<Internship> internshipsByPromo = this.internshipDomainService.getInternshipsByPromo(promo);
-            return internshipDtoMapper.internshipsToInternshipDto(internshipsByPromo);
+            List<Student> studentsByPromoForInternship = this.internshipDomainService.getInternshipsByPromo(promo);
+            return studentDtoMapper.studentListToStudentDtoListForInternship(studentsByPromoForInternship);
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
         }
+    }
+
+    public InternshipDto postInternshipForAStudent(String numEtu, InternshipDto internshipDto) {
+        Internship internship = internshipDtoMapper.internshipDtoToInternship(internshipDto);
+        return this.internshipDtoMapper.internshipToInternshipDto(internshipDomainService.postInternshipForAStudent(numEtu, internship));
     }
 }

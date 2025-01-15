@@ -12,8 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InternshipDaoMapper {
 
-    private final StudentDaoMapper studentDaoMapper;
-
     public Internship internshipDaoToInternShip(InternshipDao internshipDao) {
         return Internship.builder()
                 .id(internshipDao.getId())
@@ -21,7 +19,6 @@ public class InternshipDaoMapper {
                 .comment(internshipDao.getComment())
                 .weekNumber(internshipDao.getWeekNumber())
                 .type(String.valueOf(internshipDao.getType()))
-                .student(studentDaoMapper.studentDaoToStudent(internshipDao.getStudent()))
                 .build();
     }
 
@@ -36,7 +33,6 @@ public class InternshipDaoMapper {
                 .comment(internship.getComment())
                 .weekNumber(internship.getWeekNumber())
                 .type(TypeEnum.valueOf(internship.getType()))
-                .student(studentDaoMapper.studentToStudentDao(internship.getStudent()))
                 .build();
     }
 

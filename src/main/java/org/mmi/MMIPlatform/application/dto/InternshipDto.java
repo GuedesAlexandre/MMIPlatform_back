@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InternshipDto {
-    @JsonProperty("id")
-    private String id;
     @JsonProperty("title")
     private String title;
     @JsonProperty("comment")
@@ -19,6 +17,4 @@ public class InternshipDto {
     private int weekNumber;
     @JsonProperty("type")
     private String type;
-    @JsonProperty("student")
-    private StudentDto student;
 }

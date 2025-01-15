@@ -12,16 +12,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InternshipDtoMapper {
 
-    private final StudentDtoMapper studentDtoMapper;
-
     public InternshipDto internshipToInternshipDto(Internship internship) {
         return InternshipDto.builder()
-                .id(internship.getId())
                 .title(internship.getTitle())
                 .comment(internship.getComment())
                 .weekNumber(internship.getWeekNumber())
                 .type(internship.getType())
-                .student(this.studentDtoMapper.studentToStudentDto(internship.getStudent()))
                 .build();
     }
 
@@ -31,12 +27,10 @@ public class InternshipDtoMapper {
 
     public Internship internshipDtoToInternship(InternshipDto internshipDto) {
         return Internship.builder()
-                .id(internshipDto.getId())
                 .title(internshipDto.getTitle())
                 .comment(internshipDto.getComment())
                 .weekNumber(internshipDto.getWeekNumber())
                 .type(internshipDto.getType())
-                .student(this.studentDtoMapper.studentDtoToStudent(internshipDto.getStudent()))
                 .build();
     }
 

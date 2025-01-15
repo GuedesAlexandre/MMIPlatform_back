@@ -16,6 +16,7 @@ public class StudentDaoMapper {
 
     private final ModuleDaoMapper moduleDaoMapper;
     private final NoteDaoMapper noteDaoMapper;
+    private final InternshipDaoMapper internshipDaoMapper;
 
     public Student studentDaoToStudent(StudentDao studentDao) {
         if(studentDao == null) {
@@ -30,6 +31,25 @@ public class StudentDaoMapper {
                 .numEtu(studentDao.getNumEtu())
                 .notes(null == studentDao.getNotes() ? null : studentDao.getNotes().stream().map(this.noteDaoMapper::noteDaoToNote).toList())
                 .build();
+    }
+
+    public Student studentDaoToStudentForInternship(StudentDao studentDao) {
+        if(studentDao == null) {
+            return null;
+        }
+        return Student.builder()
+                .id(studentDao.getId())
+                .lastName(studentDao.getLastName())
+                .firstName(studentDao.getFirstName())
+                .promo(studentDao.getPromo().toString())
+                .group(studentDao.getGroup())
+                .numEtu(studentDao.getNumEtu())
+                .internships(null == studentDao.getInternships() ? null : studentDao.getInternships().stream().map(this.internshipDaoMapper::internshipDaoToInternShip).toList())
+                .build();
+    }
+
+    public List<Student> studentsDaostoStudentsForInternship(List<StudentDao> studentDaos){
+        return studentDaos.stream().map(this::studentDaoToStudentForInternship).toList();
     }
 
     public List<Student> studentsDaostoStudents(List<StudentDao> studentDaos){
@@ -48,6 +68,21 @@ public class StudentDaoMapper {
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
                 .notes(null == student.getNotes() ? null : student.getNotes().stream().map(this.noteDaoMapper::noteToNoteDao).toList())
+                .build();
+    }
+
+    public StudentDao studentToStudentDaoForInternship(Student student) {
+        if(student == null) {
+            return null;
+        }
+        return StudentDao.builder()
+                .id(student.getId())
+                .lastName(student.getLastName())
+                .firstName(student.getFirstName())
+                .promo(PromoEnum.valueOf(student.getPromo()))
+                .group(student.getGroup())
+                .numEtu(student.getNumEtu())
+                .internships(null == student.getInternships() ? null : student.getInternships().stream().map(this.internshipDaoMapper::internshipToInternshipDao).toList())
                 .build();
     }
 

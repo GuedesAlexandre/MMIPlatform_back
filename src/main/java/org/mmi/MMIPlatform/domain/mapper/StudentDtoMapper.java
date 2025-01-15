@@ -13,6 +13,7 @@ public class StudentDtoMapper {
 
     private final ModuleDtoMapper moduleDtoMapper;
     private final NoteDtoMapper noteDtoMapper;
+    private final InternshipDtoMapper internshipDtoMapper;
 
 
     public StudentDto studentToStudentDto(Student student){
@@ -26,8 +27,23 @@ public class StudentDtoMapper {
                 .build();
     }
 
+    public StudentDto studentToStudentDtoForInternship(Student student){
+        return StudentDto.builder()
+                .lastName(student.getLastName())
+                .firstName(student.getFirstName())
+                .promo(student.getPromo())
+                .group(student.getGroup())
+                .numEtu(student.getNumEtu())
+                .internships(this.internshipDtoMapper.internshipsToInternshipDto(student.getInternships()))
+                .build();
+    }
+
     public List<StudentDto> studentListToStudentDtoList(List<Student> students){
         return students.stream().map(this::studentToStudentDto).toList();
+    }
+
+    public List<StudentDto> studentListToStudentDtoListForInternship(List<Student> students){
+        return students.stream().map(this::studentToStudentDtoForInternship).toList();
     }
 
     public Student studentDtoToStudent(StudentDto studentDto) {
@@ -38,6 +54,17 @@ public class StudentDtoMapper {
                 .group(studentDto.getGroup())
                 .numEtu(studentDto.getNumEtu())
                 .notes(this.noteDtoMapper.noteDtoListToNoteList(studentDto.getNotes()))
+                .build();
+    }
+
+    public Student studentDtoToStudentForInternship(StudentDto studentDto) {
+        return Student.builder()
+                .lastName(studentDto.getLastName())
+                .firstName(studentDto.getFirstName())
+                .promo(studentDto.getPromo())
+                .group(studentDto.getGroup())
+                .numEtu(studentDto.getNumEtu())
+                .internships(this.internshipDtoMapper.internshipDtoToInternship(studentDto.getInternships()))
                 .build();
     }
 
