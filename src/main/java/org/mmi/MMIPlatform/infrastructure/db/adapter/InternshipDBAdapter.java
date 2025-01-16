@@ -46,7 +46,7 @@ public class InternshipDBAdapter {
                 .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
                 .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: "+ numEtu + " at years: " + years + " with title: " + title)));
         try {
-            log.info("internship supprimer : {}", internshipDao);
+            studentDao.getInternships().remove(internshipDao);
             this.internshipDaoRepository.delete(internshipDao);
         } catch (Exception e) {
             return e.getLocalizedMessage();
