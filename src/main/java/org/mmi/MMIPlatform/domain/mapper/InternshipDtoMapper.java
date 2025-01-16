@@ -16,7 +16,7 @@ public class InternshipDtoMapper {
         return InternshipDto.builder()
                 .title(internship.getTitle())
                 .comment(internship.getComment())
-                .weekNumber(internship.getWeekNumber())
+                .weekCount(internship.getWeekCount())
                 .type(internship.getType())
                 .years(internship.getYears())
                 .build();
@@ -30,7 +30,7 @@ public class InternshipDtoMapper {
         return Internship.builder()
                 .title(internshipDto.getTitle())
                 .comment(internshipDto.getComment())
-                .weekNumber(internshipDto.getWeekNumber())
+                .weekCount(internshipDto.getWeekCount())
                 .type(internshipDto.getType())
                 .years(internshipDto.getYears())
                 .build();

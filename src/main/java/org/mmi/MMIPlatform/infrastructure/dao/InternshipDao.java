@@ -26,8 +26,8 @@ public class InternshipDao {
     @Column(name = "MMI_PLATFORM_INTERNSHIP_COMMENT")
     private String comment;
 
-    @Column(name = "MMI_PLATFORM_INTERNSHIP_WEEKNUMBER")
-    private int weekNumber;
+    @Column(name = "MMI_PLATFORM_INTERNSHIP_WEEKCOUNT")
+    private int weekCount;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_YEARS")
     private int years;

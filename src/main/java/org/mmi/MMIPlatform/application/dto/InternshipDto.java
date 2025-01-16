@@ -13,8 +13,8 @@ public class InternshipDto {
     private String title;
     @JsonProperty("comment")
     private String comment;
-    @JsonProperty("weekNumber")
-    private int weekNumber;
+    @JsonProperty("weekCount")
+    private int weekCount;
     @JsonProperty("years")
     private int years;
     @JsonProperty("type")

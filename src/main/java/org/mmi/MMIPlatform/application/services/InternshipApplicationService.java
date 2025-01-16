@@ -23,13 +23,8 @@ public class InternshipApplicationService {
     private final StudentDtoMapper studentDtoMapper;
 
     public List<StudentDto> getInternshipsByPromo(String promo) {
-        try {
-            List<Student> studentsByPromoForInternship = this.internshipDomainService.getInternshipsByPromo(promo);
-            return studentDtoMapper.studentListToStudentDtoListForInternship(studentsByPromoForInternship);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
-        }
+        List<Student> studentsByPromoForInternship = this.internshipDomainService.getInternshipsByPromo(promo);
+        return studentDtoMapper.studentListToStudentDtoListForInternship(studentsByPromoForInternship);
     }
 
     public InternshipDto postInternshipForAStudent(String numEtu, InternshipDto internshipDto) {

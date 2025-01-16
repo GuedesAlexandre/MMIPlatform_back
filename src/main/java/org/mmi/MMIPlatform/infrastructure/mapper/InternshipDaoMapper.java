@@ -18,7 +18,7 @@ public class InternshipDaoMapper {
                 .id(internshipDao.getId())
                 .title(internshipDao.getTitle())
                 .comment(internshipDao.getComment())
-                .weekNumber(internshipDao.getWeekNumber())
+                .weekCount(internshipDao.getWeekCount())
                 .type(String.valueOf(internshipDao.getType()))
                 .years(internshipDao.getYears())
                 .build();
@@ -33,7 +33,7 @@ public class InternshipDaoMapper {
                 .id(internship.getId())
                 .title(internship.getTitle())
                 .comment(internship.getComment())
-                .weekNumber(internship.getWeekNumber())
+                .weekCount(internship.getWeekCount())
                 .type(TypeEnum.valueOf(internship.getType()))
                 .years(internship.getYears())
                 .build();

@@ -12,7 +12,7 @@ public class Internship {
     private String id;
     private String title;
     private String comment;
-    private int weekNumber;
+    private int weekCount;
     private int years;
     private String type;
     private Student student;
