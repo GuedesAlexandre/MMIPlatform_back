@@ -3,6 +3,7 @@ package org.mmi.MMIPlatform.infrastructure.mapper;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.domain.models.Internship;
 import org.mmi.MMIPlatform.infrastructure.dao.InternshipDao;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.TypeEnum;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class InternshipDaoMapper {
                 .comment(internshipDao.getComment())
                 .weekNumber(internshipDao.getWeekNumber())
                 .type(String.valueOf(internshipDao.getType()))
+                .years(internshipDao.getYears())
                 .build();
     }
 
@@ -33,6 +35,7 @@ public class InternshipDaoMapper {
                 .comment(internship.getComment())
                 .weekNumber(internship.getWeekNumber())
                 .type(TypeEnum.valueOf(internship.getType()))
+                .years(internship.getYears())
                 .build();
     }
 

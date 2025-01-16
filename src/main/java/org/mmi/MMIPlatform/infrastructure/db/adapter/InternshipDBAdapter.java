@@ -10,6 +10,7 @@ import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -37,5 +38,19 @@ public class InternshipDBAdapter {
             log.error("Error adding internship for a student {}: {}", numEtu, e.getMessage());
             throw e;
         }
+    }
+
+    public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
+        StudentDao studentDao = this.studentDaoRepository.findByNumEtu(numEtu);
+        InternshipDao internshipDao = studentDao.getInternships().stream()
+                .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
+                .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: "+ numEtu + " at years: " + years + " with title: " + title)));
+        try {
+            log.info("internship supprimer : {}", internshipDao);
+            this.internshipDaoRepository.delete(internshipDao);
+        } catch (Exception e) {
+            return e.getLocalizedMessage();
+        }
+        return "internship deleted successfully";
     }
 }

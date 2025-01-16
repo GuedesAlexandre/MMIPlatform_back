@@ -15,6 +15,8 @@ public class InternshipDto {
     private String comment;
     @JsonProperty("weekNumber")
     private int weekNumber;
+    @JsonProperty("years")
+    private int years;
     @JsonProperty("type")
     private String type;
 }

@@ -36,4 +36,8 @@ public class InternshipApplicationService {
         Internship internship = internshipDtoMapper.internshipDtoToInternship(internshipDto);
         return this.internshipDtoMapper.internshipToInternshipDto(internshipDomainService.postInternshipForAStudent(numEtu, internship));
     }
+
+    public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
+        return this.internshipDomainService.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title);
+    }
 }

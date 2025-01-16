@@ -41,4 +41,8 @@ public class InternshipDomainService {
             log.error(e.getLocalizedMessage());
         }
         return this.internshipDaoMapper.internshipDaoToInternShip(internshipDao) ;}
+
+    public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
+        return this.internshipDBAdapter.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title);
+    }
 }

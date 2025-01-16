@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.TypeEnum;
 
 @Entity
@@ -27,6 +28,9 @@ public class InternshipDao {
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_WEEKNUMBER")
     private int weekNumber;
+
+    @Column(name = "MMI_PLATFORM_INTERNSHIP_YEARS")
+    private int years;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_TYPE")
     @Enumerated(EnumType.STRING)

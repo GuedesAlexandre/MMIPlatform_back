@@ -44,4 +44,15 @@ public class InternshipController {
     public ResponseEntity<InternshipDto> postInternshipForAStudent(@PathVariable(name="num_etu") String numEtu, @RequestBody InternshipDto internshipDto) {
         return ResponseEntity.ok(this.internshipApplicationService.postInternshipForAStudent(numEtu, internshipDto));
     }
+
+    @Operation(summary = "Delete internship for student", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "student deleted succesfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InternshipDto.class))}),
+    })
+    @DeleteMapping("/{num_etu}/{years}/{title}")
+    public ResponseEntity<String> postInternshipForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name="years") int years, @PathVariable(name="title") String title) {
+        return ResponseEntity.ok(this.internshipApplicationService.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title));
+    }
 }

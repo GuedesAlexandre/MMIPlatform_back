@@ -18,6 +18,7 @@ public class InternshipDtoMapper {
                 .comment(internship.getComment())
                 .weekNumber(internship.getWeekNumber())
                 .type(internship.getType())
+                .years(internship.getYears())
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class InternshipDtoMapper {
                 .comment(internshipDto.getComment())
                 .weekNumber(internshipDto.getWeekNumber())
                 .type(internshipDto.getType())
+                .years(internshipDto.getYears())
                 .build();
     }
 
