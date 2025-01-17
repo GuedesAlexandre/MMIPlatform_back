@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +82,14 @@ public class XlsAdapter {
             headerRow.getCell(colIndex).setCellStyle(headerStyle);
             colIndex++;
         }
-        headerRow.createCell(colIndex).setCellValue("Moyenne générale");
+
+        headerRow.createCell(colIndex).setCellValue("Moyenne du semestre");
         headerRow.getCell(colIndex).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex+1).setCellValue("Classement");
+        headerRow.getCell(colIndex+1).setCellStyle(headerStyle);
+
+        Object[][] overallUnsortedStudent = new Object[studentDaoList.size()][2];
 
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = summarySheet.createRow(i + 1);
@@ -146,9 +153,44 @@ public class XlsAdapter {
             } else {
                 row.getCell(colIndex).setCellStyle(cellStyleGreen);
             }
-        }
 
+            overallUnsortedStudent[i][0] = Double.parseDouble(student.getNumEtu());
+            overallUnsortedStudent[i][1] = overallAverage;
+        }
+        Object[][] overallSortedStudent = summaryAverageSort(overallUnsortedStudent);
+        for (int k = 0; k < studentDaoList.size(); k++){
+            Row row = summarySheet.getRow(k + 1);
+            StudentDao student = studentDaoList.get(k);
+            int colIndexRanking = UEEnum.values().length + 4;
+            for (int j = 0; j < overallSortedStudent.length; j++) {
+                if (overallSortedStudent[j][0] != null && overallSortedStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
+                    row.createCell(colIndexRanking).setCellValue(String.valueOf(j + 1));
+                    break;
+                }
+            }
+        }
+        autoSizeColumns(summarySheet, UEEnum.values().length + 4);
         autoSizeColumns(summarySheet, colIndex);
+    }
+
+    private Object[][] summaryAverageSort(Object[][] unsortedStudentList) {
+        int listSize = unsortedStudentList.length;
+        for (int i = 0; i < listSize - 1; i++) {
+            int bestAverageIndex = i;
+            for (int j = i + 1; j < listSize; j++) {
+                if (unsortedStudentList[j][1] != null) {
+                    double currentAverage = (double) unsortedStudentList[j][1];
+                    double bestAverage = (double) unsortedStudentList[bestAverageIndex][1];
+                    if (currentAverage > bestAverage) {
+                        bestAverageIndex = j;
+                    }
+                }
+            }
+            Object[] temp = unsortedStudentList[i];
+            unsortedStudentList[i] = unsortedStudentList[bestAverageIndex];
+            unsortedStudentList[bestAverageIndex] = temp;
+        }
+        return unsortedStudentList;
     }
 
     private void validateInput(String promo, String semester) {
@@ -266,6 +308,7 @@ public class XlsAdapter {
             subHeaderRow.getCell(i + 3).setCellStyle(headerStyle);
         }
     }
+
     private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, List<ModuleDao> moduleList, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
         List<ModuleDao> filteredModules = moduleList.stream()
                 .filter(module -> module.getUeName().equals(ue.name()))
@@ -317,6 +360,7 @@ public class XlsAdapter {
             }
         }
     }
+
     private void autoSizeColumns(XSSFSheet sheet, int columnCount) {
         for (int i = 0; i <= columnCount; i++) {
             sheet.autoSizeColumn(i);
