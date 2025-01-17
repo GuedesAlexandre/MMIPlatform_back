@@ -66,6 +66,7 @@ public class XlsAdapter {
         XSSFCellStyle headerStyle = createHeaderStyle(workbook);
         XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
         XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
+        XSSFCellStyle cellTextCentered = createCellStyleCenter(workbook);
 
         // Create header row
         Row headerRow = summarySheet.createRow(0);
@@ -86,8 +87,8 @@ public class XlsAdapter {
         headerRow.createCell(colIndex).setCellValue("Moyenne du semestre");
         headerRow.getCell(colIndex).setCellStyle(headerStyle);
 
-        headerRow.createCell(colIndex+1).setCellValue("Classement");
-        headerRow.getCell(colIndex+1).setCellStyle(headerStyle);
+        headerRow.createCell(colIndex + 1).setCellValue("Classement");
+        headerRow.getCell(colIndex + 1).setCellStyle(headerStyle);
 
         Object[][] overallUnsortedStudent = new Object[studentDaoList.size()][2];
 
@@ -158,15 +159,23 @@ public class XlsAdapter {
             overallUnsortedStudent[i][1] = overallAverage;
         }
         Object[][] overallSortedStudent = summaryAverageSort(overallUnsortedStudent);
-        for (int k = 0; k < studentDaoList.size(); k++){
+        int currentRank = 1;
+        double previousAverage = -1;
+        for (int k = 0; k < studentDaoList.size(); k++) {
             Row row = summarySheet.getRow(k + 1);
             StudentDao student = studentDaoList.get(k);
             int colIndexRanking = UEEnum.values().length + 4;
             for (int j = 0; j < overallSortedStudent.length; j++) {
+                double currentAverage = (double) overallSortedStudent[j][1];
+                if (currentAverage != previousAverage) {
+                    currentRank = j + 1;
+                }
                 if (overallSortedStudent[j][0] != null && overallSortedStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
-                    row.createCell(colIndexRanking).setCellValue(String.valueOf(j + 1));
+                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
+                    row.getCell(colIndexRanking).setCellStyle(cellTextCentered);
                     break;
                 }
+                previousAverage = currentAverage;
             }
         }
         autoSizeColumns(summarySheet, UEEnum.values().length + 4);
@@ -191,6 +200,14 @@ public class XlsAdapter {
             unsortedStudentList[bestAverageIndex] = temp;
         }
         return unsortedStudentList;
+    }
+
+    private XSSFCellStyle createCellStyleCenter(Workbook workbook){
+        XSSFCellStyle cellStyleCentered = (XSSFCellStyle) workbook.createCellStyle();
+        cellStyleCentered.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleCentered.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleCentered.setWrapText(true);
+        return cellStyleCentered;
     }
 
     private void validateInput(String promo, String semester) {
