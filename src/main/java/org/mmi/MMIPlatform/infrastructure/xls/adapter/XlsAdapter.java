@@ -43,12 +43,13 @@ public class XlsAdapter {
             XSSFCellStyle headerStyle = createHeaderStyle(workbook);
             XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
             XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
+            XSSFCellStyle centeredStyle = createCenteredCellStyle(workbook);
 
             for (UEEnum ue : UEEnum.values()) {
                 XSSFSheet sheet = (XSSFSheet) workbook.createSheet(ue.name());
                 createHeaderRow(sheet, headerStyle, ue, semester, moduleList);
 
-                fillStudentData(sheet, studentDaoList, ue, semester, moduleList, cellStyleRed, cellStyleGreen);
+                fillStudentData(sheet, studentDaoList, ue, semester, moduleList, cellStyleRed, cellStyleGreen, centeredStyle);
 
                 autoSizeColumns(sheet, moduleList.size() + 3);
             }
@@ -66,7 +67,7 @@ public class XlsAdapter {
         XSSFCellStyle headerStyle = createHeaderStyle(workbook);
         XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
         XSSFCellStyle cellStyleGreen = createCellStyleGreen(workbook);
-        XSSFCellStyle cellTextCentered = createCellStyleCenter(workbook);
+        XSSFCellStyle centeredStyle = createCenteredCellStyle(workbook);
 
         // Create header row
         Row headerRow = summarySheet.createRow(0);
@@ -158,7 +159,7 @@ public class XlsAdapter {
             overallUnsortedStudent[i][0] = Double.parseDouble(student.getNumEtu());
             overallUnsortedStudent[i][1] = overallAverage;
         }
-        Object[][] overallSortedStudent = summaryAverageSort(overallUnsortedStudent);
+        Object[][] overallSortedStudent = averageSort(overallUnsortedStudent);
         int currentRank = 1;
         double previousAverage = -1;
         for (int k = 0; k < studentDaoList.size(); k++) {
@@ -172,7 +173,7 @@ public class XlsAdapter {
                 }
                 if (overallSortedStudent[j][0] != null && overallSortedStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
                     row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
-                    row.getCell(colIndexRanking).setCellStyle(cellTextCentered);
+                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
                     break;
                 }
                 previousAverage = currentAverage;
@@ -182,7 +183,7 @@ public class XlsAdapter {
         autoSizeColumns(summarySheet, colIndex);
     }
 
-    private Object[][] summaryAverageSort(Object[][] unsortedStudentList) {
+    private Object[][] averageSort(Object[][] unsortedStudentList) {
         int listSize = unsortedStudentList.length;
         for (int i = 0; i < listSize - 1; i++) {
             int bestAverageIndex = i;
@@ -200,14 +201,6 @@ public class XlsAdapter {
             unsortedStudentList[bestAverageIndex] = temp;
         }
         return unsortedStudentList;
-    }
-
-    private XSSFCellStyle createCellStyleCenter(Workbook workbook){
-        XSSFCellStyle cellStyleCentered = (XSSFCellStyle) workbook.createCellStyle();
-        cellStyleCentered.setAlignment(HorizontalAlignment.CENTER);
-        cellStyleCentered.setVerticalAlignment(VerticalAlignment.CENTER);
-        cellStyleCentered.setWrapText(true);
-        return cellStyleCentered;
     }
 
     private void validateInput(String promo, String semester) {
@@ -319,6 +312,9 @@ public class XlsAdapter {
         headerRow.createCell(filteredModules.size() + 3).setCellValue("Moyenne de l'UE");
         headerRow.getCell(filteredModules.size() + 3).setCellStyle(headerStyle);
 
+        headerRow.createCell(filteredModules.size() + 4).setCellValue("Classement");
+        headerRow.getCell(filteredModules.size() + 4).setCellStyle(headerStyle);
+
         Row subHeaderRow = sheet.createRow(1);
         for (int i = 0; i < filteredModules.size(); i++) {
             subHeaderRow.createCell(i + 3).setCellValue("Coeff: " + filteredModules.get(i).getCoeff());
@@ -326,10 +322,12 @@ public class XlsAdapter {
         }
     }
 
-    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, List<ModuleDao> moduleList, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+    private void fillStudentData(XSSFSheet sheet, List<StudentDao> studentDaoList, UEEnum ue, String semester, List<ModuleDao> moduleList, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen, XSSFCellStyle centeredStyle) {
         List<ModuleDao> filteredModules = moduleList.stream()
                 .filter(module -> module.getUeName().equals(ue.name()))
                 .toList();
+
+        Object[][] overallUnsortedUeStudents = new Object[studentDaoList.size()][2];
 
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = sheet.createRow(i + 2);
@@ -374,6 +372,29 @@ public class XlsAdapter {
                 row.getCell(filteredModules.size() + 3).setCellStyle(cellStyleRed);
             } else {
                 row.getCell(filteredModules.size() + 3).setCellStyle(cellStyleGreen);
+            }
+
+            overallUnsortedUeStudents[i][0] = Double.parseDouble(studentDaoList.get(i).getNumEtu());
+            overallUnsortedUeStudents[i][1] = ueAverage;
+        }
+        Object[][] overallSortedUeStudents = averageSort(overallUnsortedUeStudents);
+        int currentRank = 1;
+        double previousAverage = -1;
+        for (int k = 0; k < studentDaoList.size(); k++) {
+            Row row = sheet.getRow(k + 2);
+            StudentDao student = studentDaoList.get(k);
+            int colIndexRanking = filteredModules.size() + 4;
+            for (int j = 0; j < overallSortedUeStudents.length; j++) {
+                double currentAverage = (double) overallSortedUeStudents[j][1];
+                if (currentAverage != previousAverage) {
+                    currentRank = j + 1;
+                }
+                if (overallSortedUeStudents[j][0] != null && overallSortedUeStudents[j][0].equals(Double.parseDouble(student.getNumEtu()))){
+                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
+                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
+                    break;
+                }
+                previousAverage = currentAverage;
             }
         }
     }
@@ -423,7 +444,7 @@ public class XlsAdapter {
 
             Map<String, Integer> evalColumnMap = createHeaderRowForModule(sheet, headerStyle, module, studentDaoList);
 
-            fillStudentDataForModule(sheet, studentDaoList, module, evalColumnMap, cellStyleRed, cellStyleGreen);
+            fillStudentDataForModule(sheet, studentDaoList, module, evalColumnMap, cellStyleRed, cellStyleGreen, centeredStyle);
             applyCenteredStyleToAllCells(sheet, centeredStyle);
             autoSizeColumns(sheet, evalColumnMap.size() + 4);
 
@@ -464,6 +485,9 @@ public class XlsAdapter {
         headerRow.createCell(colIndex).setCellValue("Moyenne de " + module.getName());
         headerRow.getCell(colIndex).setCellStyle(headerStyle);
 
+        headerRow.createCell(colIndex + 1).setCellValue("Classement");
+        headerRow.getCell(colIndex + 1).setCellStyle(headerStyle);
+
         return evalColumnMap;
     }
 
@@ -479,7 +503,8 @@ public class XlsAdapter {
     }
 
     private void fillStudentDataForModule(XSSFSheet sheet, List<StudentDao> studentDaoList, ModuleDao module,
-                                          Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen) {
+                                          Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen, XSSFCellStyle centeredStyle) {
+        Object[][] overallUnsortedModuleStudent = new Object[studentDaoList.size()][2];
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = sheet.createRow(i + 1);
             StudentDao student = studentDaoList.get(i);
@@ -518,8 +543,28 @@ public class XlsAdapter {
             } else {
                 row.getCell(avgColIndex).setCellStyle(cellStyleGreen);
             }
+            overallUnsortedModuleStudent[i][0] = Double.parseDouble(student.getNumEtu());
+            overallUnsortedModuleStudent[i][1] = averageGrade;
+        }
+        Object[][] overallSortedModuleStudent = averageSort(overallUnsortedModuleStudent);
+        int currentRank = 1;
+        double previousAverage = -1;
+        for (int k = 0; k < studentDaoList.size(); k++) {
+            Row row = sheet.getRow(k + 1);
+            StudentDao student = studentDaoList.get(k);
+            int colIndexRanking = evalColumnMap.size() + 4;
+            for (int j = 0; j < overallSortedModuleStudent.length; j++){
+                double currentAverage = (double) overallSortedModuleStudent[j][1];
+                if (currentAverage != previousAverage) {
+                    currentRank = j + 1;
+                }
+                if (overallSortedModuleStudent[j][0] != null && overallSortedModuleStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
+                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
+                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
+                    break;
+                }
+                previousAverage = currentAverage;
+            }
         }
     }
-
-
 }
