@@ -6,7 +6,6 @@ import org.mmi.MMIPlatform.domain.models.Internship;
 import org.mmi.MMIPlatform.domain.models.Student;
 import org.mmi.MMIPlatform.infrastructure.dao.InternshipDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
-import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
 import org.mmi.MMIPlatform.infrastructure.db.adapter.InternshipDBAdapter;
 import org.mmi.MMIPlatform.infrastructure.mapper.InternshipDaoMapper;
 import org.mmi.MMIPlatform.infrastructure.mapper.StudentDaoMapper;
@@ -44,5 +43,15 @@ public class InternshipDomainService {
 
     public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
         return this.internshipDBAdapter.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title);
+    }
+
+    public Internship putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, Internship internship) {
+        InternshipDao internshipDao = this.internshipDaoMapper.internshipToInternshipDao(internship);
+        try{
+            this.internshipDBAdapter.putInternshipByNumEtuYearsAndTitle(numEtu, years, title, internshipDao);
+        }catch (Exception e){
+            log.error(e.getLocalizedMessage());
+        }
+        return this.internshipDaoMapper.internshipDaoToInternShip(internshipDao);
     }
 }

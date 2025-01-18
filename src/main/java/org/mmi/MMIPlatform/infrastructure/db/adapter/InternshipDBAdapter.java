@@ -53,4 +53,22 @@ public class InternshipDBAdapter {
         }
         return "internship deleted successfully";
     }
+
+    public InternshipDao putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, InternshipDao internshipDao) {
+        StudentDao studentDao = this.studentDaoRepository.findByNumEtu(numEtu);
+        InternshipDao oldInternshipDao = studentDao.getInternships().stream()
+                .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
+                .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: "+ numEtu + " at years: " + years + " with title: " + title)));
+        studentDao.getInternships().stream()
+                .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
+                .forEach(i -> {
+                    i.setTitle(internshipDao.getTitle());
+                    i.setComment(internshipDao.getComment());
+                    i.setYears(internshipDao.getYears());
+                    i.setType(internshipDao.getType());
+                    i.setWeekCount(internshipDao.getWeekCount());
+                });
+        log.info("studentDao {}", studentDao);
+        return internshipDao;
+    }
 }

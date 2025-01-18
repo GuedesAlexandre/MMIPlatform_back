@@ -35,4 +35,9 @@ public class InternshipApplicationService {
     public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
         return this.internshipDomainService.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title);
     }
+
+    public InternshipDto putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, InternshipDto internshipDto) {
+        Internship internship = internshipDtoMapper.internshipDtoToInternship(internshipDto);
+        return this.internshipDtoMapper.internshipToInternshipDto(internshipDomainService.putInternshipByNumEtuYearsAndTitle(numEtu, years, title, internship));
+    }
 }
