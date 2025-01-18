@@ -23,22 +23,13 @@ public class InternshipDomainService {
     private final StudentDaoMapper studentDaoMapper;
 
     public List<Student> getInternshipsByPromo(String promo) {
-        try {
             List<StudentDao> studentDaoByPromo = this.internshipDBAdapter.getInternshipsByPromo(promo);
             return this.studentDaoMapper.studentsDaostoStudentsForInternship(studentDaoByPromo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
-        }
     }
 
     public Internship postInternshipForAStudent(String numEtu, Internship internship) {
         InternshipDao internshipDao = this.internshipDaoMapper.internshipToInternshipDao(internship);
-        try{
             this.internshipDBAdapter.postInternshipForAStudent(numEtu, internshipDao);
-        }catch (Exception e){
-            log.error(e.getLocalizedMessage());
-        }
         return this.internshipDaoMapper.internshipDaoToInternShip(internshipDao) ;}
 
     public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
@@ -47,11 +38,7 @@ public class InternshipDomainService {
 
     public Internship putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, Internship internship) {
         InternshipDao internshipDao = this.internshipDaoMapper.internshipToInternshipDao(internship);
-        try{
             this.internshipDBAdapter.putInternshipByNumEtuYearsAndTitle(numEtu, years, title, internshipDao);
-        }catch (Exception e){
-            log.error(e.getLocalizedMessage());
-        }
         return this.internshipDaoMapper.internshipDaoToInternShip(internshipDao);
     }
 }

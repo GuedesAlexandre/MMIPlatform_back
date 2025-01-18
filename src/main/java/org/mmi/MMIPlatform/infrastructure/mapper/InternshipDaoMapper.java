@@ -14,6 +14,9 @@ import java.util.List;
 public class InternshipDaoMapper {
 
     public Internship internshipDaoToInternShip(InternshipDao internshipDao) {
+        if(internshipDao == null) {
+            throw new NullPointerException("internship required");
+        }
         return Internship.builder()
                 .id(internshipDao.getId())
                 .title(internshipDao.getTitle())
@@ -29,6 +32,9 @@ public class InternshipDaoMapper {
     }
 
     public InternshipDao internshipToInternshipDao(Internship internship) {
+        if(internship == null) {
+            throw new NullPointerException("internship required");
+        }
         return InternshipDao.builder()
                 .id(internship.getId())
                 .title(internship.getTitle())

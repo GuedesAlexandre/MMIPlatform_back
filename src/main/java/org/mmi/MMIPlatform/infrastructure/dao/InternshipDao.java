@@ -21,6 +21,7 @@ public class InternshipDao {
     private String id;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_TITLE")
+    @NonNull
     private String title;
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_COMMENT")
@@ -34,6 +35,7 @@ public class InternshipDao {
 
     @Column(name = "MMI_PLATFORM_INTERNSHIP_TYPE")
     @Enumerated(EnumType.STRING)
+    @NonNull
     private TypeEnum type;
 
     @ManyToOne

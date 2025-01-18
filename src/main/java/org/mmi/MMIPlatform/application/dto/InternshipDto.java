@@ -3,6 +3,7 @@ package org.mmi.MMIPlatform.application.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Builder
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class InternshipDto {
     @JsonProperty("title")
+    @NonNull
     private String title;
     @JsonProperty("comment")
     private String comment;
@@ -18,5 +20,6 @@ public class InternshipDto {
     @JsonProperty("years")
     private int years;
     @JsonProperty("type")
+    @NonNull
     private String type;
 }

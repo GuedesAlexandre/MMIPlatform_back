@@ -35,7 +35,7 @@ public class StudentDaoMapper {
 
     public Student studentDaoToStudentForInternship(StudentDao studentDao) {
         if(studentDao == null) {
-            return null;
+            throw new NullPointerException("student required");
         }
         return Student.builder()
                 .id(studentDao.getId())
@@ -73,7 +73,7 @@ public class StudentDaoMapper {
 
     public StudentDao studentToStudentDaoForInternship(Student student) {
         if(student == null) {
-            return null;
+            throw new NullPointerException("student required");
         }
         return StudentDao.builder()
                 .id(student.getId())

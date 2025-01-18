@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers("/api/v1/export/**").hasAuthority("ADMIN")
                         .requestMatchers("api/v1/student").hasAnyAuthority("ADMIN", "TEACHER", "SCOLARITY")
-                        .requestMatchers("api/v1/internship/**").hasAnyAuthority("ADMIN", "TEACHER", "SCOLARITY")
+                        .requestMatchers("api/v1/internship/**").hasAnyAuthority("ADMIN", "SCOLARITY")
                         .anyRequest().permitAll()
 
                 )
