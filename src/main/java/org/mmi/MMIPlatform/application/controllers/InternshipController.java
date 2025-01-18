@@ -52,7 +52,7 @@ public class InternshipController {
                             schema = @Schema(implementation = InternshipDto.class))}),
     })
     @DeleteMapping("/{num_etu}/{years}/{title}")
-    public ResponseEntity<String> postInternshipForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name="years") int years, @PathVariable(name="title") String title) {
+    public ResponseEntity<String> deleteInternshipByNumEtuYearsAndTitle(@PathVariable(name="num_etu") String numEtu, @PathVariable(name="years") int years, @PathVariable(name="title") String title) {
         return ResponseEntity.ok(this.internshipApplicationService.deleteInternshipByNumEtuYearsAndTitle(numEtu, years, title));
     }
 
@@ -62,8 +62,8 @@ public class InternshipController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = InternshipDto.class))}),
     })
-    @DeleteMapping("/{num_etu}/{years}/{title}")
-    public ResponseEntity<InternshipDto> postInternshipForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name="years") int years, @PathVariable(name="title") String title, @RequestBody InternshipDto internshipDto) {
+    @PutMapping("/{num_etu}/{years}/{title}")
+    public ResponseEntity<InternshipDto> putInternshipByNumEtuYearsAndTitle(@PathVariable(name="num_etu") String numEtu, @PathVariable(name="years") int years, @PathVariable(name="title") String title, @RequestBody InternshipDto internshipDto) {
         return ResponseEntity.ok(this.internshipApplicationService.putInternshipByNumEtuYearsAndTitle(numEtu, years, title, internshipDto));
     }
 }

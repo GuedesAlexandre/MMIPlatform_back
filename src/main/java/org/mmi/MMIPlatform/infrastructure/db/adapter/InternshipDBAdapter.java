@@ -26,49 +26,54 @@ public class InternshipDBAdapter {
 
     public InternshipDao postInternshipForAStudent(String numEtu, InternshipDao internship) {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
+
         if (student == null) {
-            throw new IllegalArgumentException("student doesn't exist");
+            throw new IllegalArgumentException("Student not found with numEtu: " + numEtu);
         }
-        try {
-            log.info("Adding internship for student {}", numEtu);
+
+
             internship.setStudent(student);
             this.internshipDaoRepository.save(internship);
             return internship;
-        } catch (Exception e) {
-            log.error("Error adding internship for a student {}: {}", numEtu, e.getMessage());
-            throw e;
-        }
     }
 
     public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
         StudentDao studentDao = this.studentDaoRepository.findByNumEtu(numEtu);
+
+        if (studentDao == null) {
+            throw new IllegalArgumentException("Student not found with numEtu: " + numEtu);
+        }
+
         InternshipDao internshipDao = studentDao.getInternships().stream()
                 .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
-                .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: "+ numEtu + " at years: " + years + " with title: " + title)));
-        try {
-            studentDao.getInternships().remove(internshipDao);
-            this.internshipDaoRepository.delete(internshipDao);
-        } catch (Exception e) {
-            return e.getLocalizedMessage();
-        }
+                .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: " + numEtu + " at years: " + years + " with title: " + title)));
+
+        studentDao.getInternships().remove(internshipDao);
+        this.internshipDaoRepository.delete(internshipDao);
+
         return "internship deleted successfully";
     }
 
-    public InternshipDao putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, InternshipDao internshipDao) {
+    public InternshipDao putInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title, InternshipDao newInternshipDao) {
         StudentDao studentDao = this.studentDaoRepository.findByNumEtu(numEtu);
-        InternshipDao oldInternshipDao = studentDao.getInternships().stream()
-                .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
-                .findFirst().orElseThrow((() -> new IllegalArgumentException("Enable to find internship for student: "+ numEtu + " at years: " + years + " with title: " + title)));
-        studentDao.getInternships().stream()
-                .filter(internship -> internship.getTitle().equals(title) && internship.getYears() == years)
-                .forEach(i -> {
-                    i.setTitle(internshipDao.getTitle());
-                    i.setComment(internshipDao.getComment());
-                    i.setYears(internshipDao.getYears());
-                    i.setType(internshipDao.getType());
-                    i.setWeekCount(internshipDao.getWeekCount());
-                });
-        log.info("studentDao {}", studentDao);
-        return internshipDao;
+
+        if (studentDao == null) {
+            throw new IllegalArgumentException("Student not found with numEtu: " + numEtu);
+        }
+
+        InternshipDao internship = studentDao.getInternships().stream()
+                .filter(i -> i.getTitle().equals(title) && i.getYears() == years)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unable to find internship for student: " + numEtu + " at years: " + years + " with title: " + title));
+
+        internship.setTitle(newInternshipDao.getTitle());
+        internship.setComment(newInternshipDao.getComment());
+        internship.setYears(newInternshipDao.getYears());
+        internship.setType(newInternshipDao.getType());
+        internship.setWeekCount(newInternshipDao.getWeekCount());
+
+        this.internshipDaoRepository.save(internship);
+        this.studentDaoRepository.save(studentDao);
+
+        return internship;
     }
 }
