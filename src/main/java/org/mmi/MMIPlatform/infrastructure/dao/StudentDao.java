@@ -39,4 +39,7 @@ public class StudentDao {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoteDao> notes;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InternshipDao> internships;
 }

@@ -25,4 +25,6 @@ public class StudentDto {
     private String numEtu;
     @JsonProperty("notes")
     private List<NoteDto> notes;
+    @JsonProperty("internships")
+    private List<InternshipDto> internships;
 }

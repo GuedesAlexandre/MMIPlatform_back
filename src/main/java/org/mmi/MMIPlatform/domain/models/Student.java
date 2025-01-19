@@ -17,4 +17,5 @@ public class Student {
     private String group;
     private String numEtu;
     private List<Note> notes;
+    private List<Internship> internships;
 }
