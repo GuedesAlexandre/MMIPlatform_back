@@ -19,7 +19,7 @@ public class SignatureDao {
     private String id;
 
     @Column(name = "MMI_PLATFORM_SIGNATURE_SIGN")
-    private Byte[] sign;
+    private byte[] sign;
 
     @OneToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_USER_STUDENT")
