@@ -15,13 +15,13 @@ import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
+import org.mmi.MMIPlatform.infrastructure.xls.adapter.models.StudentsRank;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +90,7 @@ public class XlsAdapter {
         headerRow.createCell(colIndex + 1).setCellValue("Classement");
         headerRow.getCell(colIndex + 1).setCellStyle(headerStyle);
 
-        Object[][] overallUnsortedStudent = new Object[studentDaoList.size()][2];
+        List<StudentsRank> overallUnsortedStudents = new ArrayList<>();
 
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = summarySheet.createRow(i + 1);
@@ -154,52 +154,48 @@ public class XlsAdapter {
             } else {
                 row.getCell(colIndex).setCellStyle(cellStyleGreen);
             }
+            StudentsRank unsortedStudent = StudentsRank.builder()
+                    .numEtu(student.getNumEtu())
+                    .average(overallAverage)
+                    .build();
+            overallUnsortedStudents.add(unsortedStudent);
+        }
 
-            overallUnsortedStudent[i][0] = Double.parseDouble(student.getNumEtu());
-            overallUnsortedStudent[i][1] = overallAverage;
-        }
-        Object[][] overallSortedStudent = averageSort(overallUnsortedStudent);
-        int currentRank = 1;
-        double previousAverage = -1;
-        for (int k = 0; k < studentDaoList.size(); k++) {
-            Row row = summarySheet.getRow(k + 1);
-            StudentDao student = studentDaoList.get(k);
-            int colIndexRanking = UEEnum.values().length + 4;
-            for (int j = 0; j < overallSortedStudent.length; j++) {
-                double currentAverage = (double) overallSortedStudent[j][1];
-                if (currentAverage != previousAverage) {
-                    currentRank = j + 1;
-                }
-                if (overallSortedStudent[j][0] != null && overallSortedStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
-                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
-                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
-                    break;
-                }
-                previousAverage = currentAverage;
-            }
-        }
+        List<StudentsRank> overallSortedStudents = sortStudentsByGrades(overallUnsortedStudents);
+        int colIndexRanking = UEEnum.values().length + 4;
+        createRankingColumn(summarySheet, colIndexRanking, 1, overallSortedStudents, studentDaoList, centeredStyle);
+
         autoSizeColumns(summarySheet, UEEnum.values().length + 4);
         autoSizeColumns(summarySheet, colIndex);
     }
 
-    private Object[][] averageSort(Object[][] unsortedStudentList) {
-        int listSize = unsortedStudentList.length;
-        for (int i = 0; i < listSize - 1; i++) {
-            int bestAverageIndex = i;
-            for (int j = i + 1; j < listSize; j++) {
-                if (unsortedStudentList[j][1] != null) {
-                    double currentAverage = (double) unsortedStudentList[j][1];
-                    double bestAverage = (double) unsortedStudentList[bestAverageIndex][1];
-                    if (currentAverage > bestAverage) {
-                        bestAverageIndex = j;
-                    }
+    private void createRankingColumn(XSSFSheet summarySheet, int colIndexRanking, int rowIndexRanking, List<StudentsRank> overallSortedStudents, List<StudentDao> studentDaoList, XSSFCellStyle centeredStyle) {
+        int currentRank = 1;
+        double previousAverage = -1;
+
+        for (int j = 0; j < studentDaoList.size(); j++) {
+            StudentsRank sortedStudent = overallSortedStudents.get(j);
+
+            if (sortedStudent.getAverage() != previousAverage) {
+                currentRank = j + 1;
+            }
+
+            for (int k = 0; k < studentDaoList.size(); k++) {
+                StudentDao student = studentDaoList.get(k);
+                if (sortedStudent.getNumEtu().equals(student.getNumEtu())) {
+                    Row row = summarySheet.getRow(k + rowIndexRanking);
+                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
+                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
                 }
             }
-            Object[] temp = unsortedStudentList[i];
-            unsortedStudentList[i] = unsortedStudentList[bestAverageIndex];
-            unsortedStudentList[bestAverageIndex] = temp;
+            previousAverage = sortedStudent.getAverage();
         }
-        return unsortedStudentList;
+    }
+
+    private List<StudentsRank> sortStudentsByGrades(List<StudentsRank> unsortedStudents) {
+        return unsortedStudents.stream()
+                .sorted((student1, student2) -> student2.getAverage().compareTo(student1.getAverage()))
+                .collect(Collectors.toList());
     }
 
     private void validateInput(String promo, String semester) {
@@ -326,7 +322,7 @@ public class XlsAdapter {
                 .filter(module -> module.getUeName().equals(ue.name()))
                 .toList();
 
-        Object[][] overallUnsortedUeStudents = new Object[studentDaoList.size()][2];
+        List<StudentsRank> overallUnsortedStudents = new ArrayList<>();
 
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = sheet.createRow(i + 2);
@@ -373,29 +369,15 @@ public class XlsAdapter {
                 row.getCell(filteredModules.size() + 3).setCellStyle(cellStyleGreen);
             }
 
-            overallUnsortedUeStudents[i][0] = Double.parseDouble(studentDaoList.get(i).getNumEtu());
-            overallUnsortedUeStudents[i][1] = ueAverage;
+            StudentsRank unsortedStudent = StudentsRank.builder()
+                    .numEtu(studentDaoList.get(i).getNumEtu())
+                    .average(ueAverage)
+                    .build();
+            overallUnsortedStudents.add(unsortedStudent);
         }
-        Object[][] overallSortedUeStudents = averageSort(overallUnsortedUeStudents);
-        int currentRank = 1;
-        double previousAverage = -1;
-        for (int k = 0; k < studentDaoList.size(); k++) {
-            Row row = sheet.getRow(k + 2);
-            StudentDao student = studentDaoList.get(k);
-            int colIndexRanking = filteredModules.size() + 4;
-            for (int j = 0; j < overallSortedUeStudents.length; j++) {
-                double currentAverage = (double) overallSortedUeStudents[j][1];
-                if (currentAverage != previousAverage) {
-                    currentRank = j + 1;
-                }
-                if (overallSortedUeStudents[j][0] != null && overallSortedUeStudents[j][0].equals(Double.parseDouble(student.getNumEtu()))){
-                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
-                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
-                    break;
-                }
-                previousAverage = currentAverage;
-            }
-        }
+        List<StudentsRank> overallSortedStudents = sortStudentsByGrades(overallUnsortedStudents);
+        int colIndexRanking = filteredModules.size() + 4;
+        createRankingColumn(sheet, colIndexRanking, 2, overallSortedStudents, studentDaoList, centeredStyle);
     }
 
     private void autoSizeColumns(XSSFSheet sheet, int columnCount) {
@@ -503,7 +485,7 @@ public class XlsAdapter {
 
     private void fillStudentDataForModule(XSSFSheet sheet, List<StudentDao> studentDaoList, ModuleDao module,
                                           Map<String, Integer> evalColumnMap, XSSFCellStyle cellStyleRed, XSSFCellStyle cellStyleGreen, XSSFCellStyle centeredStyle) {
-        Object[][] overallUnsortedModuleStudent = new Object[studentDaoList.size()][2];
+        List<StudentsRank> overallUnsortedStudents = new ArrayList<>();
         for (int i = 0; i < studentDaoList.size(); i++) {
             Row row = sheet.createRow(i + 1);
             StudentDao student = studentDaoList.get(i);
@@ -542,28 +524,14 @@ public class XlsAdapter {
             } else {
                 row.getCell(avgColIndex).setCellStyle(cellStyleGreen);
             }
-            overallUnsortedModuleStudent[i][0] = Double.parseDouble(student.getNumEtu());
-            overallUnsortedModuleStudent[i][1] = averageGrade;
+            StudentsRank unsortedStudent = StudentsRank.builder()
+                    .numEtu(student.getNumEtu())
+                    .average(averageGrade)
+                    .build();
+            overallUnsortedStudents.add(unsortedStudent);
         }
-        Object[][] overallSortedModuleStudent = averageSort(overallUnsortedModuleStudent);
-        int currentRank = 1;
-        double previousAverage = -1;
-        for (int k = 0; k < studentDaoList.size(); k++) {
-            Row row = sheet.getRow(k + 1);
-            StudentDao student = studentDaoList.get(k);
-            int colIndexRanking = evalColumnMap.size() + 4;
-            for (int j = 0; j < overallSortedModuleStudent.length; j++){
-                double currentAverage = (double) overallSortedModuleStudent[j][1];
-                if (currentAverage != previousAverage) {
-                    currentRank = j + 1;
-                }
-                if (overallSortedModuleStudent[j][0] != null && overallSortedModuleStudent[j][0].equals(Double.parseDouble(student.getNumEtu()))) {
-                    row.createCell(colIndexRanking).setCellValue(String.valueOf(currentRank));
-                    row.getCell(colIndexRanking).setCellStyle(centeredStyle);
-                    break;
-                }
-                previousAverage = currentAverage;
-            }
-        }
+        List<StudentsRank> overallSortedStudents = sortStudentsByGrades(overallUnsortedStudents);
+        int colIndexRanking = evalColumnMap.size() + 4;
+        createRankingColumn(sheet, colIndexRanking, 1, overallSortedStudents, studentDaoList, centeredStyle);
     }
 }
