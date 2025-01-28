@@ -426,7 +426,6 @@ public class XlsAdapter {
             Map<String, Integer> evalColumnMap = createHeaderRowForModule(sheet, headerStyle, module, studentDaoList);
 
             fillStudentDataForModule(sheet, studentDaoList, module, evalColumnMap, cellStyleRed, cellStyleGreen, centeredStyle);
-//            applyCenteredStyleToAllCells(sheet, centeredStyle);
             autoSizeColumns(sheet, evalColumnMap.size() + 4);
 
             return writeWorkbookToByteArray(workbook);
@@ -491,11 +490,8 @@ public class XlsAdapter {
             StudentDao student = studentDaoList.get(i);
 
             row.createCell(0).setCellValue(student.getFirstName() + " " + student.getLastName());
-            row.getCell(0).setCellStyle(centeredStyle);
             row.createCell(1).setCellValue(student.getNumEtu());
-            row.getCell(1).setCellStyle(centeredStyle);
             row.createCell(2).setCellValue(student.getGroup());
-            row.getCell(2).setCellStyle(centeredStyle);
 
             double totalGrades = 0;
             double totalCoeff = 0;
