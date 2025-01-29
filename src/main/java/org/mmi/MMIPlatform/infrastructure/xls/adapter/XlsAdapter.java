@@ -7,11 +7,16 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.mmi.MMIPlatform.domain.models.Internship;
+import org.mmi.MMIPlatform.infrastructure.dao.InternshipDao;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.TypeEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
+import org.mmi.MMIPlatform.infrastructure.db.adapter.InternshipDBAdapter;
+import org.mmi.MMIPlatform.infrastructure.db.repository.InternshipDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
@@ -31,12 +36,14 @@ public class XlsAdapter {
     private final StudentDaoRepository studentDaoRepository;
     private final ModuleDaoRepository moduleDaoRepository;
     private final NoteDaoRepository noteDaoRepository;
+    private final InternshipDBAdapter internshipDBAdapter;
 
     public byte[] exportStudentToExcel(String promo, String semester) {
         validateInput(promo, semester);
 
         List<StudentDao> studentDaoList = getStudentList(promo);
         List<ModuleDao> moduleList = getModuleList(promo, semester);
+        List<StudentDao> internshipList = internshipDBAdapter.getInternshipsByPromo(promo);
 
         try (Workbook workbook = new XSSFWorkbook()) {
             XSSFCellStyle headerStyle = createHeaderStyle(workbook);
@@ -53,7 +60,7 @@ public class XlsAdapter {
                 autoSizeColumns(sheet, moduleList.size() + 3);
             }
 
-            createSummarySheet((XSSFWorkbook) workbook, studentDaoList, moduleList);
+            createSummarySheet((XSSFWorkbook) workbook, studentDaoList, moduleList, internshipList);
 
             return writeWorkbookToByteArray(workbook);
         } catch (IOException e) {
@@ -61,7 +68,7 @@ public class XlsAdapter {
         }
     }
 
-    private void createSummarySheet(XSSFWorkbook workbook, List<StudentDao> studentDaoList, List<ModuleDao> moduleList) {
+    private void createSummarySheet(XSSFWorkbook workbook, List<StudentDao> studentDaoList, List<ModuleDao> moduleList, List<StudentDao> internshipList) {
         XSSFSheet summarySheet = workbook.createSheet("Synthèse");
         XSSFCellStyle headerStyle = createHeaderStyle(workbook);
         XSSFCellStyle cellStyleRed = createCellStyleRed(workbook);
@@ -89,6 +96,9 @@ public class XlsAdapter {
 
         headerRow.createCell(colIndex + 1).setCellValue("Classement");
         headerRow.getCell(colIndex + 1).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex + 2).setCellValue("Nombre de semaine de stage");
+        headerRow.getCell(colIndex + 2).setCellStyle(headerStyle);
 
         List<StudentsRank> overallUnsortedStudents = new ArrayList<>();
 
@@ -154,6 +164,35 @@ public class XlsAdapter {
             } else {
                 row.getCell(colIndex).setCellStyle(cellStyleGreen);
             }
+
+            List<InternshipDao> studentInternships = internshipList.stream()
+                    .filter(studentInternshipList -> studentInternshipList.getNumEtu().equals(student.getNumEtu()))
+                    .map(StudentDao::getInternships)
+                    .flatMap(List::stream)
+                    .toList();
+
+            int totalInternshipsWeeks = 0;
+            boolean isAlternance = false;
+            for (InternshipDao internship : studentInternships) {
+                if (internship.getType().equals(TypeEnum.ALTERNANCE)){
+                    isAlternance = true;
+                }
+                totalInternshipsWeeks += internship.getWeekCount();
+            }
+
+            if (isAlternance) {
+                row.createCell(colIndex + 2).setCellValue("Valider par alternance");
+                row.getCell(colIndex + 2).setCellStyle(cellStyleGreen);
+            } else {
+                if (totalInternshipsWeeks <= 25){
+                    row.createCell(colIndex + 2).setCellValue(totalInternshipsWeeks + " semaines");
+                    row.getCell(colIndex + 2).setCellStyle(cellStyleRed);
+                } else {
+                    row.createCell(colIndex + 2).setCellValue(totalInternshipsWeeks + " semaines");
+                    row.getCell(colIndex + 2).setCellStyle(cellStyleGreen);
+                }
+            }
+
             StudentsRank unsortedStudent = StudentsRank.builder()
                     .numEtu(student.getNumEtu())
                     .average(overallAverage)
@@ -166,7 +205,7 @@ public class XlsAdapter {
         createRankingColumn(summarySheet, colIndexRanking, 1, overallSortedStudents, studentDaoList, centeredStyle);
 
         autoSizeColumns(summarySheet, UEEnum.values().length + 4);
-        autoSizeColumns(summarySheet, colIndex);
+        autoSizeColumns(summarySheet, colIndex + 2);
     }
 
     private void createRankingColumn(XSSFSheet summarySheet, int colIndexRanking, int rowIndexRanking, List<StudentsRank> overallSortedStudents, List<StudentDao> studentDaoList, XSSFCellStyle centeredStyle) {
