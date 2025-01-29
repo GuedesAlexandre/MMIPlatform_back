@@ -12,6 +12,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignatureSheetDaoMapper {
 
+    private final SignatureDaoMapper signatureDaoMapper;
+    private final UserStudentDaoMapper userStudentDaoMapper;
+
     public SignatureSheet signatureSheetDaoToSignatureSheet(SignatureSheetDao signatureSheetDao) {
         return SignatureSheet.builder()
                 .id(signatureSheetDao.getId())
@@ -19,10 +22,12 @@ public class SignatureSheetDaoMapper {
                 .moduleName(signatureSheetDao.getModuleName())
                 .createdAt(signatureSheetDao.getCreatedAt())
                 .finishAt(signatureSheetDao.getFinishAt())
+                .signatures(signatureDaoMapper.signatureDaoListToSignatureList(signatureSheetDao.getSignatureDaos()))
+                .userStudents(userStudentDaoMapper.userStudentDaoListToUserStudentList(signatureSheetDao.getUserStudentDaos()))
                 .build();
     }
 
-    public List<SignatureSheet> signatureSheetDaoListToSignatureSheetDao(List<SignatureSheetDao> signatureSheetDaoList) {
+    public List<SignatureSheet> signatureSheetDaoListToSignatureSheetList(List<SignatureSheetDao> signatureSheetDaoList) {
         return signatureSheetDaoList.stream().map(this::signatureSheetDaoToSignatureSheet).toList();
     }
 
@@ -33,10 +38,12 @@ public class SignatureSheetDaoMapper {
                 .moduleName(signatureSheet.getModuleName())
                 .createdAt(signatureSheet.getCreatedAt())
                 .finishAt(signatureSheet.getFinishAt())
+                .signatureDaos(signatureDaoMapper.signatureListToSignatureDaoList(signatureSheet.getSignatures()))
+                .userStudentDaos(userStudentDaoMapper.userStudentListToUserStudentDaoList(signatureSheet.getUserStudents()))
                 .build();
     }
 
-    public List<SignatureSheetDao> signatureSheetListToSignatureSheetList(List<SignatureSheet> signatureSheets) {
+    public List<SignatureSheetDao> signatureSheetListToSignatureSheetDaoList(List<SignatureSheet> signatureSheets) {
         return signatureSheets.stream().map(this::signatureSheetToSignatureSheetDao).toList();
     }
 }

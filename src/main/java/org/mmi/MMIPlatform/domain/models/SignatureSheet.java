@@ -16,5 +16,6 @@ public class SignatureSheet {
     private String moduleName;
     private Date createdAt;
     private Date finishAt;
-    private List<Signature> Signatures;
+    private List<Signature> signatures;
+    private List<UserStudent> userStudents;
 }

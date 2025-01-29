@@ -37,7 +37,7 @@ public class SignatureSheetDao {
 
     @OneToMany
     @JoinColumn(name="MMIPLATFORM_SIGNATURE_SHEET_SIGNATURE")
-    private List<SignatureDao> signatureDao;
+    private List<SignatureDao> signatureDaos;
 
     @OneToMany
     @JoinTable(name = "MMI_PLATFORM_USER_STUDENT_SIGNATURE_SHEET",
