@@ -18,14 +18,11 @@ public class SignatureDao {
     @Column(name = "MMI_PLATFORM_SIGNATURE_ID")
     private String id;
 
+    @Lob
     @Column(name = "MMI_PLATFORM_SIGNATURE_SIGN")
     private byte[] sign;
 
     @OneToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_USER_STUDENT")
     private UserStudentDao userStudentDao;
-
-    @ManyToOne
-    @JoinColumn(name="MMIPLATFORM_USER_SIGNATURE_SHEET")
-    private SignatureSheetDao signatureSheetDao;
 }

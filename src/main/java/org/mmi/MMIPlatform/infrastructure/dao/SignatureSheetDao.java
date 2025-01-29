@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-@Table(name="MMIPLATFORM_USER_SIGNATURE_SHEET")
+@Table(name="MMIPLATFORM_SIGNATURE_SHEET")
 public class SignatureSheetDao {
 
     @Id
@@ -36,7 +36,11 @@ public class SignatureSheetDao {
     private Date finishAt;
 
     @OneToMany
-    @JoinTable(name = "MMI_PLATFORM_USER_STUDENT",
+    @JoinColumn(name="MMIPLATFORM_SIGNATURE_SHEET_SIGNATURE")
+    private List<SignatureDao> signatureDao;
+
+    @OneToMany
+    @JoinTable(name = "MMI_PLATFORM_USER_STUDENT_SIGNATURE_SHEET",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_STUDENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_SHEET_ID"))
     private List<UserStudentDao> userStudentDaos;

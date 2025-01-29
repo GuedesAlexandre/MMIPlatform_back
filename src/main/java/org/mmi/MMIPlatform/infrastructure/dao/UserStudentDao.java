@@ -29,7 +29,6 @@ public class UserStudentDao {
     @Column(name = "MMI_PLATFORM_USER_STUDENT_EMAIL")
     private String email;
 
-
     @Column(name = "MMI_PLATFORM_USER_STUDENT_PASSWORD")
     private String password;
 
@@ -41,10 +40,4 @@ public class UserStudentDao {
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_CREATED_AT")
     private Date createdAt;
-
-    @OneToMany
-    @JoinTable(name = "MMI_PLATFORM_SIGNATURE_SHEET",
-            joinColumns = @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_SHEET_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_STUDENT_ID"))
-    private List<SignatureSheetDao> signatureSheetDaos;
 }
