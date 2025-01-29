@@ -20,9 +20,10 @@ public class SignatureDao {
 
     @Lob
     @Column(name = "MMI_PLATFORM_SIGNATURE_SIGN")
-    private byte[] sign;
+    private byte @NonNull [] sign;
 
     @OneToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_USER_STUDENT")
+    @NonNull
     private UserStudentDao userStudentDao;
 }

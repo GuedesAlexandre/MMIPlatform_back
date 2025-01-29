@@ -24,20 +24,26 @@ public class UserStudentDao {
     private String id;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_NUM_ETU")
+    @NonNull
     private String numEtu;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_EMAIL")
+    @NonNull
     private String email;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_PASSWORD")
+    @NonNull
     private String password;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_LASTNAME")
+    @NonNull
     private String lastName;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_FIRSTNAME")
+    @NonNull
     private String firstName;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_CREATED_AT")
+    @NonNull
     private Date createdAt;
 }
