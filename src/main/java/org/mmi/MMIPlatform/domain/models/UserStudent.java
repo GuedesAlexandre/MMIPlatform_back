@@ -22,6 +22,5 @@ public class UserStudent {
     private String lastName;
     @NonNull
     private String firstName;
-    @NonNull
     private Date createdAt;
 }

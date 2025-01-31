@@ -40,6 +40,7 @@ public class UserStudentDaoMapper {
                 .email(userStudent.getEmail())
                 .password(userStudent.getPassword())
                 .lastName(userStudent.getLastName())
+                .firstName(userStudent.getFirstName())
                 .createdAt(userStudent.getCreatedAt())
                 .build();
     }

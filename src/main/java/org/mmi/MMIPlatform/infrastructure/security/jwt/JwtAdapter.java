@@ -5,6 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
+import org.mmi.MMIPlatform.infrastructure.dao.UserStudentDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,29 @@ public class JwtAdapter {
         return Jwts.builder()
                 .claims(claims)
                 .subject(user.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateTokenForUserStudent(UserStudentDao userStudent) {
+        Map<String, Object> userClaims = new HashMap<>();
+        userClaims.put("numEtu", userStudent.getNumEtu());
+        userClaims.put("email", userStudent.getEmail());
+        userClaims.put("name", userStudent.getLastName());
+        userClaims.put("firstName", userStudent.getFirstName());
+
+        Map<String, Object> filteredUserClaims = userClaims.entrySet().stream()
+                .filter(entry -> entry.getValue() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("user", filteredUserClaims);
+
+        return Jwts.builder()
+                .claims(claims)
+                .subject(userStudent.getNumEtu())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)

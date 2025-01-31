@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/mmiplatform/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/mmiplatform/api/v1/auth/**").permitAll()
+                        .requestMatchers("/mmiplatform/api/v1/auth/student/**").permitAll()
                         .requestMatchers("/mmiplatform/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers("/api/v1/export/**").hasAuthority("ADMIN")

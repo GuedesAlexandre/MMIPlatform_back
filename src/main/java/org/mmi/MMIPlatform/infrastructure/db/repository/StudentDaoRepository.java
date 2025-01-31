@@ -7,5 +7,4 @@ import java.util.UUID;
 
 public interface StudentDaoRepository extends JpaRepository<StudentDao, UUID> {
     StudentDao findByNumEtu(String numEtu);
-
 }

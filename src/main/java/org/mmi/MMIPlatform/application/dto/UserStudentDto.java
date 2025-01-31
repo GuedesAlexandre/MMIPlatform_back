@@ -28,6 +28,5 @@ public class UserStudentDto {
     @NonNull
     private String firstName;
     @JsonProperty("createdAt")
-    @NonNull
     private Date createdAt;
 }

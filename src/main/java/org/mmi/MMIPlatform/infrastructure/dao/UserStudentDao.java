@@ -44,6 +44,5 @@ public class UserStudentDao {
     private String firstName;
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_CREATED_AT")
-    @NonNull
     private Date createdAt;
 }

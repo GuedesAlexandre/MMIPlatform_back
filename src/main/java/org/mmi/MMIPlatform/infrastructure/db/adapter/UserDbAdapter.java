@@ -34,7 +34,7 @@ public class UserDbAdapter {
 
     public UserDao saveUserDao(UserDao userDao) {
         if (!userDao.getPassword().matches(PASSWORD_PATTERN)) {
-            log.info("Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.");
+            throw new IllegalArgumentException("Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.");
         }
         try {
             userDao.setPassword(argon2PasswordEncoder.encode(userDao.getPassword()));
@@ -54,10 +54,6 @@ public class UserDbAdapter {
             log.error(e.getLocalizedMessage());
         }
         return userDao;
-    }
-
-    public UserDao getUserDaoById(UUID id) {
-        return this.userDaoRepository.findById(id).orElse(null);
     }
 
     public UserDao getUserDaoByEmail(String email) {

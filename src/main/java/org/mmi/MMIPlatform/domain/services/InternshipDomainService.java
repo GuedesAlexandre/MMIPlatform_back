@@ -29,7 +29,7 @@ public class InternshipDomainService {
 
     public Internship postInternshipForAStudent(String numEtu, Internship internship) {
         InternshipDao internshipDao = this.internshipDaoMapper.internshipToInternshipDao(internship);
-            this.internshipDBAdapter.postInternshipForAStudent(numEtu, internshipDao);
+        this.internshipDBAdapter.postInternshipForAStudent(numEtu, internshipDao);
         return this.internshipDaoMapper.internshipDaoToInternShip(internshipDao) ;}
 
     public String deleteInternshipByNumEtuYearsAndTitle(String numEtu, int years, String title) {
