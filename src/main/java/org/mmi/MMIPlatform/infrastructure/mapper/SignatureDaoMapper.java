@@ -14,6 +14,9 @@ public class SignatureDaoMapper {
     private final UserStudentDaoMapper userStudentDaoMapper;
 
     public Signature signatureDaoToSignature(SignatureDao signatureDao) {
+        if(signatureDao == null) {
+            throw new NullPointerException("signature required");
+        }
         return Signature.builder()
                 .id(signatureDao.getId())
                 .sign(signatureDao.getSign())
@@ -26,6 +29,9 @@ public class SignatureDaoMapper {
     }
 
     public SignatureDao signatureToSignatureDao(Signature signature) {
+        if(signature == null) {
+            throw new NullPointerException("signature required");
+        }
         return SignatureDao.builder()
                 .id(signature.getId())
                 .sign(signature.getSign())

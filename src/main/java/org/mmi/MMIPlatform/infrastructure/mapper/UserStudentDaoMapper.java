@@ -12,6 +12,9 @@ import java.util.List;
 public class UserStudentDaoMapper {
 
     public UserStudent userStudentDaoToUserStudent(UserStudentDao userStudentDao) {
+        if(userStudentDao == null) {
+            throw new NullPointerException("user student required");
+        }
         return UserStudent.builder()
                 .id(userStudentDao.getId())
                 .numEtu(userStudentDao.getNumEtu())
@@ -28,6 +31,9 @@ public class UserStudentDaoMapper {
     }
 
     public UserStudentDao userStudentToUserStudentDao(UserStudent userStudent) {
+        if(userStudent == null) {
+            throw new NullPointerException("user student required");
+        }
         return UserStudentDao.builder()
                 .id(userStudent.getId())
                 .numEtu(userStudent.getNumEtu())

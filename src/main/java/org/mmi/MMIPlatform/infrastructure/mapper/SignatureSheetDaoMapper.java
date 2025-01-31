@@ -16,6 +16,9 @@ public class SignatureSheetDaoMapper {
     private final UserStudentDaoMapper userStudentDaoMapper;
 
     public SignatureSheet signatureSheetDaoToSignatureSheet(SignatureSheetDao signatureSheetDao) {
+        if(signatureSheetDao == null) {
+            throw new NullPointerException("signature sheet required");
+        }
         return SignatureSheet.builder()
                 .id(signatureSheetDao.getId())
                 .promo(String.valueOf(signatureSheetDao.getPromo()))
@@ -32,6 +35,9 @@ public class SignatureSheetDaoMapper {
     }
 
     public SignatureSheetDao signatureSheetToSignatureSheetDao(SignatureSheet signatureSheet) {
+        if(signatureSheet == null) {
+            throw new NullPointerException("signature sheet required");
+        }
         return SignatureSheetDao.builder()
                 .id(signatureSheet.getId())
                 .promo(PromoEnum.valueOf(signatureSheet.getPromo()))
