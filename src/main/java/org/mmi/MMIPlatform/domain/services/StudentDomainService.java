@@ -30,6 +30,16 @@ public class StudentDomainService {
             return null;
         }
     }
+   
+    public List<Student> getStudentsByPromoAndGroup(String promo, String group) {
+        try {
+            List<StudentDao> studentsDaoByPromoAndGroupe = studentDBAdapter.getStudentsByPromoAndGroup(promo, group);
+            return studentDaoMapper.studentsDaostoStudents(studentsDaoByPromoAndGroupe);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     public String postNotesForAStudent(String numEtu, String ModuleName, Note note) {
         return studentDBAdapter.postNotesForAStudent(numEtu, ModuleName, this.noteDaoMapper.noteToNoteDao(note));
