@@ -24,7 +24,6 @@ public class SignatureDao {
     private SignatureStatusEnum sign;
 
     @OneToOne
-    @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_USER_STUDENT")
-    @NonNull
+    @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_STUDENT")
     private StudentDao studentDao;
 }

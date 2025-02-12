@@ -1,6 +1,7 @@
 package org.mmi.MMIPlatform.application.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.mmi.MMIPlatform.application.dto.SignatureSheetDto;
 import org.mmi.MMIPlatform.domain.mapper.SignatureSheetDtoMapper;
 import org.mmi.MMIPlatform.domain.services.SignatureSheetDomainService;
@@ -17,59 +18,37 @@ public class SignatureSheetApplicationService {
 
 
     public SignatureSheetDto getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
-        try {
-            return signatureSheetDtoMapper.signatureSheetToSignatureSheetDto(this.signatureSheetDomainService.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet by module name and promo and created at and finish at"));
-        }
+        return signatureSheetDtoMapper.signatureSheetToSignatureSheetDto(this.signatureSheetDomainService.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));
     }
 
     public List<SignatureSheetDto> getSignatureSheetByModuleName(String moduleName) throws Exception {
-        try {
-            return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByModuleName(moduleName));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet by module name"));
-        }
+        return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByModuleName(moduleName));
     }
 
     public List<SignatureSheetDto> getSignatureSheetList() throws Exception {
-        try {
-            return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetList());
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet list"));
-        }
+
+        return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetList());
+
     }
 
     public List<SignatureSheetDto> getSignatureSheetListByPromo(String promo) throws Exception {
-        try {
-            return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByPromo(promo));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet list by promo"));
-        }
+        return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByPromo(promo));
     }
 
     public SignatureSheetDto postSignatureSheet(SignatureSheetDto signatureSheetDto) throws Exception {
-        try {
-            return signatureSheetDtoMapper.signatureSheetToSignatureSheetDto(this.signatureSheetDomainService.postSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto)));
-        } catch (Exception e) {
-            throw (new Exception("Error while posting signature sheet"));
-        }
+
+        return signatureSheetDtoMapper.signatureSheetToSignatureSheetDto(this.signatureSheetDomainService.postSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto)));
+
     }
 
     public String deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
-        try {
-            return this.signatureSheetDomainService.deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName
-                    , promo, createdAt, finishAt);
-        } catch (Exception e) {
-            throw (new Exception("Error while deleting signature sheet"));
-        }
+
+        return this.signatureSheetDomainService.deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName
+                , promo, createdAt, finishAt);
+
     }
 
     public String deleteSignatureSheet(SignatureSheetDto signatureSheetDto) throws Exception {
-        try {
-            return this.signatureSheetDomainService.deleteSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto));
-        } catch (Exception e) {
-            throw (new Exception("Error while deleting signature sheet"));
-        }
+        return this.signatureSheetDomainService.deleteSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto));
     }
 }

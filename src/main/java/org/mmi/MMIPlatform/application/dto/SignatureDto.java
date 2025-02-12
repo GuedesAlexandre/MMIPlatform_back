@@ -12,9 +12,8 @@ import org.mmi.MMIPlatform.infrastructure.dao.enums.SignatureStatusEnum;
 @Setter
 public class SignatureDto {
     @JsonProperty("sign")
-    @NonNull
     private SignatureStatusEnum sign;
+
     @JsonProperty("studentWhoSign")
-    @NonNull
     private StudentDto studentDto;
 }

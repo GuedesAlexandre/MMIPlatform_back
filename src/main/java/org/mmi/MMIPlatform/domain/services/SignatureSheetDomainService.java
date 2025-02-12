@@ -17,60 +17,38 @@ public class SignatureSheetDomainService {
     private final SignatureSheetDaoMapper signatureSheetDaoMapper;
 
     public SignatureSheet postSignatureSheet(SignatureSheet signatureSheet) throws Exception {
-        try {
-            return this.signatureSheetDaoMapper.signatureSheetDaoToSignatureSheet(this.signatureSheetDBAdapter.saveSignatureSheet(this.signatureSheetDaoMapper.signatureSheetToSignatureSheetDao(signatureSheet)));
-        } catch (Exception e) {
-            throw (new Exception("Error while saving signature sheet"));
-        }
+        return this.signatureSheetDaoMapper.signatureSheetDaoToSignatureSheet(this.signatureSheetDBAdapter.saveSignatureSheet(this.signatureSheetDaoMapper.signatureSheetToSignatureSheetDao(signatureSheet)));
     }
 
     public SignatureSheet getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
-        try {
-            return this.signatureSheetDaoMapper.signatureSheetDaoToSignatureSheet(this.signatureSheetDBAdapter.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet by module name and promo and created at and finish at"));
-        }
+        return this.signatureSheetDaoMapper.signatureSheetDaoToSignatureSheet(this.signatureSheetDBAdapter.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));
     }
 
 
     public List<SignatureSheet> getSignatureSheetList() throws Exception {
-        try {
-            return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetList());
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet list"));
-        }
+        return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetList());
     }
 
     public List<SignatureSheet> getSignatureSheetListByPromo(String promo) throws Exception {
-        try {
-            return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByPromo(promo));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet list by promo"));
-        }
+
+        return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByPromo(promo));
+
     }
 
     public List<SignatureSheet> getSignatureSheetListByModuleName(String moduleName) throws Exception {
-        try {
-            return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByModuleName(moduleName));
-        } catch (Exception e) {
-            throw (new Exception("Error while fetching signature sheet list by module name"));
-        }
+
+        return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByModuleName(moduleName));
+
     }
 
     public String deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
-        try {
-          return  this.signatureSheetDBAdapter.deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt);
-        } catch (Exception e) {
-            throw (new Exception("Error while deleting signature sheet"));
-        }
+
+        return this.signatureSheetDBAdapter.deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt);
+
     }
 
     public String deleteSignatureSheet(SignatureSheet signatureSheet) throws Exception {
-        try {
-           return this.signatureSheetDBAdapter.deleteSignatureSheet(this.signatureSheetDaoMapper.signatureSheetToSignatureSheetDao(signatureSheet));
-        } catch (Exception e) {
-            throw (new Exception("Error while deleting signature sheet"));
-        }
+        return this.signatureSheetDBAdapter.deleteSignatureSheet(this.signatureSheetDaoMapper.signatureSheetToSignatureSheetDao(signatureSheet));
     }
 
 }
