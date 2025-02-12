@@ -14,7 +14,7 @@ public class SignatureDto {
     @JsonProperty("sign")
     @NonNull
     private SignatureStatusEnum sign;
-    @JsonProperty("student")
+    @JsonProperty("studentWhoSign")
     @NonNull
     private StudentDto studentDto;
 }
