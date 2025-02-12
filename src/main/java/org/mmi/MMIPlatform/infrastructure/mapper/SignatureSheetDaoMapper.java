@@ -14,6 +14,7 @@ public class SignatureSheetDaoMapper {
 
     private final SignatureDaoMapper signatureDaoMapper;
     private final UserStudentDaoMapper userStudentDaoMapper;
+    private final StudentDaoMapper studentDaoMapper;
 
     public SignatureSheet signatureSheetDaoToSignatureSheet(SignatureSheetDao signatureSheetDao) {
         if(signatureSheetDao == null) {
@@ -26,7 +27,7 @@ public class SignatureSheetDaoMapper {
                 .createdAt(signatureSheetDao.getCreatedAt())
                 .finishAt(signatureSheetDao.getFinishAt())
                 .signatures(signatureDaoMapper.signatureDaoListToSignatureList(signatureSheetDao.getSignatureDaos()))
-                .userStudents(userStudentDaoMapper.userStudentDaoListToUserStudentList(signatureSheetDao.getUserStudentDaos()))
+                .students(studentDaoMapper.studentsDaostoStudents(signatureSheetDao.getStudentDaos()))
                 .build();
     }
 
@@ -45,7 +46,7 @@ public class SignatureSheetDaoMapper {
                 .createdAt(signatureSheet.getCreatedAt())
                 .finishAt(signatureSheet.getFinishAt())
                 .signatureDaos(signatureDaoMapper.signatureListToSignatureDaoList(signatureSheet.getSignatures()))
-                .userStudentDaos(userStudentDaoMapper.userStudentListToUserStudentDaoList(signatureSheet.getUserStudents()))
+                .studentDaos(studentDaoMapper.studentListToStudentDaoList(signatureSheet.getStudents()))
                 .build();
     }
 

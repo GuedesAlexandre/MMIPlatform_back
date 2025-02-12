@@ -13,6 +13,7 @@ public class SignatureSheetDtoMapper {
 
     private final SignatureDtoMapper signatureDtoMapper;
     private final UserStudentDtoMapper userStudentDtoMapper;
+    private final StudentDtoMapper studentDtoMapper;
 
     public SignatureSheetDto signatureSheetToSignatureSheetDto(SignatureSheet signatureSheet) {
         return SignatureSheetDto.builder()
@@ -21,7 +22,7 @@ public class SignatureSheetDtoMapper {
                 .createdAt(signatureSheet.getCreatedAt())
                 .finishAt(signatureSheet.getFinishAt())
                 .signatureDtos(signatureDtoMapper.signatureListToSignatureDtoList(signatureSheet.getSignatures()))
-                .userStudentDtos(userStudentDtoMapper.userStudentListToUserStudentDtoList(signatureSheet.getUserStudents()))
+                .studentDtos(studentDtoMapper.studentListToStudentDtoList(signatureSheet.getStudents()))
                 .build();
     }
 
@@ -36,7 +37,7 @@ public class SignatureSheetDtoMapper {
                 .createdAt(signatureSheetDto.getCreatedAt())
                 .finishAt(signatureSheetDto.getFinishAt())
                 .signatures(signatureDtoMapper.signatureDtoListToSignatureList(signatureSheetDto.getSignatureDtos()))
-                .userStudents(userStudentDtoMapper.userStudentDtoListToUserStudentList(signatureSheetDto.getUserStudentDtos()))
+                .students(studentDtoMapper.studentDtoListToStudent(signatureSheetDto.getStudentDtos()))
                 .build();
     }
 

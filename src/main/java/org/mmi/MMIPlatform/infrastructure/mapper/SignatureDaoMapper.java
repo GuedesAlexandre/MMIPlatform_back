@@ -11,7 +11,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignatureDaoMapper {
 
-    private final UserStudentDaoMapper userStudentDaoMapper;
+
+    private final StudentDaoMapper studentDaoMapper;
 
     public Signature signatureDaoToSignature(SignatureDao signatureDao) {
         if(signatureDao == null) {
@@ -20,7 +21,7 @@ public class SignatureDaoMapper {
         return Signature.builder()
                 .id(signatureDao.getId())
                 .sign(signatureDao.getSign())
-                .userStudent(userStudentDaoMapper.userStudentDaoToUserStudent(signatureDao.getUserStudentDao()))
+                .student(studentDaoMapper.studentDaoToStudent(signatureDao.getStudentDao()))
                 .build();
     }
 
@@ -35,7 +36,7 @@ public class SignatureDaoMapper {
         return SignatureDao.builder()
                 .id(signature.getId())
                 .sign(signature.getSign())
-                .userStudentDao(userStudentDaoMapper.userStudentToUserStudentDao(signature.getUserStudent()))
+                .studentDao(studentDaoMapper.studentToStudentDao(signature.getStudent()))
                 .build();
     }
 

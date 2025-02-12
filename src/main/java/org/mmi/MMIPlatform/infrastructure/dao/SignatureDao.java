@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.SignatureStatusEnum;
 
 @Entity
 @AllArgsConstructor
@@ -18,12 +19,12 @@ public class SignatureDao {
     @Column(name = "MMI_PLATFORM_SIGNATURE_ID")
     private String id;
 
-    @Lob
+
     @Column(name = "MMI_PLATFORM_SIGNATURE_SIGN")
-    private byte @NonNull [] sign;
+    private SignatureStatusEnum sign;
 
     @OneToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_USER_STUDENT")
     @NonNull
-    private UserStudentDao userStudentDao;
+    private StudentDao studentDao;
 }

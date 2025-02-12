@@ -49,5 +49,5 @@ public class SignatureSheetDao {
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_USER_STUDENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_SHEET_ID"))
     @NonNull
-    private List<UserStudentDao> userStudentDaos;
+    private List<StudentDao> studentDaos;
 }

@@ -30,5 +30,5 @@ public class SignatureSheetDto {
     private List<SignatureDto> signatureDtos;
     @JsonProperty("UserStudents")
     @NonNull
-    private List<UserStudentDto> userStudentDtos;
+    private List<StudentDto> studentDtos;
 }
