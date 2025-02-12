@@ -31,6 +31,17 @@ public class StudentApplicationService {
         }
     }
 
+    public List<StudentDto> getStudentsByPromoAndGroup(String promo, String group) {
+
+        try {
+            List<Student> studentsByPromoAndGroup = this.studentDomainService.getStudentsByPromoAndGroup(promo, group);
+            return studentDtoMapper.studentListToStudentDtoList(studentsByPromoAndGroup);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
     public String postNotesForAStudent(String numEtu, String ModuleName, NoteDto note) {
         return studentDomainService.postNotesForAStudent(numEtu, ModuleName, this.noteDtoMapper.noteDtoToNote(note));
     }
