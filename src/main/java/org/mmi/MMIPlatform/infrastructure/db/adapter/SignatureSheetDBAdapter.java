@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.SignatureSheetDto;
 import org.mmi.MMIPlatform.infrastructure.dao.SignatureSheetDao;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
+import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureSheetDaoRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class SignatureSheetDBAdapter {
 
     private final SignatureSheetDaoRepository signatureSheetDaoRepository;
+    private final SignatureDaoRepository signatureDaoRepository;
 
     public List<SignatureSheetDao> getSignatureSheetList() throws Exception {
         try {
@@ -51,6 +53,7 @@ public class SignatureSheetDBAdapter {
 
     public SignatureSheetDao saveSignatureSheet(SignatureSheetDao signatureSheetDao) throws Exception {
         try {
+
             return this.signatureSheetDaoRepository.save(signatureSheetDao);
         } catch (Exception e) {
             throw (new Exception("Error while saving signature sheet"));

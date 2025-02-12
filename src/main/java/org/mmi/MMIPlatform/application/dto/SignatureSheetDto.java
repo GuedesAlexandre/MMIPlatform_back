@@ -25,10 +25,10 @@ public class SignatureSheetDto {
     @JsonProperty("finishAt")
     @NonNull
     private Date finishAt;
-    @JsonProperty("Signatures")
+    @JsonProperty("signatures")
     @NonNull
     private List<SignatureDto> signatureDtos;
-    @JsonProperty("UserStudents")
+    @JsonProperty("students")
     @NonNull
     private List<StudentDto> studentDtos;
 }
