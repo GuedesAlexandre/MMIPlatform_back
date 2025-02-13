@@ -22,5 +22,7 @@ public class UserStudent {
     private String lastName;
     @NonNull
     private String firstName;
+    private String promo;
+    private String group;
     private Date createdAt;
 }

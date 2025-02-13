@@ -27,6 +27,10 @@ public class UserStudentDto {
     @JsonProperty("firstName")
     @NonNull
     private String firstName;
+    @JsonProperty("promo")
+    private String promo;
+    @JsonProperty("group")
+    private String group;
     @JsonProperty("createdAt")
     private Date createdAt;
 }
