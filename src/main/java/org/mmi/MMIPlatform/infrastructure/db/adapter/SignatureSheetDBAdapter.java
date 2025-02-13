@@ -65,7 +65,7 @@ public class SignatureSheetDBAdapter {
             this.signatureDaoRepository.saveAll(signatureSheetDao.getSignatureDaos());
             return this.signatureSheetDaoRepository.save(signatureSheetDao);
         } catch (Exception e) {
-            throw new Exception("Failed to save signature sheet: " + e.getMessage(), e);
+            throw new Exception("Failed to save signature sheet: " + e.getMessage());
         }
     }
 
