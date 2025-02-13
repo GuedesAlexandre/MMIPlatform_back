@@ -36,6 +36,19 @@ public class StudentController {
         return ResponseEntity.ok(studentApplicationService.getStudentsByPromo(promo));
     }
 
+    @Operation(summary = "get Students by promo and group", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "students recover",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))}),
+    })
+    @GetMapping("/{promo}/{group}")
+    public ResponseEntity<List<StudentDto>> getStudentsByPromoAndGroupe(@PathVariable String promo , @PathVariable String group) {
+        return ResponseEntity.ok(studentApplicationService.getStudentsByPromoAndGroup(promo, group));
+    }
+
+
+
     @Operation(summary = "get all Students", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "students recover",

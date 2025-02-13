@@ -11,12 +11,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignatureDtoMapper {
 
-    private final UserStudentDtoMapper userStudentDtoMapper;
+    private final StudentDtoMapper userStudentDtoMapper;
 
     public SignatureDto signatureToSignatureDto(Signature signature) {
         return SignatureDto.builder()
                 .sign(signature.getSign())
-                .userStudentDto(userStudentDtoMapper.userStudentToUserStudentDto(signature.getUserStudent()))
+                .studentDto(userStudentDtoMapper.studentToStudentDto(signature.getStudent()))
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class SignatureDtoMapper {
     public Signature signatureDtoToSignature(SignatureDto signatureDto) {
         return Signature.builder()
                 .sign(signatureDto.getSign())
-                .userStudent(userStudentDtoMapper.userStudentDtoToUserStudent(signatureDto.getUserStudentDto()))
+                .student(userStudentDtoMapper.studentDtoToStudent(signatureDto.getStudentDto()))
                 .build();
     }
 

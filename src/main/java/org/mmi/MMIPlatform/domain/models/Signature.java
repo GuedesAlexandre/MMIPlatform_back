@@ -4,13 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.SignatureStatusEnum;
 
 @Builder
 @Getter
 @Setter
 public class Signature {
     private String id;
-    private byte @NonNull [] sign;
     @NonNull
-    private UserStudent userStudent;
+    private SignatureStatusEnum sign;
+    @NonNull
+    private Student student;
 }

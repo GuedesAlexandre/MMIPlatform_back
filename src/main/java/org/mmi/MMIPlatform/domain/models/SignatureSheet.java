@@ -24,5 +24,5 @@ public class SignatureSheet {
     @NonNull
     private List<Signature> signatures;
     @NonNull
-    private List<UserStudent> userStudents;
+    private List<Student> students;
 }

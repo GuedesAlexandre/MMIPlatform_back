@@ -30,8 +30,6 @@ public class InternshipDBAdapter {
         if (student == null) {
             throw new IllegalArgumentException("Student not found with numEtu: " + numEtu);
         }
-
-
             internship.setStudent(student);
             this.internshipDaoRepository.save(internship);
             return internship;

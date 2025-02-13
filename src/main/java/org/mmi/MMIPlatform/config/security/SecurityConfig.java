@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/export/**").hasAuthority("ADMIN")
                         .requestMatchers("api/v1/student").hasAnyAuthority("ADMIN", "TEACHER", "SCOLARITY")
                         .requestMatchers("api/v1/internship/**").hasAnyAuthority("ADMIN", "SCOLARITY")
+                        .requestMatchers("api/v1/sheets/**").permitAll()
                         .anyRequest().permitAll()
 
                 )

@@ -30,6 +30,12 @@ public class StudentDBAdapter {
         return this.studentDaoRepository.findAll().stream().filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo))).toList();
     }
 
+    public List<StudentDao> getStudentsByPromoAndGroup(String promo, String groupe) {
+        return this.studentDaoRepository.findAll().stream()
+               .filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo)) && student.getGroup().equals(groupe))
+               .toList();
+    } 
+
     public List<StudentDao> getAllStudents() {
         return this.studentDaoRepository.findAll();
     }

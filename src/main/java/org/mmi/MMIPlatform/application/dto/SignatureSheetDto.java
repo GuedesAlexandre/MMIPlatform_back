@@ -14,21 +14,15 @@ import java.util.List;
 @Setter
 public class SignatureSheetDto {
     @JsonProperty("promo")
-    @NonNull
     private String promo;
     @JsonProperty("moduleName")
-    @NonNull
     private String moduleName;
     @JsonProperty("createdAt")
-    @NonNull
     private Date createdAt;
     @JsonProperty("finishAt")
-    @NonNull
     private Date finishAt;
-    @JsonProperty("Signatures")
-    @NonNull
+    @JsonProperty("signatures")
     private List<SignatureDto> signatureDtos;
-    @JsonProperty("UserStudents")
-    @NonNull
-    private List<UserStudentDto> userStudentDtos;
+    @JsonProperty("students")
+    private List<StudentDto> studentDtos;
 }
