@@ -2,7 +2,6 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.AllArgsConstructor;
 
-import org.mmi.MMIPlatform.application.dto.SignatureSheetDto;
 import org.mmi.MMIPlatform.infrastructure.dao.SignatureDao;
 import org.mmi.MMIPlatform.infrastructure.dao.SignatureSheetDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
@@ -58,7 +57,7 @@ public class SignatureSheetDBAdapter {
 
     public SignatureSheetDao saveSignatureSheet(SignatureSheetDao signatureSheetDao) throws Exception {
         try {
-            signatureSheetDao.setSignatureDaos(this.mapSignatureWithObjectInBase(signatureSheetDao.getSignatureDaos()));
+            signatureSheetDao.setSignatureDaos(this.mapSignatureStudentWithStudentObjectInBase(signatureSheetDao.getSignatureDaos()));
             signatureSheetDao.setStudentDaos(signatureSheetDao.getStudentDaos().stream().map(studentDao -> {
                 StudentDao existingStudentDao = this.studentDaoRepository.findByNumEtu(studentDao.getNumEtu());
                 return existingStudentDao != null ? existingStudentDao : studentDao;
@@ -70,7 +69,7 @@ public class SignatureSheetDBAdapter {
         }
     }
 
-    public List<SignatureDao> mapSignatureWithObjectInBase(List<SignatureDao> signatureDaos) {
+    public List<SignatureDao> mapSignatureStudentWithStudentObjectInBase(List<SignatureDao> signatureDaos) {
         signatureDaos.forEach(signatureDao -> {
             StudentDao studentDao = this.studentDaoRepository.findByNumEtu(signatureDao.getStudentDao().getNumEtu());
             if (studentDao != null) {
@@ -82,6 +81,7 @@ public class SignatureSheetDBAdapter {
         });
         return signatureDaos;
     }
+
     public String deleteSignatureSheet(SignatureSheetDao signatureSheetDao) throws Exception {
         try {
             this.signatureSheetDaoRepository.delete(signatureSheetDao);
