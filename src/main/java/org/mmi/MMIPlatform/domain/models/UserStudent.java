@@ -12,17 +12,20 @@ import java.util.Date;
 @Setter
 public class UserStudent {
     private String id;
-    @NonNull
+
     private String numEtu;
-    @NonNull
+
     private String email;
-    @NonNull
+
     private String password;
-    @NonNull
+
     private String lastName;
-    @NonNull
+
     private String firstName;
+
     private String promo;
+
     private String group;
+
     private Date createdAt;
 }
