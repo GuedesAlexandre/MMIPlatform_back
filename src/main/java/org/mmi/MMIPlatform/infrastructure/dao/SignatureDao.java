@@ -23,7 +23,7 @@ public class SignatureDao {
     @Column(name = "MMI_PLATFORM_SIGNATURE_SIGN")
     private SignatureStatusEnum sign;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_STUDENT")
     private StudentDao studentDao;
 }

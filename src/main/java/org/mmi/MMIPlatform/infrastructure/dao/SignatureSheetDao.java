@@ -44,7 +44,7 @@ public class SignatureSheetDao {
     @NonNull
     private List<SignatureDao> signatureDaos;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "MMI_PLATFORM_STUDENT_SIGNATURE_SHEET",
             joinColumns = @JoinColumn(name = "MMI_PLATFORM_STUDENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_SHEET_ID"))
