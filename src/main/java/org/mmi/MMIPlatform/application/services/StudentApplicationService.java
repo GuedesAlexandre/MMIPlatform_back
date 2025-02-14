@@ -25,7 +25,7 @@ public class StudentApplicationService {
         try {
             return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromo(promo));
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -33,7 +33,7 @@ public class StudentApplicationService {
         try {
             return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromoAndGroup(promo, group));
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ public class StudentApplicationService {
         try {
             return studentDtoMapper.studentToStudentDto(this.studentDomainService.getStudentByNumEtu(numEtu));
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class StudentApplicationService {
         try {
             return studentDtoMapper.studentListToStudentDtoList(studentDomainService.getAllStudents());
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }

@@ -25,7 +25,7 @@ public class StudentDomainService {
         try {
             return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentsByPromo(promo));
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
    
@@ -33,7 +33,7 @@ public class StudentDomainService {
         try {
             return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentsByPromoAndGroup(promo, group));
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ public class StudentDomainService {
         try {
             return studentDaoMapper.studentDaoToStudent(studentDBAdapter.getStudentByNumEtu(numEtu));
         } catch (Exception e){
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class StudentDomainService {
         try {
             return studentDaoMapper.studentsDaostoStudents( studentDBAdapter.getAllStudents());
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }
