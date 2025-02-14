@@ -32,28 +32,24 @@ public class UserStudentDBAdapter {
             throw new IllegalArgumentException("Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.");
         }
 
-        userStudentDao.setPassword(argon2PasswordEncoder.encode(userStudentDao.getPassword()));
-        userStudentDao.setCreatedAt(new Date());
-
         String numEtu = userStudentDao.getNumEtu();
         List<StudentDao> studentDaoList = this.studentDaoRepository.findAll();
         List<UserStudentDao> userStudentDaoList = this.userStudentDaoRepository.findAll();
+        StudentDao studentDaoByNumEtu = studentDaoList.stream()
+                .filter(s -> s.getNumEtu().equals(userStudentDao.getNumEtu()))
+                .findFirst().orElseThrow((() -> new IllegalArgumentException("Student with numEtu: " + numEtu + " does not exist in the registry, if this is not normal please contact your university")));
+
+        userStudentDao.setPassword(argon2PasswordEncoder.encode(userStudentDao.getPassword()));
+        userStudentDao.setPromo(String.valueOf(studentDaoByNumEtu.getPromo()));
+        userStudentDao.setGroup(studentDaoByNumEtu.getGroup());
+        userStudentDao.setCreatedAt(new Date());
 
         if (!userStudentDao.getEmail().matches(EMAIL_PATTERN)) {
             throw new IllegalArgumentException("This email: '" + userStudentDao.getEmail() + "' does not belong to the university");
         }
 
-        if (studentDaoList.stream()
-                .filter(s -> s.getNumEtu().equals(userStudentDao.getNumEtu()))
-                .toList().isEmpty()) {
-            throw new IllegalArgumentException("Student with numEtu: " + numEtu + " does not exist in the registry, if this is not normal please contact your university");
-        }
-
-        if (studentDaoList.stream()
-                .filter(s -> s.getNumEtu().equals(userStudentDao.getNumEtu()) &&
-                        s.getFirstName().equals(userStudentDao.getFirstName()) &&
-                        s.getLastName().equals(userStudentDao.getLastName()))
-                .toList().isEmpty()) {
+        if (studentDaoByNumEtu.getFirstName().equals(userStudentDao.getFirstName()) &&
+                studentDaoByNumEtu.getLastName().equals(userStudentDao.getLastName())) {
             throw new IllegalArgumentException("Your personal information doesn't match with the information in the registry");
         }
 

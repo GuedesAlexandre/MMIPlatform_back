@@ -18,6 +18,8 @@ public class UserStudentDtoMapper {
                 .password(userStudent.getPassword())
                 .lastName(userStudent.getLastName())
                 .firstName(userStudent.getFirstName())
+                .group(userStudent.getGroup())
+                .promo(userStudent.getPromo())
                 .createdAt(userStudent.getCreatedAt())
                 .build();
     }
@@ -33,6 +35,8 @@ public class UserStudentDtoMapper {
                 .password(userStudentDto.getPassword())
                 .lastName(userStudentDto.getLastName())
                 .firstName(userStudentDto.getFirstName())
+                .group(userStudentDto.getGroup())
+                .promo(userStudentDto.getPromo())
                 .createdAt(userStudentDto.getCreatedAt())
                 .build();
     }

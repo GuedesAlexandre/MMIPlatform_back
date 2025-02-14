@@ -43,6 +43,12 @@ public class UserStudentDao {
     @NonNull
     private String firstName;
 
+    @Column(name = "MMI_PLATFORM_USER_STUDENT_PROMO")
+    private String promo;
+
+    @Column(name = "MMI_PLATFORM_USER_STUDENT_GROUP")
+    private String group;
+
     @Column(name = "MMI_PLATFORM_USER_STUDENT_CREATED_AT")
     private Date createdAt;
 }

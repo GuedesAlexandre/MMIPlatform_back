@@ -3,6 +3,7 @@ package org.mmi.MMIPlatform.infrastructure.mapper;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.domain.models.UserStudent;
 import org.mmi.MMIPlatform.infrastructure.dao.UserStudentDao;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class UserStudentDaoMapper {
                 .password(userStudentDao.getPassword())
                 .lastName(userStudentDao.getLastName())
                 .firstName(userStudentDao.getFirstName())
+                .promo(userStudentDao.getPromo())
+                .group(userStudentDao.getGroup())
                 .createdAt(userStudentDao.getCreatedAt())
                 .build();
     }
@@ -41,6 +44,8 @@ public class UserStudentDaoMapper {
                 .password(userStudent.getPassword())
                 .lastName(userStudent.getLastName())
                 .firstName(userStudent.getFirstName())
+                .promo(userStudent.getPromo())
+                .group(userStudent.getGroup())
                 .createdAt(userStudent.getCreatedAt())
                 .build();
     }
