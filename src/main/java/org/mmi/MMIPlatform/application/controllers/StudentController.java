@@ -53,8 +53,8 @@ public class StudentController {
                 content = {@Content(mediaType = "application.json",
                     schema = @Schema(implementation = StudentDto.class))}),
     })
-    @GetMapping("/search/{num_etu}")
-    public ResponseEntity<StudentDto> getStudentByNumEtu(@PathVariable(name = "num_etu") String numEtu) {
+    @GetMapping("/search/{numEtu}")
+    public ResponseEntity<StudentDto> getStudentByNumEtu(@PathVariable(name = "numEtu") String numEtu) {
         return ResponseEntity.ok(studentApplicationService.getStudentByNumEtu(numEtu));
     }
 
