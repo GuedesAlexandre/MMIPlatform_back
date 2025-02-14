@@ -42,6 +42,16 @@ public class StudentApplicationService {
         }
     }
 
+    public StudentDto getStudentByNumEtu(String numEtu) {
+        try {
+            Student studentByNumEtu = this.studentDomainService.getStudentByNumEtu(numEtu);
+            return studentDtoMapper.studentToStudentDto(studentByNumEtu);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
     public String postNotesForAStudent(String numEtu, String ModuleName, NoteDto note) {
         return studentDomainService.postNotesForAStudent(numEtu, ModuleName, this.noteDtoMapper.noteDtoToNote(note));
     }
