@@ -23,32 +23,25 @@ public class StudentApplicationService {
 
     public List<StudentDto> getStudentsByPromo(String promo) {
         try {
-            List<Student> studentsByPromo = this.studentDomainService.getStudentsByPromo(promo);
-            return studentDtoMapper.studentListToStudentDtoList(studentsByPromo);
+            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromo(promo));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students by promo: " + promo);
         }
     }
 
     public List<StudentDto> getStudentsByPromoAndGroup(String promo, String group) {
-
         try {
-            List<Student> studentsByPromoAndGroup = this.studentDomainService.getStudentsByPromoAndGroup(promo, group);
-            return studentDtoMapper.studentListToStudentDtoList(studentsByPromoAndGroup);
+            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromoAndGroup(promo, group));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students by promo :" + promo + " and group" + group);
         }
     }
 
     public StudentDto getStudentByNumEtu(String numEtu) {
         try {
-            Student studentByNumEtu = this.studentDomainService.getStudentByNumEtu(numEtu);
-            return studentDtoMapper.studentToStudentDto(studentByNumEtu);
-        } catch (Exception e){
-            log.error(e.getMessage());
-            return null;
+            return studentDtoMapper.studentToStudentDto(this.studentDomainService.getStudentByNumEtu(numEtu));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not get student by num etu: " + numEtu);
         }
     }
 
@@ -62,10 +55,9 @@ public class StudentApplicationService {
 
     public List<StudentDto> getAllStudents() {
         try {
-            return studentDtoMapper.studentListToStudentDtoList( studentDomainService.getAllStudents());
+            return studentDtoMapper.studentListToStudentDtoList(studentDomainService.getAllStudents());
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students");
         }
     }
 }

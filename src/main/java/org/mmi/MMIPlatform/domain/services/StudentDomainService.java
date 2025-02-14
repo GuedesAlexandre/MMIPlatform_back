@@ -23,31 +23,25 @@ public class StudentDomainService {
 
     public List<Student> getStudentsByPromo(String promo) {
         try {
-            List<StudentDao> studentsDaoByPromo = studentDBAdapter.getStudentsByPromo(promo);
-            return studentDaoMapper.studentsDaostoStudents(studentsDaoByPromo);
+            return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentsByPromo(promo));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students by promo: " + promo);
         }
     }
    
     public List<Student> getStudentsByPromoAndGroup(String promo, String group) {
         try {
-            List<StudentDao> studentsDaoByPromoAndGroupe = studentDBAdapter.getStudentsByPromoAndGroup(promo, group);
-            return studentDaoMapper.studentsDaostoStudents(studentsDaoByPromoAndGroupe);
+            return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentsByPromoAndGroup(promo, group));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students by promo :" + promo + " and group" + group);
         }
     }
 
     public Student getStudentByNumEtu(String numEtu) {
         try {
-            StudentDao studentDaoByNumEtu = studentDBAdapter.getStudentByNumEtu(numEtu);
-            return studentDaoMapper.studentDaoToStudent(studentDaoByNumEtu);
+            return studentDaoMapper.studentDaoToStudent(studentDBAdapter.getStudentByNumEtu(numEtu));
         } catch (Exception e){
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get student by num etu: " + numEtu);
         }
     }
 
@@ -63,8 +57,7 @@ public class StudentDomainService {
         try {
             return studentDaoMapper.studentsDaostoStudents( studentDBAdapter.getAllStudents());
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException("Could not get students");
         }
     }
 }
