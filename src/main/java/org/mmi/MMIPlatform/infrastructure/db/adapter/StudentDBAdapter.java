@@ -2,7 +2,6 @@ package org.mmi.MMIPlatform.infrastructure.db.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.math.raw.Mod;
 import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
 import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
@@ -12,8 +11,6 @@ import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +31,11 @@ public class StudentDBAdapter {
         return this.studentDaoRepository.findAll().stream()
                .filter(student -> student.getPromo().equals(PromoEnum.valueOf(promo)) && student.getGroup().equals(groupe))
                .toList();
-    } 
+    }
+
+    public StudentDao getStudentByNumEtu(String numEtu){
+        return this.studentDaoRepository.findByNumEtu(numEtu);
+    }
 
     public List<StudentDao> getAllStudents() {
         return this.studentDaoRepository.findAll();

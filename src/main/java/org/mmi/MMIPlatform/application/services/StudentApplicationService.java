@@ -23,22 +23,25 @@ public class StudentApplicationService {
 
     public List<StudentDto> getStudentsByPromo(String promo) {
         try {
-            List<Student> studentsByPromo = this.studentDomainService.getStudentsByPromo(promo);
-            return studentDtoMapper.studentListToStudentDtoList(studentsByPromo);
+            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromo(promo));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
     public List<StudentDto> getStudentsByPromoAndGroup(String promo, String group) {
-
         try {
-            List<Student> studentsByPromoAndGroup = this.studentDomainService.getStudentsByPromoAndGroup(promo, group);
-            return studentDtoMapper.studentListToStudentDtoList(studentsByPromoAndGroup);
+            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByPromoAndGroup(promo, group));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    public StudentDto getStudentByNumEtu(String numEtu) {
+        try {
+            return studentDtoMapper.studentToStudentDto(this.studentDomainService.getStudentByNumEtu(numEtu));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -52,10 +55,9 @@ public class StudentApplicationService {
 
     public List<StudentDto> getAllStudents() {
         try {
-            return studentDtoMapper.studentListToStudentDtoList( studentDomainService.getAllStudents());
+            return studentDtoMapper.studentListToStudentDtoList(studentDomainService.getAllStudents());
         } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }
