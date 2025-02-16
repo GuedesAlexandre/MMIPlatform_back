@@ -48,8 +48,8 @@ public class UserStudentDBAdapter {
             throw new IllegalArgumentException("This email: '" + userStudentDao.getEmail() + "' does not belong to the university");
         }
 
-        if (studentDaoByNumEtu.getFirstName().equals(userStudentDao.getFirstName()) &&
-                studentDaoByNumEtu.getLastName().equals(userStudentDao.getLastName())) {
+        if (!studentDaoByNumEtu.getFirstName().equals(userStudentDao.getFirstName()) ||
+                !studentDaoByNumEtu.getLastName().equals(userStudentDao.getLastName())) {
             throw new IllegalArgumentException("Your personal information doesn't match with the information in the registry");
         }
 
