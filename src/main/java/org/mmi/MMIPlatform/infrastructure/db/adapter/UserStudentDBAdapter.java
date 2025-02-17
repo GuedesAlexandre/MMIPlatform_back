@@ -32,17 +32,14 @@ public class UserStudentDBAdapter {
             throw new IllegalArgumentException("Password must be at least 8 characters long and include a digit, a lowercase letter, an uppercase letter, and a special character.");
         }
 
-        String numEtu = userStudentDao.getNumEtu();
-        List<StudentDao> studentDaoList = this.studentDaoRepository.findAll();
-        List<UserStudentDao> userStudentDaoList = this.userStudentDaoRepository.findAll();
-        StudentDao studentDaoByNumEtu = studentDaoList.stream()
-                .filter(s -> s.getNumEtu().equals(userStudentDao.getNumEtu()))
-                .findFirst().orElseThrow((() -> new IllegalArgumentException("Student with numEtu: " + numEtu + " does not exist in the registry, if this is not normal please contact your university")));
+        StudentDao studentDaoByNumEtu = this.studentDaoRepository.findByNumEtu(userStudentDao.getNumEtu());
+        if (studentDaoByNumEtu == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with numEtu " + userStudentDao.getNumEtu() + " does not exist in the registry. If this is not normal, please contact your university.");
+        }
 
-        userStudentDao.setPassword(argon2PasswordEncoder.encode(userStudentDao.getPassword()));
-        userStudentDao.setPromo(String.valueOf(studentDaoByNumEtu.getPromo()));
-        userStudentDao.setGroup(studentDaoByNumEtu.getGroup());
-        userStudentDao.setCreatedAt(new Date());
+        this.userStudentDaoRepository.findByNumEtu(userStudentDao.getNumEtu()).ifPresent(optionalUserStudent -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Student with numEtu" + userStudentDao.getNumEtu() + "already exist");
+        });
 
         if (!userStudentDao.getEmail().matches(EMAIL_PATTERN)) {
             throw new IllegalArgumentException("This email: '" + userStudentDao.getEmail() + "' does not belong to the university");
@@ -50,19 +47,18 @@ public class UserStudentDBAdapter {
 
         if (!studentDaoByNumEtu.getFirstName().equals(userStudentDao.getFirstName()) ||
                 !studentDaoByNumEtu.getLastName().equals(userStudentDao.getLastName())) {
-            throw new IllegalArgumentException("Your personal information doesn't match with the information in the registry");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Your personal information doesn't match with the information in the registry");
         }
 
-        if (!userStudentDaoList.stream()
-                .filter(s -> s.getNumEtu().equals(numEtu))
-                .toList().isEmpty()) {
-            throw new IllegalArgumentException("Student with numEtu: " + numEtu + " already exist");
-        }
+        userStudentDao.setPassword(argon2PasswordEncoder.encode(userStudentDao.getPassword()));
+        userStudentDao.setPromo(String.valueOf(studentDaoByNumEtu.getPromo()));
+        userStudentDao.setGroup(studentDaoByNumEtu.getGroup());
+        userStudentDao.setCreatedAt(new Date());
 
         try {
             this.userStudentDaoRepository.save(userStudentDao);
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while saving the user student");
         }
 
         return userStudentDao;
