@@ -1,7 +1,5 @@
 package org.mmi.MMIPlatform.infrastructure.db.repository;
 
-import lombok.NonNull;
-import org.mmi.MMIPlatform.infrastructure.dao.UserDao;
 import org.mmi.MMIPlatform.infrastructure.dao.UserStudentDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
