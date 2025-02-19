@@ -4,5 +4,6 @@ public enum PermissionEnum {
     ADMIN,
     SCOLARITY,
     TEACHER,
-    SUPPORT
+    SUPPORT,
+    STUDENT
 }

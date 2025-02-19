@@ -8,7 +8,8 @@ public enum PermissionsEnum {
     ADMIN("ADMIN"),
     SCOLARITY("SCOLARITY"),
     TEACHER("TEACHER"),
-    SUPPORT("SUPPORT");
+    SUPPORT("SUPPORT"),
+    STUDENT("STUDENT");
 
     private final String PermissionsEnum;
 }

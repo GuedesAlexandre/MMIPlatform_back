@@ -2,8 +2,8 @@ package org.mmi.MMIPlatform.domain.models;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 
 import java.util.Date;
 
@@ -28,4 +28,6 @@ public class UserStudent {
     private String group;
 
     private Date createdAt;
+
+    private PermissionsEnum access;
 }
