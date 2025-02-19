@@ -60,6 +60,7 @@ public class JwtAdapter {
         userClaims.put("firstName", userStudent.getFirstName());
         userClaims.put("group", userStudent.getGroup());
         userClaims.put("promo", userStudent.getPromo());
+        userClaims.put("access", userStudent.getAccess());
 
         Map<String, Object> filteredUserClaims = userClaims.entrySet().stream()
                 .filter(entry -> entry.getValue() != null)
