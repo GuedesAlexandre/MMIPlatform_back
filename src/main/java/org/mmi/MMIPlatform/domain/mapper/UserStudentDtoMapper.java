@@ -22,8 +22,7 @@ public class UserStudentDtoMapper {
                 .group(userStudent.getGroup())
                 .promo(userStudent.getPromo())
                 .createdAt(userStudent.getCreatedAt())
-                .access(userStudent.getAccess().name())
-                .build();
+                .access(String.valueOf(userStudent.getAccess())).build();
     }
 
     public List<UserStudentDto> userStudentListToUserStudentDtoList(List<UserStudent> userStudentList) {
