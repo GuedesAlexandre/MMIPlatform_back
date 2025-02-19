@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.JustificationEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.SignatureStatusEnum;
 
 @Builder
@@ -15,4 +16,6 @@ public class Signature {
     private SignatureStatusEnum sign;
     @NonNull
     private Student student;
+    @NonNull
+    private JustificationEnum justification;
 }

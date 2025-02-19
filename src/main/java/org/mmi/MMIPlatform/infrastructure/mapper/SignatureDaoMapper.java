@@ -22,6 +22,7 @@ public class SignatureDaoMapper {
                 .id(signatureDao.getId())
                 .sign(signatureDao.getSign())
                 .student(studentDaoMapper.studentDaoToStudent(signatureDao.getStudentDao()))
+                .justification(signatureDao.getJustification())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class SignatureDaoMapper {
                 .id(signature.getId())
                 .sign(signature.getSign())
                 .studentDao(studentDaoMapper.studentToStudentDao(signature.getStudent()))
+                .justification(signature.getJustification())
                 .build();
     }
 

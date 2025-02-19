@@ -17,6 +17,7 @@ public class SignatureDtoMapper {
         return SignatureDto.builder()
                 .sign(signature.getSign())
                 .studentDto(userStudentDtoMapper.studentToStudentDto(signature.getStudent()))
+                .justification(signature.getJustification())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class SignatureDtoMapper {
         return Signature.builder()
                 .sign(signatureDto.getSign())
                 .student(userStudentDtoMapper.studentDtoToStudent(signatureDto.getStudentDto()))
+                .justification(signatureDto.getJustification())
                 .build();
     }
 
