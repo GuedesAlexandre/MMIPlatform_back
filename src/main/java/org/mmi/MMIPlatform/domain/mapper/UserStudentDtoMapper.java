@@ -3,6 +3,7 @@ package org.mmi.MMIPlatform.domain.mapper;
 import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.UserStudentDto;
 import org.mmi.MMIPlatform.domain.models.UserStudent;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class UserStudentDtoMapper {
                 .group(userStudent.getGroup())
                 .promo(userStudent.getPromo())
                 .createdAt(userStudent.getCreatedAt())
-                .build();
+                .access(String.valueOf(userStudent.getAccess())).build();
     }
 
     public List<UserStudentDto> userStudentListToUserStudentDtoList(List<UserStudent> userStudentList) {
@@ -38,6 +39,7 @@ public class UserStudentDtoMapper {
                 .group(userStudentDto.getGroup())
                 .promo(userStudentDto.getPromo())
                 .createdAt(userStudentDto.getCreatedAt())
+                .access(PermissionsEnum.valueOf(userStudentDto.getAccess()))
                 .build();
     }
 

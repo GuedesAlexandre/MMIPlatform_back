@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.JustificationEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.SignatureStatusEnum;
 
 @Entity
@@ -26,4 +27,7 @@ public class SignatureDao {
     @ManyToOne
     @JoinColumn(name = "MMI_PLATFORM_SIGNATURE_STUDENT")
     private StudentDao studentDao;
+
+    @Column(name = "MMI_PLATFORM_SIGNATURE_JUSTIFICATION")
+    private JustificationEnum justification;
 }

@@ -2,6 +2,7 @@ package org.mmi.MMIPlatform.infrastructure.dao;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PermissionsEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 
 import java.util.Date;
@@ -51,4 +52,7 @@ public class UserStudentDao {
 
     @Column(name = "MMI_PLATFORM_USER_STUDENT_CREATED_AT")
     private Date createdAt;
+
+    @Column(name = "MMI_PLATFORM_USER_STUDENT_ACCESS")
+    private PermissionsEnum access;
 }

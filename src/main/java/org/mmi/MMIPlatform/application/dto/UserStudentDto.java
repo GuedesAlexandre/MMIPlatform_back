@@ -33,4 +33,6 @@ public class UserStudentDto {
     private String group;
     @JsonProperty("createdAt")
     private Date createdAt;
+    @JsonProperty("access")
+    private String access;
 }

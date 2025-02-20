@@ -26,6 +26,7 @@ public class UserStudentDaoMapper {
                 .promo(userStudentDao.getPromo())
                 .group(userStudentDao.getGroup())
                 .createdAt(userStudentDao.getCreatedAt())
+                .access(userStudentDao.getAccess())
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class UserStudentDaoMapper {
                 .promo(userStudent.getPromo())
                 .group(userStudent.getGroup())
                 .createdAt(userStudent.getCreatedAt())
+                .access(userStudent.getAccess())
                 .build();
     }
 
