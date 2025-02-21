@@ -34,6 +34,11 @@ public class SignatureSheetController {
         return ResponseEntity.ok(signatureSheetApplicationService.getSignatureSheetListByPromo(promo));
     }
 
+    @GetMapping("/{promo}/{numEtu}")
+    public ResponseEntity<List<SignatureSheetDto>> getSignatureSheetListByPromoAndNumEtu(@PathVariable String promo, @PathVariable String numEtu) throws Exception {
+        return ResponseEntity.ok(this.signatureSheetApplicationService.getSignatureSheetListByPromoAndNumEtu(promo, numEtu));
+    }
+
     @GetMapping("/{moduleName}/{promo}/{createdAt}/{finishAt}")
     public ResponseEntity<SignatureSheetDto> getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(@PathVariable String moduleName, @PathVariable String promo, @PathVariable String createdAt, @PathVariable String finishAt) throws Exception {
         return ResponseEntity.ok(signatureSheetApplicationService.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));

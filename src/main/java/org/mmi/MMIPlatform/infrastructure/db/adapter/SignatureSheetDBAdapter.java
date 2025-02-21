@@ -38,6 +38,14 @@ public class SignatureSheetDBAdapter {
         }
     }
 
+    public List<SignatureSheetDao> getSignatureSheetListByPromoAndNumEtu(String promo, String numEtu) throws Exception {
+        try {
+            return this.getSignatureSheetListByPromo(promo).stream().filter(signatureSheetDao -> signatureSheetDao.getStudentDaos().stream().anyMatch(student -> student.getNumEtu().equals(numEtu))).toList();
+        } catch (Exception e) {
+            throw (new Exception(e.getMessage()));
+        }
+    }
+
     public List<SignatureSheetDao> getSignatureSheetListByModuleName(String moduleName) throws Exception {
         try {
             return this.signatureSheetDaoRepository.findByModuleName(moduleName);

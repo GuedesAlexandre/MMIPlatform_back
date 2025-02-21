@@ -35,6 +35,10 @@ public class SignatureSheetApplicationService {
         return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByPromo(promo));
     }
 
+    public List<SignatureSheetDto> getSignatureSheetListByPromoAndNumEtu(String Promo, String numEtu) throws Exception {
+        return signatureSheetDtoMapper.signatureSheetListToSignatureSheetDtoList(this.signatureSheetDomainService.getSignatureSheetListByPromoAndNumEtu(Promo, numEtu));
+    }
+
     public SignatureSheetDto postSignatureSheet(SignatureSheetDto signatureSheetDto) throws Exception {
 
         return signatureSheetDtoMapper.signatureSheetToSignatureSheetDto(this.signatureSheetDomainService.postSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto)));

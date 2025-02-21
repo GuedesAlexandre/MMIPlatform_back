@@ -30,9 +30,11 @@ public class SignatureSheetDomainService {
     }
 
     public List<SignatureSheet> getSignatureSheetListByPromo(String promo) throws Exception {
-
         return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByPromo(promo));
+    }
 
+    public List<SignatureSheet> getSignatureSheetListByPromoAndNumEtu(String Promo, String numEtu) throws Exception {
+        return this.signatureSheetDaoMapper.signatureSheetDaoListToSignatureSheetList(this.signatureSheetDBAdapter.getSignatureSheetListByPromoAndNumEtu(Promo, numEtu));
     }
 
     public List<SignatureSheet> getSignatureSheetListByModuleName(String moduleName) throws Exception {

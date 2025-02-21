@@ -19,6 +19,4 @@ public interface SignatureSheetDaoRepository extends JpaRepository<SignatureShee
 
     void deleteSignatureSheetDaoByModuleNameAndPromoAndCreatedAtAndFinishAt(@NonNull String moduleName, @NonNull PromoEnum promo, @NonNull Date createdAt, @NonNull Date finishAt);
 
-
-
 }
