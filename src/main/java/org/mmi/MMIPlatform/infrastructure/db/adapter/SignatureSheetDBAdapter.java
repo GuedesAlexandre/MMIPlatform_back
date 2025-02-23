@@ -58,15 +58,14 @@ public class SignatureSheetDBAdapter {
 
     public SignatureSheetDao getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS XXX");
             return this.signatureSheetDaoRepository.findByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, PromoEnum.valueOf(promo), dateFormat.parse(createdAt), dateFormat.parse(finishAt));
         } catch (ParseException e) {
-            throw new Exception("Failed to parse date: " + e.getMessage());
+            throw new Exception("Failed to parse date: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("An error occurred: " + e.getMessage(), e);
         }
     }
-
 
     public SignatureSheetDao saveSignatureSheet(SignatureSheetDao signatureSheetDao) throws Exception {
         try {
