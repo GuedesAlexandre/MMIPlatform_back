@@ -11,6 +11,8 @@ import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureSheetDaoReposit
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -56,9 +58,12 @@ public class SignatureSheetDBAdapter {
 
     public SignatureSheetDao getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
         try {
-            return this.signatureSheetDaoRepository.findByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, PromoEnum.valueOf(promo), new Date(Long.parseLong(createdAt)), new Date(Long.parseLong(finishAt)));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            return this.signatureSheetDaoRepository.findByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, PromoEnum.valueOf(promo), dateFormat.parse(createdAt), dateFormat.parse(finishAt));
+        } catch (ParseException e) {
+            throw new Exception("Failed to parse date: " + e.getMessage());
         } catch (Exception e) {
-            throw (new Exception(e.getMessage()));
+            throw new Exception(e.getMessage());
         }
     }
 
