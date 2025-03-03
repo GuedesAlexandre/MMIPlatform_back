@@ -40,4 +40,6 @@ public class InternshipApplicationService {
         Internship internship = internshipDtoMapper.internshipDtoToInternship(internshipDto);
         return this.internshipDtoMapper.internshipToInternshipDto(internshipDomainService.putInternshipByNumEtuYearsAndTitle(numEtu, years, title, internship));
     }
+
+
 }
