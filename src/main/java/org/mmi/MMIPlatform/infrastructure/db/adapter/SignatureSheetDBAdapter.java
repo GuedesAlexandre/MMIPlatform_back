@@ -11,6 +11,13 @@ import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureSheetDaoReposit
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -54,11 +61,26 @@ public class SignatureSheetDBAdapter {
         }
     }
 
-    public SignatureSheetDao getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(String moduleName, String promo, String createdAt, String finishAt) throws Exception {
+    public SignatureSheetDao getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(
+            String moduleName, String promo, String createdAt, String finishAt) throws Exception {
         try {
-            return this.signatureSheetDaoRepository.findByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, PromoEnum.valueOf(promo), new Date(Long.parseLong(createdAt)), new Date(Long.parseLong(finishAt)));
+            createdAt = createdAt.replace(" ", "+");
+            finishAt = finishAt.replace(" ", "+");
+
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+            OffsetDateTime createdAtDateTime = OffsetDateTime.parse(createdAt, dateTimeFormatter);
+            Date createdAtDate = Date.from(createdAtDateTime.toInstant());
+
+            OffsetDateTime finishAtDateTime = OffsetDateTime.parse(finishAt, dateTimeFormatter);
+            Date finishAtDate = Date.from(finishAtDateTime.toInstant());
+
+            return this.signatureSheetDaoRepository.findByModuleNameAndPromoAndCreatedAtAndFinishAt(
+                    moduleName, PromoEnum.valueOf(promo), createdAtDate, finishAtDate);
+        } catch (DateTimeParseException e) {
+            throw new Exception("Failed to parse date: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw (new Exception(e.getMessage()));
+            throw new Exception("An error occurred: " + e.getMessage(), e);
         }
     }
 
