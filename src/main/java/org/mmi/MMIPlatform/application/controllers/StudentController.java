@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.mmi.MMIPlatform.application.dto.NoteDto;
 import org.mmi.MMIPlatform.application.dto.StudentDto;
 import org.mmi.MMIPlatform.application.services.StudentApplicationService;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,11 +54,23 @@ public class StudentController {
                 content = {@Content(mediaType = "application.json",
                     schema = @Schema(implementation = StudentDto.class))}),
     })
+
     @GetMapping("/search/{numEtu}")
     public ResponseEntity<StudentDto> getStudentByNumEtu(@PathVariable(name = "numEtu") String numEtu) {
         return ResponseEntity.ok(studentApplicationService.getStudentByNumEtu(numEtu));
     }
 
+    @Operation(summary = "get a list of students by tp", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "students recover",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))}),
+    })
+    @GetMapping("/search/group/{promo}/{tp}")
+    public ResponseEntity<List<StudentDto>> getStudentsByTp(@PathVariable(name = "tp") String tp, @PathVariable(name = "promo") String promo) {
+        String decodedTp = URLDecoder.decode(tp, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(studentApplicationService.getStudentsByTpAndPromo(decodedTp, promo));
+    }
 
     @Operation(summary = "get all Students", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {

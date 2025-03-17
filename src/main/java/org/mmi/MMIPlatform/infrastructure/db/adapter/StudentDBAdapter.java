@@ -79,6 +79,10 @@ public class StudentDBAdapter {
         }
     }
 
+    public List<StudentDao> getStudentByTpAndPromo(String tp, String promo) {
+        return this.studentDaoRepository.findByPromoAndTp(PromoEnum.valueOf(promo), tp);
+    }
+
     public String putNotesForAStudent(String numEtu, String moduleName, String name, NoteDao note) {
         StudentDao student = this.studentDaoRepository.findByNumEtu(numEtu);
         List<ModuleDao> moduleDaoList = this.moduleDaoRepository.findAll().stream().filter(module -> module.getName().equals(moduleName)).toList();

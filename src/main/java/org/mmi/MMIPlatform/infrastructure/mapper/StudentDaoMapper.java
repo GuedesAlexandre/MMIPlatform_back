@@ -30,6 +30,8 @@ public class StudentDaoMapper {
                 .group(studentDao.getGroup())
                 .numEtu(studentDao.getNumEtu())
                 .notes(null == studentDao.getNotes() ? null : studentDao.getNotes().stream().map(this.noteDaoMapper::noteDaoToNote).toList())
+                .tp(studentDao.getTp())
+                .email(studentDao.getEmail())
                 .build();
     }
 
@@ -45,6 +47,8 @@ public class StudentDaoMapper {
                 .group(studentDao.getGroup())
                 .numEtu(studentDao.getNumEtu())
                 .internships(null == studentDao.getInternships() ? null : studentDao.getInternships().stream().map(this.internshipDaoMapper::internshipDaoToInternShip).toList())
+                .tp(studentDao.getTp())
+                .email(studentDao.getEmail())
                 .build();
     }
 
@@ -68,6 +72,8 @@ public class StudentDaoMapper {
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
                 .notes(null == student.getNotes() ? null : student.getNotes().stream().map(this.noteDaoMapper::noteToNoteDao).toList())
+                .tp(student.getTp())
+                .email(student.getEmail())
                 .build();
     }
 
@@ -83,6 +89,8 @@ public class StudentDaoMapper {
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
                 .internships(null == student.getInternships() ? null : student.getInternships().stream().map(this.internshipDaoMapper::internshipToInternshipDao).toList())
+                .tp(student.getTp())
+                .email(student.getEmail())
                 .build();
     }
 
@@ -100,6 +108,8 @@ public class StudentDaoMapper {
                 .promo(PromoEnum.valueOf(student.getPromo()))
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
+                .tp(student.getTp())
+                .email(student.getEmail())
                 .build();
     }
 
