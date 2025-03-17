@@ -44,6 +44,9 @@ public class UserStudentDBAdapter {
         if (!userStudentDao.getEmail().matches(EMAIL_PATTERN)) {
             throw new IllegalArgumentException("This email: '" + userStudentDao.getEmail() + "' does not belong to the university");
         }
+        if(userStudentDao.getEmail().equals(studentDaoByNumEtu.getEmail())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your email does not match with the email in the registry");
+        };
 
         if (!studentDaoByNumEtu.getFirstName().equals(userStudentDao.getFirstName()) ||
                 !studentDaoByNumEtu.getLastName().equals(userStudentDao.getLastName())) {

@@ -24,6 +24,8 @@ public class StudentDtoMapper {
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
                 .notes(this.noteDtoMapper.noteListToNoteDtoList(student.getNotes()))
+                .tp(student.getTp())
+                .email(student.getEmail())
                 .build();
     }
 
@@ -35,6 +37,8 @@ public class StudentDtoMapper {
                 .group(student.getGroup())
                 .numEtu(student.getNumEtu())
                 .internships(this.internshipDtoMapper.internshipsToInternshipDto(student.getInternships()))
+                .tp(student.getTp())
+                .email(student.getEmail())
                 .build();
     }
 
@@ -54,6 +58,8 @@ public class StudentDtoMapper {
                 .group(studentDto.getGroup())
                 .numEtu(studentDto.getNumEtu())
                 .notes(this.noteDtoMapper.noteDtoListToNoteList(studentDto.getNotes()))
+                .tp(studentDto.getTp())
+                .email(studentDto.getEmail())
                 .build();
     }
 
@@ -65,6 +71,8 @@ public class StudentDtoMapper {
                 .group(studentDto.getGroup())
                 .numEtu(studentDto.getNumEtu())
                 .internships(this.internshipDtoMapper.internshipDtoToInternship(studentDto.getInternships()))
+                .tp(studentDto.getTp())
+                .email(studentDto.getEmail())
                 .build();
     }
 

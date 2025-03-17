@@ -53,11 +53,23 @@ public class StudentController {
                 content = {@Content(mediaType = "application.json",
                     schema = @Schema(implementation = StudentDto.class))}),
     })
+
     @GetMapping("/search/{numEtu}")
     public ResponseEntity<StudentDto> getStudentByNumEtu(@PathVariable(name = "numEtu") String numEtu) {
         return ResponseEntity.ok(studentApplicationService.getStudentByNumEtu(numEtu));
     }
 
+    @Operation(summary = "get a list of students by tp", security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "students recover",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StudentDto.class))}),
+    })
+    @GetMapping("/search/group/{tp}")
+    public ResponseEntity<List<StudentDto>> getStudentsByTp(@PathVariable(name = "tp") String tp) {
+        String decodedTp = URLDecoder.decode(tp, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(studentApplicationService.getStudentsByTp(decodedTp));
+    }
 
     @Operation(summary = "get all Students", security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {

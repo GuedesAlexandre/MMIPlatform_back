@@ -28,6 +28,14 @@ public class StudentDomainService {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
+
+    public List<Student> getStudentsByTp(String tp) {
+        try {
+            return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentByTp(tp));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
    
     public List<Student> getStudentsByPromoAndGroup(String promo, String group) {
         try {

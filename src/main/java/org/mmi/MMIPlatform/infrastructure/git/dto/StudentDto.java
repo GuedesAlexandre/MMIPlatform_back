@@ -14,4 +14,6 @@ public class StudentDto {
     private String promo;
     private String numEtu;
     private List<NoteDto> notes;
+    private String email;
+    private String tp;
 }

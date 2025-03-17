@@ -27,4 +27,8 @@ public class StudentDto {
     private List<NoteDto> notes;
     @JsonProperty("internships")
     private List<InternshipDto> internships;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("tp")
+    private String tp;
 }

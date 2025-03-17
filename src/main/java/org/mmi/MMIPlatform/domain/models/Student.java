@@ -18,4 +18,6 @@ public class Student {
     private String numEtu;
     private List<Note> notes;
     private List<Internship> internships;
+    private String email;
+    private String tp;
 }

@@ -34,6 +34,12 @@ public class StudentDao {
     @Column(name = "MMI_PLATFORM_STUDENT_GROUP")
     private String group;
 
+    @Column(name = "MMI_PLATFORM_STUDENT_EMAIL")
+    private String email;
+
+    @Column(name = "MMI_PLATFORM_STUDENT_TP")
+    private String tp;
+
     @Column(name = "MMI_PLATFORM_STUDENT_NUM_ETU")
     private String numEtu;
 
