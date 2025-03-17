@@ -29,9 +29,9 @@ public class StudentDomainService {
         }
     }
 
-    public List<Student> getStudentsByTp(String tp) {
+    public List<Student> getStudentsByTpAndPromo(String tp, String promo) {
         try {
-            return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentByTp(tp));
+            return studentDaoMapper.studentsDaostoStudents(studentDBAdapter.getStudentByTpAndPromo(tp, promo));
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }

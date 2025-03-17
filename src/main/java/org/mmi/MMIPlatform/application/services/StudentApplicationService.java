@@ -37,9 +37,9 @@ public class StudentApplicationService {
         }
     }
 
-    public List<StudentDto> getStudentsByTp(String tp) {
+    public List<StudentDto> getStudentsByTpAndPromo(String tp, String promo) {
         try {
-            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByTp(tp));
+            return studentDtoMapper.studentListToStudentDtoList(this.studentDomainService.getStudentsByTpAndPromo(tp, promo));
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
