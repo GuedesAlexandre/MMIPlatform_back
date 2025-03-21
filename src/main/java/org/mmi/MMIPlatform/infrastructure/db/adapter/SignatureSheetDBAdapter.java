@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import org.mmi.MMIPlatform.infrastructure.dao.SignatureDao;
 import org.mmi.MMIPlatform.infrastructure.dao.SignatureSheetDao;
 import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.JustificationEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureSheetDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -127,6 +130,20 @@ public class SignatureSheetDBAdapter {
             return "Signature sheet deleted";
         } catch (Exception e) {
             throw (new Exception(e.getMessage()));
+        }
+    }
+
+    public String justifyMissing(String moduleName, String promo, String createdAt, String finishAt, String numEtu) {
+        try {
+            SignatureSheetDao signatureSheetDao = this.getSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt);
+            signatureSheetDao.getSignatureDaos().stream().filter(signatureDao -> signatureDao.getStudentDao().getNumEtu().equals(numEtu)).findFirst().ifPresent(signatureDao -> {
+                signatureDao.setJustification(JustificationEnum.JUSTIFIED);
+                this.signatureDaoRepository.save(signatureDao);
+            });
+            this.signatureSheetDaoRepository.save(signatureSheetDao);
+            return "Signature sheet justified for numEtu: " + numEtu;
+        } catch (Exception e) {
+            throw (new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage()));
         }
     }
 

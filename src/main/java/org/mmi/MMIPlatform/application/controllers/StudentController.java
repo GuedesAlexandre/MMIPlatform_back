@@ -106,4 +106,6 @@ public class StudentController {
     public ResponseEntity<String> putNotesForAStudent(@PathVariable(name="num_etu") String numEtu, @PathVariable(name = "module") String module, @PathVariable(name = "name") String name, @RequestBody NoteDto noteDto) {
         return ResponseEntity.ok(this.studentApplicationService.putNotesForAStudent(numEtu , URLDecoder.decode(module, StandardCharsets.UTF_8), name, noteDto));
     }
+
+
 }

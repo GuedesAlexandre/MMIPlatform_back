@@ -53,4 +53,8 @@ public class SignatureSheetDomainService {
         return this.signatureSheetDBAdapter.deleteSignatureSheet(this.signatureSheetDaoMapper.signatureSheetToSignatureSheetDao(signatureSheet));
     }
 
+    public String justifyMissingForOneStudent(String moduleName, String promo, String createdAt, String finishAt, String numEtu) throws Exception {
+        return this.signatureSheetDBAdapter.justifyMissing(moduleName, promo, createdAt, finishAt, numEtu);
+    }
+
 }
