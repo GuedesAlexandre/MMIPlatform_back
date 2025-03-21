@@ -9,7 +9,9 @@ import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.SignatureSheetDaoRepository;
 import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,19 +39,19 @@ public class SignatureSheetDBAdapter {
         }
     }
 
-    public List<SignatureSheetDao> getSignatureSheetListByPromo(String promo) throws Exception {
+    public List<SignatureSheetDao> getSignatureSheetListByPromo(String promo) {
         try {
             return this.signatureSheetDaoRepository.findByPromo(PromoEnum.valueOf(promo));
         } catch (Exception e) {
-            throw (new Exception(e.getMessage()));
+            throw (new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage()));
         }
     }
 
-    public List<SignatureSheetDao> getSignatureSheetListByPromoAndNumEtu(String promo, String numEtu) throws Exception {
+    public List<SignatureSheetDao> getSignatureSheetListByPromoAndNumEtu(String promo, String numEtu) {
         try {
             return this.getSignatureSheetListByPromo(promo).stream().filter(signatureSheetDao -> signatureSheetDao.getStudentDaos().stream().anyMatch(student -> student.getNumEtu().equals(numEtu))).toList();
         } catch (Exception e) {
-            throw (new Exception(e.getMessage()));
+            throw (new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage()));
         }
     }
 
