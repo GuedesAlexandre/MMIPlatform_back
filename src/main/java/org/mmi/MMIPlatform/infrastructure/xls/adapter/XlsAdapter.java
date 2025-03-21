@@ -8,18 +8,14 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.mmi.MMIPlatform.domain.models.Internship;
-import org.mmi.MMIPlatform.infrastructure.dao.InternshipDao;
-import org.mmi.MMIPlatform.infrastructure.dao.ModuleDao;
-import org.mmi.MMIPlatform.infrastructure.dao.NoteDao;
-import org.mmi.MMIPlatform.infrastructure.dao.StudentDao;
+import org.mmi.MMIPlatform.infrastructure.dao.*;
+import org.mmi.MMIPlatform.infrastructure.dao.enums.JustificationEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.PromoEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.TypeEnum;
 import org.mmi.MMIPlatform.infrastructure.dao.enums.UEEnum;
 import org.mmi.MMIPlatform.infrastructure.db.adapter.InternshipDBAdapter;
-import org.mmi.MMIPlatform.infrastructure.db.repository.InternshipDaoRepository;
-import org.mmi.MMIPlatform.infrastructure.db.repository.ModuleDaoRepository;
-import org.mmi.MMIPlatform.infrastructure.db.repository.NoteDaoRepository;
-import org.mmi.MMIPlatform.infrastructure.db.repository.StudentDaoRepository;
+import org.mmi.MMIPlatform.infrastructure.db.adapter.SignatureSheetDBAdapter;
+import org.mmi.MMIPlatform.infrastructure.db.repository.*;
 import org.mmi.MMIPlatform.infrastructure.xls.adapter.models.StudentsRank;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +33,7 @@ public class XlsAdapter {
     private final ModuleDaoRepository moduleDaoRepository;
     private final NoteDaoRepository noteDaoRepository;
     private final InternshipDBAdapter internshipDBAdapter;
+    private final SignatureSheetDBAdapter signatureSheetDBAdapter;
 
     public byte[] exportStudentToExcel(String promo, String semester) {
         validateInput(promo, semester);
@@ -99,6 +96,18 @@ public class XlsAdapter {
 
         headerRow.createCell(colIndex + 2).setCellValue("Nombre de semaine de stage");
         headerRow.getCell(colIndex + 2).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex + 3).setCellValue("Heures Abs justifées");
+        headerRow.getCell(colIndex + 3).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex + 4).setCellValue("Heures Abs NON justifiées");
+        headerRow.getCell(colIndex + 4).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex + 5).setCellValue("Pénalité");
+        headerRow.getCell(colIndex + 5).setCellStyle(headerStyle);
+
+        headerRow.createCell(colIndex + 6).setCellValue("Moyenne avec pénalité");
+        headerRow.getCell(colIndex + 6).setCellStyle(headerStyle);
 
         List<StudentsRank> overallUnsortedStudents = new ArrayList<>();
 
@@ -174,7 +183,7 @@ public class XlsAdapter {
             int totalInternshipsWeeks = 0;
             boolean isAlternance = false;
             for (InternshipDao internship : studentInternships) {
-                if (internship.getType().equals(TypeEnum.ALTERNANCE)){
+                if (internship.getType().equals(TypeEnum.ALTERNANCE)) {
                     isAlternance = true;
                 }
                 totalInternshipsWeeks += internship.getWeekCount();
@@ -184,7 +193,7 @@ public class XlsAdapter {
                 row.createCell(colIndex + 2).setCellValue("Valider par alternance");
                 row.getCell(colIndex + 2).setCellStyle(cellStyleGreen);
             } else {
-                if (totalInternshipsWeeks <= 25){
+                if (totalInternshipsWeeks <= 25) {
                     row.createCell(colIndex + 2).setCellValue(totalInternshipsWeeks + " semaines");
                     row.getCell(colIndex + 2).setCellStyle(cellStyleRed);
                 } else {
@@ -192,6 +201,50 @@ public class XlsAdapter {
                     row.getCell(colIndex + 2).setCellStyle(cellStyleGreen);
                 }
             }
+
+            List<SignatureSheetDao> signatureSheetDaoList = signatureSheetDBAdapter.getSignatureSheetListByPromoAndNumEtu(String.valueOf(student.getPromo()), student.getNumEtu());
+
+            int totalNotJustifiedAbsence = 0;
+            int totalJustifiedAbsence = 0;
+
+            for (SignatureSheetDao signatureSheetDao : signatureSheetDaoList) {
+
+                SignatureDao signatureDao = signatureSheetDao.getSignatureDaos().stream()
+                        .filter(studentSearch -> studentSearch.getStudentDao().getNumEtu().equals(student.getNumEtu()))
+                        .findFirst()
+                        .orElse(null);
+
+                int absDuration = signatureSheetDao.getFinishAt().getHours() - signatureSheetDao.getCreatedAt().getHours();
+
+                if (signatureDao != null && signatureDao.getJustification().equals(JustificationEnum.JUSTIFIED)) {
+                    totalJustifiedAbsence += absDuration;
+                } else if (signatureDao != null && signatureDao.getJustification().equals(JustificationEnum.NOT_JUSTIFIED)) {
+                    totalNotJustifiedAbsence += absDuration;
+                }
+            }
+
+            double totalPenality = calculAbsencePenality(totalNotJustifiedAbsence);
+            double overallAverageWithPenality = overallAverage - totalPenality;
+
+            row.createCell(colIndex + 3).setCellValue(totalJustifiedAbsence + " h");
+            row.getCell(colIndex + 3).setCellStyle(centeredStyle);
+            autoSizeColumns(summarySheet, colIndex + 3);
+
+            row.createCell(colIndex + 4).setCellValue(totalNotJustifiedAbsence + " h");
+            row.getCell(colIndex + 4).setCellStyle(centeredStyle);
+            autoSizeColumns(summarySheet, colIndex + 4);
+
+            row.createCell(colIndex + 5).setCellValue(String.format("%.3f", totalPenality) + " points");
+            row.getCell(colIndex + 5).setCellStyle(centeredStyle);
+            autoSizeColumns(summarySheet, colIndex + 5);
+
+            row.createCell(colIndex + 6).setCellValue(String.format("%.3f", overallAverageWithPenality));
+            if (overallAverageWithPenality < 10) {
+                row.getCell(colIndex + 6).setCellStyle(cellStyleRed);
+            } else {
+                row.getCell(colIndex + 6).setCellStyle(cellStyleGreen);
+            }
+            autoSizeColumns(summarySheet, colIndex + 6);
 
             StudentsRank unsortedStudent = StudentsRank.builder()
                     .numEtu(student.getNumEtu())
@@ -206,6 +259,18 @@ public class XlsAdapter {
 
         autoSizeColumns(summarySheet, UEEnum.values().length + 4);
         autoSizeColumns(summarySheet, colIndex + 2);
+    }
+
+    private double calculAbsencePenality(int totalNotJustifiedAbsence) {
+        if (totalNotJustifiedAbsence <= 9) return 0;
+        int totalHoursAboveLimit = totalNotJustifiedAbsence - 9;
+        if (totalHoursAboveLimit <= 19) {
+            return totalHoursAboveLimit * 0.025;
+        } else if (totalHoursAboveLimit <= 29) {
+            return 0.25 + totalHoursAboveLimit * 0.05;
+        } else {
+            return 1 + totalHoursAboveLimit * 0.1;
+        }
     }
 
     private void createRankingColumn(XSSFSheet summarySheet, int colIndexRanking, int rowIndexRanking, List<StudentsRank> overallSortedStudents, List<StudentDao> studentDaoList, XSSFCellStyle centeredStyle) {
