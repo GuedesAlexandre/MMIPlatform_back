@@ -67,7 +67,7 @@ mvn spring-boot:run
 ## 7. Documentation
 
 ### Diagramme de classes :
-![Diagramme de classe](src%2Fmain%2Fresources%2FDocumentation%2FDiagrammeDeClasse.png)
+![Diagramme de classe](src%2Fmain%2Fresources%2FDocumentation%2FDiagrrammeDeClasse.png)
 
 ### Diagramme de séquences :
 ![Diagramme de séquence](src%2Fmain%2Fresources%2FDocumentation%2Fdiagramme_de_sequence.png)
@@ -75,11 +75,7 @@ mvn spring-boot:run
 Lorsque le back-end se lance, il permet l'exécution de requêtes HTTP pour récupérer les données de la base de données. Ces données sont ensuite envoyées au front-end pour être affichées à l'utilisateur. Cependant, avant toute utilisation, le back-end effectue des tâches planifiées. Il interroge notre référentiel GitHub qui se trouve dans un repository via l'API GitHub et sauvegarde dans la base de données la liste des étudiants par promotion, ainsi que la liste des modules de MMI allant de la première à la troisième année. 
 
 ### MCD :
-![MCD](src%2Fmain%2Fresources%2FDocumentation%2Fmcd.png)
-
-Un étudiant possède une liste de notes (1,n). Si un étudiant n'a pas de notes, on attribue un tableau vide. Une note est obligatoirement liée à un et un seul étudiant. Une note appartient également à un module unique, tandis qu'un module peut contenir plusieurs notes (ou un tableau vide si aucune note n'est disponible).
-
-Un utilisateur peut être associé à 0 ou plusieurs modules, et un module peut être relié à 0 ou plusieurs utilisateurs (0,n). Les relations entre users et modules sont matérialisées par une table de jointure.
+![MCD](src%2Fmain%2Fresources%2FDocumentation%2Fmcdv2.png)
 
 ### Contraintes techniques d'implémentation
 
