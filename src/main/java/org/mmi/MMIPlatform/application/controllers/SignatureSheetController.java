@@ -54,5 +54,9 @@ public class SignatureSheetController {
         return ResponseEntity.ok(signatureSheetApplicationService.deleteSignatureSheetByModuleNameAndPromoAndCreatedAtAndFinishAt(moduleName, promo, createdAt, finishAt));
     }
 
+    @PutMapping("/{moduleName}/{promo}/{createdAt}/{finishAt}/{numEtu}")
+    public ResponseEntity<String> justifyMissingForOneStudent(@PathVariable String moduleName, @PathVariable String promo, @PathVariable String createdAt, @PathVariable String finishAt, @PathVariable String numEtu) throws Exception {
+        return ResponseEntity.ok(signatureSheetApplicationService.justifyMissingForOneStudent(moduleName, promo, createdAt, finishAt, numEtu));
+    }
 
 }

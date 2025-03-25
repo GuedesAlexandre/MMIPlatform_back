@@ -55,4 +55,8 @@ public class SignatureSheetApplicationService {
     public String deleteSignatureSheet(SignatureSheetDto signatureSheetDto) throws Exception {
         return this.signatureSheetDomainService.deleteSignatureSheet(this.signatureSheetDtoMapper.signatureSheetDtoToSignatureSheet(signatureSheetDto));
     }
+
+    public String justifyMissingForOneStudent(String moduleName, String promo, String createdAt, String finishAt, String numEtu) throws Exception {
+        return this.signatureSheetDomainService.justifyMissingForOneStudent(moduleName, promo, createdAt, finishAt, numEtu);
+    }
 }
